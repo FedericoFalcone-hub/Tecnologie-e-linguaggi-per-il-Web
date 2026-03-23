@@ -4,12 +4,32 @@
 \usepackage{float}
 \usepackage{amsfonts}
 \usepackage{amsmath}
+\usepackage{listings}
 \usepackage[dvipsnames]{xcolor}
+\usepackage[normalem]{ulem}
+
+\lstdefinestyle{htmlstyle}{
+    language=HTML,
+    backgroundcolor=\color{gray!10},
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue},
+    tagstyle=\color{black},
+    stringstyle=\color{green!60!black},
+    commentstyle=\color{gray},
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    stepnumber=1,
+    numbersep=5pt,
+    breaklines=true,
+    tabsize=2,
+    showstringspaces=false
+}
 
 % Titolo
 \title{Appunti di Linguaggi e Tecnologie per il Web}
 \author{Federico Falcone}
 \date{\today}
+
 
 \begin{document}
 
@@ -44,9 +64,384 @@ Storicamente si parla di standard di un produttore: scambio di informazioni poss
 Sono arrivati poi degli standard definiti da enti internazionali (livello di transizione dati).
 \\ Il vantaggio è che assicurano un vasto mercato per i dispositivi e il software. Inoltre consentono a prodotti provenienti da fornitori \textcolor{red}{differenti} di comunicare.
 \\ Di contro però è una tecnologia congelata e poi posono esserci più standard per la stessa funzione.
-
+\pagebreak
 \subsubsection{Standard ISO-OSI}
 Lo standard ISO ha adottato un modello a strati. Il sistema di comunicazione viene diviso a strati ciascuno dei quali esegue una funzione predefinita.
 Strati ISO/OSI possono essere separati in due categorie
+\begin{itemize}
+    \item funzioni dipendenti dalla rete (\textbf{Media layers});
+    \item funzioni orientate all'applicazione (\textbf{Host layers}).
+\end{itemize}
+La funzione di ogni strato è codificata in una serie di regole e convenzioni usate per comunicare con lo strato remoto corrispondente (\textbf{protocollo}). 
+Ogni strato fornisce dei servizi allo strato immediatamente superiore e utilizza inoltre dei servizi forniti dallo strato immediatamente inferiore.
+
+\subsection{Protocollo}
+La comunicazione tra entità richiede \textcolor{red}{cooperazione}, ossia collaborazione per il conseguimento di uno scopo comune. Le comunicazioni sono regolate tramite \textcolor{red}{protocolli}.
+\\ \textbf{Protocollo}: insieme delle regole e convenzioni seguite da entità, dislocate su nodi distinti , che intendono comunicare per svolgere un compito comune. Tali regole hanno l'obiettivo di assicurare la cooperazione \textcolor{red}{efficiente} ed \textcolor{red}{affidabile}
+per la comunicazione tra nodi.
+\\ \textbf{Sintassi}: insieme e struttura dei comandi e delle risposte, formato dei messaggi.
+\\ \textbf{Semantica}: significato dei comandi, delle azioni, delle risposte da effettuare al momento della trasmissione e ricezione dei messaggi.
+\\ \textbf{Temporizzazione}: specifica delle possibilo sequenze temporali di emissione dei comandi e dei messaggi, nonchè eventuali risposte.
+\\ Ciascun protoccolo ha un'interfaccia "interna" verso il livello superiore o inferiore, e un'interfaccia "esterna" verso il livello equivalente di un altro modo. 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Images/protocollo.png}
+\end{figure}
+\begin{itemize}
+    \item \textbf{Service interface}("interna"):operazioni e servizi offerti al protocollo superiore.
+    \item \textbf{Peer-to-peer interface}("esterna"): messaggi scambiati con un livello equivalente (peer) sull'altro nodo.
+\end{itemize}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Images/protocollo2.png}
+\end{figure}
+\begin{itemize}
+    \item Comunicazione logica tra \textit{peer entity} (entità dello stesso livello).
+\end{itemize}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{Images/protocollo3.png}
+\end{figure}
+\begin{itemize}
+    \item Comunicazione fisica (indiretta): la comunicazione tra \textit{peer entity} è diretta solo a livello hardware.
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.5\textwidth]{Images/protocollo4.png}
+    \end{figure}
+\end{itemize}
+Un messaggio si compone di:
+\begin{itemize}
+    \item \textbf{Header}: Protocol Control Information (PCI);
+    \item \textbf{Dati}: Service Data Unit (SDU).
+\end{itemize}
+L'insieme delle due è chiamata \textbf{PDU} (Protocol Data Unit).
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Images/protocollo5.png}
+\end{figure}
+Incapsulamento del messaggio
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Images/protocollo6.png}
+\end{figure}
+La comunicazione avviene \textbf{logicamente} tra \textit{peer}, ma in realtà attraversa tutti i livelli sottostanti, mediante \textbf{incapsulemnto del messaggio} a ciasun livello.
+Il sistema di comunicazione richiede un insieme di protocolli tra loro cooperanti (detti \textbf{protocol suite} o \textbf{protocol stack}).
+
+\section{HTML}
+\subsection{Linguaggio di markup}
+Linguaggio di markup modellato per rendere esplicita una particolare interpretazione di un testo. Con il markup per sistemi informatici, specifichiamo le modalità esatte di utilizzo del testo nel sistema stesso.
+I linguaggi di markup sono i linguaggi più opportuni per strutturare e marcare i documenti in maniera indipendente dall'applicazione, favorendo la riusabilità, la flessibilità e la apertura ad applicazioni complesse.
+\subsection{HyperText Markup Language}
+HTML è un linguaggio per la creazione di pagine Web.
+\begin{itemize}
+    \item Standard per la rappresentazione.
+    \item Descrive la struttura della pagina.
+    \item Non è un linguaggio di programmazione, ma di markup.
+    \item Descrive dati e regole su come mostrarli.
+    \item Poche e semplici parole sintattiche.
+\end{itemize}
+\subsection{Browser}
+È un programma per la navigazione Web. Richiede risorse attraverso il web (all'indirizzo richiesto) e la mostra nella finestra. Legge e inerpreta i documenti HTML, CSS, JavaScript, immagini sulla base di specifiche e standard.
+\\ Un Browser è formato da:
+\begin{itemize}
+    \item \textbf{Layout Engine}: riceve input dal browser (URL bar, search box, mouse clicks and key presses) e li passa al \textcolor{red}{rendering engine}.
+    \item \textbf{Rendering Engine}: riceve il codice HTML e lo interpreta visualizzandolo a video.
+    \item \textbf{User interface}: controlli del browser, ad esempio, bottoni per andare avanti o indietro.
+    \item \textbf{JavaScript engine}: engine che si prende cura di parsare ed eseguire codice JavaScript per poi ritornare il risultato dell'esecuzione.
+    \item \textbf{Network Layer}: gestisce funzioni di rete, ad esempio, criptazione, richieste http, e tutte le configurazioni di rete.
+    \item \textbf{Storage}: porzione di memoria dove il browser memorizza cached file, cookie, oggetti e dati create con JavaScript.
+    \item \textbf{Operating System Interface}: componente che interagisce con il sistema operativo per disegnare diversi elementi e per gestire la finestra.
+\end{itemize}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Images/browser.png}
+\end{figure}
+\pagebreak
+Il browser contiene anche tool per gli sviluppatori:
+\begin{itemize}
+    \item Debug pagina.
+    \item Analisi stili e sorgenti dei file.
+    \item Visualizzazione HTTP request e response.
+    \item Accesso a cookie e storage.
+    \item Etc..
+\end{itemize}
+\subsection{Struttura della pagina HTML}
+\subsubsection{Tag}
+I tag sono marcatori che identificano porzioni di testo. Permettono la personalizzazione della pagina, e di identificare e processare le porzioni di testo contrassegnate da una certa marcatura.
+\\ Nome tag = nome funzione.
+\\ Il tag ha la seguente struttura
+\begin{center}
+\texttt{<tag attributi>contenuto</tag>}
+\end{center}
+\subsection{Struttura della pagina}
+Una pagina è formata da:
+\begin{itemize}
+    \item \textbf{Riga di intestazione}: \texttt{<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01
+Transitional//IT">}. Indichiamo le specifiche W3C adottate. Esso dice al browser quale linguaggio è stato usato per il rendering.
+    \item Il tag \textbf{\texttt{<html>}}: indica l'inizio di una pagina HTML. Tutto ciò compreso all'interno del tag \texttt{html} è il codice HTML.   
+\begin{lstlisting}[language=HTML]
+<html>
+    ...
+</html>
+\end{lstlisting}
+\item Documento HTML diviso in due:
+\begin{itemize}
+    \item Testa
+    \item Corpo
+\end{itemize}
+\end{itemize}
+
+\subsubsection{Testa}
+La testa contiene informazioni non immediate. Descrive come il documento deve essere letto e interpretato. Contiene \textcolor{red}{meta-tag}, \textcolor{red}{script}, \textcolor{red}{stili}.
+\\ È racchiuso nel tag \texttt{\textbf{<head>}}.
+\subsubsection{Corpo}
+Il corpo contiene il documento vero e proprio. Contiene tutti i tag per la realizzazione del sito Web. 
+\\ È raachiuso nel tag \texttt{\textbf{<body>}}.
+\subsection{Identazione}
+Una buona norma è utilizzare caratteri di tabulazione. Aumenta la leggibilità, diminuendo così i tempi di modifica.
+\subsection{Annidamento} 
+Una caratteristica di HTML sono i \textcolor{red}{tag annidati}.
+\subsection{Commenti}
+I commenti aumentano la leggibilità del codice. Una buona norma è commentare \textbf{solo} le parti significative. Permettono di orientarsi meglio all'interno del codice.
+\begin{lstlisting}[style=htmlstyle]
+<!-- commento -->
+\end{lstlisting}
+\subsection{Maioscolo o minuscolo}
+HTML è case unsensitive, mentre XHTML lo è. È consigliabile usare il carattere minuscolo.
+\\ Inoltre non è sensibile anche agli spazi e alle linee vuote.
+\subsection{Testa (\texttt{<head>})}
+La testa contiene le informazioni/metadati relativi al documento. I browser di solito non presentano elementi che compaiono nella testa.
+\subsubsection{Titolo}
+L'elemento \texttt{<title>} permette di indicare il titolo della pagina. 
+\subsubsection{Metadati}
+L'elemento \texttt{<meta>} definisce le informazioni relative alla pagina piuttosto che contenuto vero e proprio. Contiene 3 attributi principali:
+\begin{itemize}
+    \item \textbf{Name}: contiene il nome della proprietà.
+    \item \textbf{Content}: contiene il valore della proprietà.
+    \item \textbf{http-equiv}: specifica le caratteristiche dell'HTTP responde header.
+\end{itemize}
+\begin{lstlisting}[style=htmlstyle]
+<META NAME="author" CONTENT="Federico">
+\end{lstlisting}
+\subsubsection{Meta Tag - Keywords}
+I meta tag indicano alcune informazioni sul contenuto del sito. Sono separate da virgole, punto e virgola e spazio.
+Esse inoltre sono chiavi di ricerca. 
+\\ Il motore di ricerca ricava le chiavi di indicizzazione. Bisogna fare attenzione nella scrittura delle keywords:
+\begin{itemize}
+    \item evitare termini generici e particolari;
+    \item riportare termini italiani ed inglese;
+    \item singolare e plurale.
+\end{itemize}
+Evitare di ripetere le stesse parole e usare Keyword astute.
+
+\begin{lstlisting}[style=htmlstyle]
+<meta name="keywords" content="calcio soccer tennis basket pallacanestro pallavolo volley inter milan juventus roma lazio...">
+\end{lstlisting}
+\subsubsection{Attributo HTTP-EQUIV}
+Sono informazioni sulla comunicazione server-browser. Può essere utilizzato al posto dell'attributo name.
+\\ L'attributo \texttt{http-equiv} fornisce un header HTTP per informazioni/valore dell'attributo content:
+\begin{itemize}
+    \item Può essere usato per simulare un HTTP response header.
+    \item Gli HTTP server usano questo attributo per ottenere informazioni circa l'HTTP response header.
+\end{itemize}
+Alcuni valori sono: \texttt{content-type, default-style, refresh}
+\\ Un esempio:
+\begin{lstlisting}[style=htmlstyle]
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+\end{lstlisting}
+\subsection{Corpo (<body>)}
+Il corpo di un documento contiene il contenuto vero e proprio. Il browser presenta il contenuto in diversi modi:
+\begin{itemize}
+    \item Browser visuali: è una tela su cui disegnare testi, immagini, colori, ... .
+    \item Agenti audio: il contenuto stesso è parlato.
+\end{itemize}
+Esso contiene tutte le informazioni per la visualizzazione della pagina. Siccome gli style sheet sono il modo suggerito per specificare come verrà presentato un documento
+gli attributi del \texttt{body} sono stati deprecati.
+\subsection{Tag interni al body}
+\subsubsection{Elementi inline vs block}
+Alcuni elementi HTML nel body sono "\textcolor{red}{block-level}", altri "\textcolor{red}{inline}". Gli elementi block-level possono contenere elementi inline e altri elementi block-level, mentre gli elementi
+inline contengono solo dati e altri elementi inline.
+\subsubsection{Testo - Tag predefiniti}
+I tag contenitori di testo sono block-level (ad eccezione di \texttt{<span>}).
+\begin{itemize}
+    \item \texttt{<h1>,<h2>, ...} - heading;
+    \item \texttt{<p>} - paragrafo;
+    \item \texttt{<span>} - elemento inline per raggruppare porzioni di testo (ad esempio per colorarlo in maniera diversa rispetto al resto);
+    \item \texttt{<div>} - è un contenitore degli elementi HTML.
+\end{itemize}
+\paragraph{Titoli - Heading} \mbox{}\\
+Sono previste sei grandezze predefinite per i titoli. Si va da \texttt{<h1>} che è la grandezza maggiore fino ad \texttt{<h6>} che è la grandezza minore.
+\begin{lstlisting}[style=htmlstyle]
+<h1>Titolo</h1>
+\end{lstlisting}
+\paragraph{Paragrafo} \mbox{}
+Il paragrafo è l'unità base di suddivisione del testo.
+\begin{lstlisting}[style=htmlstyle]
+<p>Paragrafo</p>
+\end{lstlisting}
+\texttt{<p>} lascia una riga vuota prima e dopo il testo.
+\paragraph{Blocco testo} \mbox{} \\
+\texttt{<div>} è un blocco contenitore. Esso va a capo ma non lascia righe di spazio.
+\begin{lstlisting}[style=htmlstyle]
+<div>Blocco 1</div>
+\end{lstlisting}
+Non impone rappresentazioni di default. 
+\paragraph{Contenitore} \mbox{} \\
+È un contenitore generico e può essere annidato. È un elemento inline (continua sulla stessa riga del tag che lo contiene). Non va a capo.
+\\ Non impone rappresentazioni di default (a parte il fatto di essere un elemento inline). 
+\paragraph{Esempio} \mbox{}
+\begin{lstlisting}[style=htmlstyle]
+<h2>Titolo della pagina</h2>
+<p>paragrafo 1</p>
+<p>paragrafo 2</p>
+<div>blocco 1</div>
+<div>blocco 2
+<span>contenitore 1</span>
+<span>contenitore 2</span>
+</div>
+\end{lstlisting}
+\subsubsection{Struttura della pagina con tag \texttt{<div>}}
+\texttt{<div>} è uno tra i tag più utilizzati nella creazione di pagine Web, sopratutto nella creazione di layout. 
+Esso fornisce un vero e proprio elemento strutturale della pagina.
+Suddivide gli spazi in zone per progettare il sito in modo \textcolor{red}{semplice} e \textcolor{red}{dettagliato}.
+\\ Molto utile quando usato insieme a fogli di stile.\\ 
+\\ Facciamo un esempio: immaginando di dover costruire un sito, pensiamo a come esso debba essere strutturato, tipicamente abbiamo:
+\begin{itemize}
+    \item un contenitore (container);
+    \item una parte alta (header);
+    \item un corpo centrale (middle);
+    \item un menù (navigation);
+    \item una parte bassa (footer);
+    \item spesso anche un pannello laterale (sidebar).
+\end{itemize}
+\begin{lstlisting}[style=htmlstyle]
+<div id="container">
+<div id="header">
+<div id="navigation"></div><!--#navigation-->
+</div><!--#header-->
+<div id="main"></div><!--#main-->
+<div id="sidebar"></div><!--#sidebar-->
+<div id="footer"></div><!--#footer-->
+</div><!--#container-->
+\end{lstlisting}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{Images/div.png}
+\end{figure}
+\pagebreak
+\subsubsection{Testo - Stili}
+Sono possibili due tipi di stili:
+\begin{itemize}
+    \item Fisici: definiscono lo stile grafico.
+    \item Logici: forniscono informazioni sul ruolo svolto dal testo. Opzionalmente impongono uno stile grafico.
+\end{itemize}
+\paragraph{Stili fisici} \mbox{}
+\begin{itemize}
+    \item \texttt{<b>} bold: formatta il testo in \textbf{grassetto};
+    \item \texttt{<i>} italic: formatta il testo in \textit{corsivo};
+    \item \texttt{<u>} underline: \underline{sottolinea} il testo;
+    \item \texttt{<strike>}: testo \sout{barrato} (usato per correzioni);
+    \item \texttt{<sup>} apice: $E=mc^2$;
+    \item \texttt{<sub>} pedice: $H_2O$.
+\end{itemize}
+\paragraph{Stili logici} \mbox{}
+\begin{itemize}
+    \item \texttt{<abbr>} abbreviazione: non comporta nessun cambiamento grafico;
+    \item \texttt{<address>} indirizzo;
+    \item \texttt{<cite>} citazioni: testo in corsivo;
+    \item \texttt{<samp>} esempio: testo a spaziatura fissa.
+\end{itemize}
+\subsubsection{Testo - Font}
+Il carattere predefinito è il \texttt{Times New Roman}. Esso però è poco leggibile. Meglio \texttt{Verdana}, \texttt{Arial} o \texttt{Helvetica}.
+\begin{lstlisting}[style=htmlstyle]
+<font face="verdana, arial, helvetica, sans-serif">testo</font>
+\end{lstlisting}
+È una buona norma utilizzare \textcolor{red}{caratteri sicuri} (sicuramente visualizzabili), non indicare un solo carattere e solo come ultima spiaggia sarà usato il \texttt{Times New Roman}.
+\\ Per scegliere il colore del testo:
+\begin{lstlisting}[style=htmlstyle]
+<font color="#0000FF">testo blu</font>
+\end{lstlisting}
+LA scelta del colore e del carattere può essere fatta nello \textcolor{red}{stesso tag}.
+\begin{lstlisting}[style=htmlstyle]
+<font color="#0000FF" face="verdana">testo blu</font>
+\end{lstlisting}
+\paragraph{Font annidati} \mbox{}
+\begin{lstlisting}[style=htmlstyle]
+<font color="blue" face="verdana">
+    testo blu
+    <font color="red">
+        testo rosso
+    </font>
+</font>
+\end{lstlisting}
+\paragraph{Dimensione del testo} \mbox{} \\
+Si utilizza l'attributo \texttt{size} del tag \texttt{font}. Ci sono 2 modi per impostare la dimensione:
+\begin{itemize}
+    \item Valore tra 1 e 7.
+    \begin{lstlisting}[language=html]
+    <font size="3">Dimensione 3</font>
+    \end{lstlisting}
+    \item Valori relativi alla dimensione del font.
+    \begin{lstlisting}[language=html]
+    <font size="+2">Dimensione +2</font>
+    \end{lstlisting}
+    Utilizza la dimensione del font di base. Il tag \texttt{<basefont>} permette di cambiare il font di base.
+\end{itemize}
+\subsubsection{Elenchi}
+Gli elenchi possono essere:
+\begin{itemize}
+    \item \textbf{ordinati};
+    \item \textbf{non ordinati};
+    \item \textbf{di definizioni}.
+\end{itemize}
+Sintassi:
+\begin{lstlisting}[language=html]
+<elenco>
+    <elemento> primo elemento
+    <elemento> secondo elemento
+</elenco>
+\end{lstlisting}
+La chiusura dell'elemento è opzionale. La sintassi degli elenchi di definizione è leggermente diversa.
+\paragraph{Elenchi ordinati} \mbox{} \\
+Gli elementi sono numerati \textcolor{red}{progressivamente}.
+\\ Il tag dell'elenco ordinato è \texttt{<ol>} (ordered list), mentre quello dell'elemento è \texttt{<li>} (list item).
+\begin{lstlisting}[style=htmlstyle]
+<div>Titolo</div>
+<ol>
+    <li>Primo elem prima tabella
+    <li>Secondo elem prima tabella
+    <ol>
+        <li> Primo elem seconda tabella
+        <li> Secondo elem seconda tabella
+    </ol>
+</ol>
+\end{lstlisting}
+\paragraph{Elenchi non ordinati} \mbox{} \\
+Gli elementi non sono numerati. Si ottiene quindi un elenco puntato. Il tag è \texttt{ul} (unordered list).
+\begin{lstlisting}[style=htmlstyle]
+<ul>
+    <li> Primo elemento
+    <li> Secondo elemento
+    <ul>
+        <li> Primo elemento
+        <li> Secondo elemento
+    </ul>
+</ul>
+\end{lstlisting}
+\paragraph{Elenco di definizioni} \mbox{}
+\\ Per creare un elenco di definizione si utilizza il tag \texttt{dl} (definition list) e il termine da definire \texttt{<dt>} (definition term). Per la definizione del termine si utilizza il tag \texttt{<dd>} (definition description).
+\begin{lstlisting}[style=htmlstyle]
+<p> Titolo
+<dl>
+    <dt>&ltp&gt
+        <dd>apertura paragrafo
+    <dt>&ltdiv&gt
+        <dd>apertura blocco di testo
+    <dt>&ltspan&gt
+        <dd>apertura elemento inline
+    Altri tag...
+</dl>
+<dl>
+\end{lstlisting}
 
 \end{document}
