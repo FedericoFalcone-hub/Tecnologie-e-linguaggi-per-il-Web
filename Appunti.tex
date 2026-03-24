@@ -5,6 +5,7 @@
 \usepackage{amsfonts}
 \usepackage{amsmath}
 \usepackage{listings}
+\usepackage{xcolor}
 \usepackage[dvipsnames]{xcolor}
 \usepackage[normalem]{ulem}
 
@@ -443,5 +444,280 @@ Gli elementi non sono numerati. Si ottiene quindi un elenco puntato. Il tag è \
 </dl>
 <dl>
 \end{lstlisting}
+\pagebreak
+\subsection{Ipertestualità (Link)}
+\subsubsection{Link}
+I link sono formati da due componenti:
+\begin{itemize}
+    \item il contenuto (testo o immagine) che nasconde il collegamento;
+    \item la risorsa puntata.
+\end{itemize}
+\begin{lstlisting}[style=htmlstyle]
+<a href="indirizzo"> link </a>
+\end{lstlisting}
+La testa del link è \textit{link}, mente la coda è \textit{indirizzo}.
+\\ La coda può essere una pagina HTML, un'immagine, documenti, altri file.
+\subsubsection{Destinazioni}
+Le destinazioni dei link possono essere:
+\begin{itemize}
+    \item Pagina HTML: aperta nel browser.
+    \item Immagine (.gif, .jpeg): aperta nel browser.
+    \item Altri documenti (.doc, .pdf):
+    \begin{itemize}
+        \item visualizzata nel browser;
+        \item richiesta di salvataggio.
+    \end{itemize}
+    \item Altri file (.zip, .exe): richiesta di salvataggio.
+\end{itemize}
+\subsubsection{Caratteristiche dei link}
+I link possono avere diversi stati:
+\begin{itemize}
+\item link a riposo: \textcolor[HTML]{0000FF}{blu};    
+\item link visitato: \textcolor[HTML]{800080}{violetto};
+    \item link attivo: passaggio da una pagina all'altra. Utile nel passato.
+    \item link al passaggio del mouse: solo con fogli di stile.
+\end{itemize}
+\subsubsection{Manipolazione dei link}
+\begin{itemize}
+    \item \texttt{<body link="red">}: cambia il colore dei link;
+    \item \texttt{<body vlink="green">}: cambia il colore dei link visited;
+    \item \texttt{body alink="yellow">}: cambia il colore dei link attivi.
+\end{itemize}
+\subsubsection{Percorsi dei link}
+I percorsi dei link possono essere:
+\begin{itemize}
+    \item \textcolor{red}{assoluti}: viene indicato il percorso per esteso;
+    \item \textcolor{red}{relativi}: fanno riferimento alla posizione del file a cui si riferisce il link a partire dalla posizione della pagina che stiamo sviluppando.
+\end{itemize}
+\paragraph{Percorsi assoluti} \mbox{}
+\begin{lstlisting}[style=htmlstyle]
+<a href="http://www.miosito.it/cartella/miofile.html"> qui</a>
+\end{lstlisting}
+\paragraph{Percorsi relativi} \mbox{}
+\begin{lstlisting}[style=htmlstyle]
+<a href="sottodir/sottolink.html">Clicca qui</a>
+\end{lstlisting}
+\pagebreak
+\subsubsection{Link interni o ancore}
+Permette di creare un indice.
+\begin{itemize}
+    \item Ancora
+    \begin{lstlisting}[style=htmlstyle]
+    <a name="primo">ancora</a>
+    \end{lstlisting}
+    \item Riferimento all'ancora
+    \begin{lstlisting}[style=htmlstyle]
+    <a href="#primo"> vai all'ancora </a>
+    \end{lstlisting}
+    \item Riferimento ad inizio pagina
+    \begin{lstlisting}[style=htmlstyle]
+    <a href='#'>torna su</a>
+    \end{lstlisting}
+\end{itemize}
+\subsubsection{Colorare i link}
+Per colorare solo un link:
+\begin{lstlisting}[style=htmlstyle]
+<a href="...">
+    <font color="green">
+        link verde
+    </font>
+</a>
+\end{lstlisting}
+\subsubsection{Immagini}
+Il web non è solo ipertesto, ma bensì ipermedia.
+\begin{lstlisting}[style=htmlstyle]
+<img src="pic.jpg" alt="description" width="128"height="128">
+\end{lstlisting}
+\begin{itemize}
+    \item Attributo \texttt{src}: sorgente del file (percorso di memorizzazione file).
+    \item Attributo \texttt{alt}: descrizione mostrata al passaggio sull'immagine.
+    \item Attributi \texttt{width} e \texttt{height}: dimensioni dell'immagine.
+\end{itemize}
+Immagine come link:
+\begin{lstlisting}[style=htmlstyle]
+<a href="destinazione.html">
+    <img src="pic.jpg">
+</a>
+\end{lstlisting}
+\pagebreak
+\subsection{Tabelle (table)}
+Le tabelle si definiscono tramite l'elemento \texttt{<table>}. Ogni riga è definita con il tag \texttt{<tr>} contenuto in \texttt{table}.
+Ogni cella è definita con il tag \texttt{<td>} contenuto in \texttt{<tr>}.
+\\ Una riga può essere anche divisa in \textcolor{red}{table heading} usando l'elemento \texttt{<th>}. Di solito sono centrari e in grassetto.
+\\ Elemento \texttt{<caption>} serve per definire la caption della tabella.
+\begin{lstlisting}[style=htmlstyle]
+<table style="width:100%">
+    <tr>
+        <td>Jill</td>
+        <td>Smith</td>
+        <td>50</td>
+    </tr>
+    <tr>
+        <td>Eve</td>
+        <td>Jackson</td>
+        <td>94</td>
+    </tr>
+    <tr>
+        <td>John</td>
+        <td>Doe</td>
+        <td>80</td>
+    </tr>
+</table>
+\end{lstlisting}
+\subsubsection{Bordi}
+Per modificare i bordi della tabella si utilizza l'attributo \texttt{border}. Se non specificato nessun bordo:
+\begin{lstlisting}[style=htmlstyle]
+<table border="1" style="width:100%">
+\end{lstlisting}
+\subsubsection{Celle collassate in una riga/colonna}
+Si utilizza l'attributo \texttt{rowsspan} per collassare un riga:
+\begin{lstlisting}[style=htmlstyle]
+<th rowspan="2">Telephone</th>
+<td rowspan="2">Telephone</td>
+\end{lstlisting}
+Si utilizza l'attributo \texttt{colspan} per collassare una colonna:
+\begin{lstlisting}[style=htmlstyle]
+<th colspan="2">Telephone</th>
+<td colspan="2">Telephone</td>
+\end{lstlisting}
+\pagebreak
+\subsection{Form}
+I form sono utilizzati per collezionare gli input degli utenti. È basato sull'elemento \texttt{<form>}. Esso specifica diversi elementi.
+\subsubsection{Input}
+È l'elemento più importante. Sono presenti diverse varianti a seconda da come si indica l'attributo \texttt{type}:
+\begin{itemize}
+    \item \texttt{text}: definisce input testo normale;
+    \item \texttt{radio}: definisce un input radio button (per selezionare una tra diverse scelte);
+    \item \texttt{submit}: definisce un bottone submit (per sottomettere il form).
+\end{itemize}
+\paragraph{Text input} \mbox{}\\
+L'input text definisce un campo di testo di una linea. \texttt{<input type="password">} è un tipo speciale di campo testo dove il valore inserito viene nascosto.
+\begin{lstlisting}[style=htmlstyle]
+<form>
+    First name:<br>
+    <input type="text" name="firstname">
+    <br>
+    Last name:<br>
+    <input type="text" name="lastname">
+</form>
+\end{lstlisting}
+\paragraph{Text area} \mbox{} \\
+Il text area definisce un campo testo a linee multiple.
+\begin{lstlisting}[style=htmlstyle]
+<textarea name="message" rows="10" cols="30">
+    The cat was playing in the garden.
+</textarea>
+\end{lstlisting}
 
+\paragraph{Radio button} \mbox{} \\
+Il radio button definisce un input che permette \textbf{una} scelta tra diverse opzioni.
+\begin{lstlisting}[style=htmlstyle]
+<form>
+    <input type="radio" name="sex" value="male" checked>Male
+    <br>
+    <input type="radio" name="sex" value="female">Female
+</form>
+\end{lstlisting}
+\paragraph{Checkbox input} \mbox{} \\ 
+La checkbox input definisce una serie di checkbox che permettono la scelta \textbf{multipla} tra diverse opzioni.
+\begin{lstlisting}[style=htmlstyle]
+<form>
+    <input type="checkbox" name="vehicle1" value="Bike"> I have a bike
+    <br>
+    <input type="checkbox" name="vehicle2" value="Car"> I have a car
+</form>
+\end{lstlisting}
+\paragraph{Drop-down list} \mbox{} \\
+La drop down-drown list definisce un \textcolor{red}{menù a tendina}. L'elemento \texttt{<option>} definisce le possibili opzioni.
+\begin{lstlisting}[style=htmlstyle]
+<select name="cars">
+    <option value="volvo">Volvo</option>
+    <option value="saab">Saab</option>
+    <option value="opel">Opel</option>
+    <option value="audi">Audi</option>
+</select>
+\end{lstlisting}
+\pagebreak
+\paragraph{Submit button} \mbox{}\\
+La submit button definisce un bottone per sottomettere la form ad un handler. L'handler è una pagina lato server che processa i dati del form. L'handler è definito con l'attributo \texttt{action}.
+\begin{lstlisting}[style=htmlstyle]
+<form action="action_page.php">
+    First name:<br>
+    <input type="text" name="firstname" value="Mickey">
+    <br>
+    Last name:<br>
+    <input type="text" name="lastname" value="Mouse">
+    <br><br>
+    <input type="submit" value="Submit">
+</form>
+\end{lstlisting}
+Permette anche di eseguire semplici azioni:
+\begin{lstlisting}[style=htmlstyle]
+<button type="button" onclick="alert('Hello World!')">Click Me!</button>
+\end{lstlisting}
+\subsubsection{Action attribute}
+L'attributo \texttt{action} definisce le azioni che devono essere fatte quando il form è inviato.
+La sottomissione viene comunque effettuata con il bottone submit. La pagina viene inviata a una pagina web lato server.
+\\ Ad esempio uno script lato server gestisce la form inviata. Se l'attributo action è omesso, si considera la pagina corrente di default.
+\subsubsection{Method attribute}
+L'attributo \texttt{method} specifica l'operazione HTTP (GET o POST) da usare per inviare la form.
+\\ GET, è l'opzione di default, viene usata per l'invio di form passive e \textcolor{red}{senza informazioni sensibili}. I dati inviati
+sono visibili nell'\textcolor{red}{indirizzo}. È ottima per piccola quantità di dati.
+\\GET è quindi utilizzata per l'invio di form che aggiornano dati, mentre POST fornisce maggiore sicurezza perchè i dati non sono visibili nell'indirizzo.
+\subsubsection{Name attribute}
+Ogni campo input deve avere un \textcolor{red}{nome}.
+\begin{lstlisting}[style=htmlstyle]
+<form action="action_page.php">
+    First name:<br>
+    <input type="text" name="firstname" value="Mickey">
+    <br>
+    Last name:<br>
+    <input type="text" name="lastname" value="Mouse">
+    <br><br>
+    <input type="submit" value="Submit">
+</form>
+\end{lstlisting}
+\subsubsection{Fieldset}
+Per raggruppare campi di una form, si utilizza \texttt{<fieldset>}. Si può definire anche una caption per la form \texttt{<legend>}.
+\begin{lstlisting}[style=htmlstyle]
+<form action="action_page.php">
+    <fieldset>
+        <legend>Personal information:</legend>
+        First name:<br>
+        <input type="text" name="firstname" value="Mickey">
+        <br>
+        Last name:<br>
+        <input type="text" name="lastname" value="Mouse">
+        <br><br>
+        <input type="submit" value="Submit">
+    </fieldset>
+</form>
+\end{lstlisting}
+\subsubsection{Altri attributi}
+\begin{itemize}
+    \item \texttt{value}: definisce il valore iniziale;
+    \item \texttt{readonly}: specifica che il valore non può essere cambiato;
+    \item \texttt{disabled}: specifica un campo disabilitato e non utilizzabile (non viene inviato);
+    \item \texttt{size}: specifica la dimensione in caratteri del campo;
+    \item \texttt{maxlength}: specifica la dimensione massima del contenuto del campo.
+\end{itemize}
+\pagebreak
+\subsection{XHTML}
+XHTML è quasi identito ad HTML, ma è più stringente. È supportato dai principali browser.
+\paragraph{Perchè utilizzare XHTML} \mbox{}
+\\ Molte pagine Web contengono HTML errato. Il seguente codice viene visualizzato bene nella maggior parte dei casi anche 
+se non segue le regole di HTML:
+\begin{lstlisting}[style=htmlstyle]
+<html>
+    <head>
+        <title>This is bad HTML</title>
+    </head>
+    <body>
+        <h1>Bad HTML</h1>
+        <p>This is a paragraph</p>
+    </body>
+</html>
+\end{lstlisting}
+Diversi browser che eseguo su device diversi richiedono maggiori risorse o potenza coputazionale per interpretare un markup sbagliato.
+\\ XHTML combina HTML e XML.
 \end{document}

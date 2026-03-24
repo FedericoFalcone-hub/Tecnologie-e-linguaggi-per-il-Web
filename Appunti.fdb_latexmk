@@ -1,8 +1,8 @@
 # Fdb version 4
-["pdflatex"] 1774282414.79041 "/home/federico/Documents/Tecnologie-e-linguaggi-per-il-Web/Appunti.tex" "Appunti.pdf" "Appunti" 1774282415.67144 0
+["pdflatex"] 1774343175.08381 "/home/federico/Documents/Tecnologie-e-linguaggi-per-il-Web/Appunti.tex" "Appunti.pdf" "Appunti" 1774343175.88714 0
   "/etc/texmf/web2c/texmf.cnf" 1760861718.5102 475 c0e671620eb5563b2130f56340a5fde8 ""
   "/home/federico/.texlive2023/texmf-var/fonts/pk/ljfour/jknappen/ec/tcrm1000.600pk" 1760861786.54029 11524 f0e65b9f20707a96144d1e02adffe1dc ""
-  "/home/federico/Documents/Tecnologie-e-linguaggi-per-il-Web/Appunti.tex" 1774282413.67271 20775 c504b07782fa14c69a765195c0b7a076 ""
+  "/home/federico/Documents/Tecnologie-e-linguaggi-per-il-Web/Appunti.tex" 1774343174.90848 31720 688226d14593814f470714a16065982b ""
   "/usr/share/texlive/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/jknappen/ec/tcrm1000.tfm" 1136768653 1536 e07581a4bb3136ece9eeb4c3ffab8233 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm" 1246382020 1004 54797486969f23fa377b128694d548df ""
@@ -89,9 +89,9 @@
   "/usr/share/texmf/web2c/texmf.cnf" 1707919699 40399 f2c302f7d2af602abb742093540a5834 ""
   "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1774280427.37506 128028 f533b797fba58d231669ea19e894e23e ""
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1774280459 6802361 58bc3638827464eb936f77005ca81b1e ""
-  "Appunti.aux" 1774282415.63128 4644 8e9d86de93d4368d060fd7478c511468 "pdflatex"
-  "Appunti.tex" 1774282413.67271 20775 c504b07782fa14c69a765195c0b7a076 ""
-  "Appunti.toc" 1774282415.63228 2805 07c983011b5c24b6935551bb342daf94 "pdflatex"
+  "Appunti.aux" 1774343175.84662 7606 168a048cd80591d6baf3cc37bd7f900c "pdflatex"
+  "Appunti.tex" 1774343174.90848 31720 688226d14593814f470714a16065982b ""
+  "Appunti.toc" 1774343175.84891 4619 a758f48c483ebb64eb2ff5ca1ff8bf58 "pdflatex"
   "Images/browser.png" 1774003912.50472 102936 e975d26d9eb1760d98c163bd4089ff71 ""
   "Images/bus_lineare.png" 1773999658.79777 16131 abfc4fe59df477c72cc9760e027c2706 ""
   "Images/bus_stella.png" 1773999723.47285 42668 351e7186161cc4e2b220fd15785441d0 ""
