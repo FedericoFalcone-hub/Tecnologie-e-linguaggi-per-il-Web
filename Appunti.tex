@@ -8,6 +8,7 @@
 \usepackage{xcolor}
 \usepackage[dvipsnames]{xcolor}
 \usepackage[normalem]{ulem}
+\usepackage{hyperref}
 
 \lstdefinestyle{htmlstyle}{
     language=HTML,
@@ -720,4 +721,245 @@ se non segue le regole di HTML:
 \end{lstlisting}
 Diversi browser che eseguo su device diversi richiedono maggiori risorse o potenza coputazionale per interpretare un markup sbagliato.
 \\ XHTML combina HTML e XML.
+\section{Bootstrap}
+\paragraph{Web design reattivo} \mbox{} \\
+ Il responsive web design riguarda la creazione di siti web che si adattano automaticamente per avere un bell'aspetto su tutti i dispositivi, dai piccoli
+telefoni ai desktop di grandi dimensioni. \\ Bootstrap è il framework HTML, CSS e JavaScript più popolare per lo sviluppo di siti Web responsive e mobile-first.
+\paragraph{} Bootstrap è un framework front-end gratuito per uno sviluppo web più rapido e semplice. Bootstrap include modelli di progettazione basati su HTML e CSS per tipografia, moduli, pulsanti, tabelle, navigazione, modali, caroselli di immagini e molti altri, oltre al plug-in JavaScript opzionali.
+\\ Bootstrap dà anche la possibilità di creare facilmente design reattivi.
+\subsection{Come ottenere Bootstrap?}
+Ci sono due modi per iniziare ad usare Bootstrap:
+\begin{itemize}
+    \item scaricare Bootstrap da \url{getbootstrap.com} e seguire le istruzioni da lì;
+    \item includere Bootstrap da un CDN (Content Delivery Network).
+\end{itemize}
+\subsubsection{CDN di Bootstrap}
+Bisogna includere i seguenti CSS, Javascript e jQuery di Bootstrap da MaxCDN nella pagina web:
+\begin{lstlisting}[style=htmlstyle]
+<!-- Ultimo CSS Bootstrap compilato e minimizzato -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+\end{lstlisting}
+\begin{lstlisting}[style=htmlstyle]
+<!-- JavaScript Bootstrap piu recente compilato -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+\end{lstlisting}
+\begin{lstlisting}[style=htmlstyle]
+<!-- ultima libreria jQuery -->
+<script src="https://code.jquery.com/jquery-latest.js"></script>
+\end{lstlisting}
+Vantaggio dell'utilizzo di Bootstrap CDN: molti utenti hanno già scaricato Bootstrap da MaxCDN visitando un altro sito. Di conseguenza, verrà caricato dalla cache quando visitano il sito,
+il che porta a tempi di caricamento più rapidi. Inoltre, la maggior parte dei CDN farà in modo che una volta che un utente richiede un file da esso, verrà servito dal server più vicino a loro,
+il che porta anche a tempi di caricamento più rapidi.
+\subsection{Creare una pagina Web con Bootstrap}
+Bisogna aggiungere il doctype HTML5 siccome Bootstrap utilizza elementi HTML e proprietà CSS di questo doctype.
+\begin{lstlisting}[style=htmlstyle]
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Bootstrap demo</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-
+            QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    </head>
+    <body>
+        <h1>Hello, world!</h1>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-
+            YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    </body>
+</html>
+\end{lstlisting}
+Bootstrap è un mobile-first:
+\begin{itemize}
+    \item Bootstrap 3 è progettato per rispondere ai dispositivi mobili. Gli stili mobile-first fanno parte del frameword principale.
+    \item Per garantire un rendering e uno zoom al tocco corretti, bisogna aggiongere il tag \texttt{<meta>} all'interno dell'elemento \texttt{<head>}.
+    \begin{lstlisting}[style=htmlstyle]
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    \end{lstlisting}
+    \item La parte \texttt{width=device-width} imposta la larghezza della pagina in modo che segue la larghezza dello schermo del dispositivo (che varierà a seconda del dispositivo).
+    \item La parte \texttt{initial-scale=1} imposta il livello di zoom iniziale quando la pgina viene caricata per la prima volta dal browser.
+\end{itemize}
+\paragraph{Contenitori} \mbox{} \\
+Bootstrap richiede anche un elemento contenitore per racchiudere i contenuti del sito. Ci sono due classi di contenitori tra cui scegliere:
+\begin{itemize}
+    \item La classe \texttt{.container} fornisce un \textbf{contenitore a larghezza fissa reattivo}.
+    \item La classe \texttt{.container-fluid} fornisce un \textbf{contenitore a larghezza intera}, che copre l'intera larghezza del viewport.
+\end{itemize}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{Images/container.png}
+\end{figure}
+\textbf{Nota}: i contenitori non sono modificabili (non è possibile inserire un contenitore all'interno di un altro contenitore).
+\pagebreak
+\subsection{Griglie Bootstrap}
+Il sistema a griglia di Bootstrap consente fino a 12 colonne nella pagina. Se non si desira utilizzare tutte e 12 le colonne singolarmente, si possono raggruppare insieme per creare colonne più larghe.
+\begin{lstlisting}[style=htmlstyle]
+<div class="col-md-12">Si estende su 12 colonne</div>
+<div class="col-md-6">Intervallo 6</div><div class="col-md-6">Intervallo 6</div>
+<div class="col-md-4">Intervallo 4</div><div class="col-md-8">Intervallo 8</div>
+<div class="col-md-4">Intervallo 4</div><div class="col-md-4">Intervallo 4</div> <div class="col-
+md-4">Intervallo 4 </div>
+\end{lstlisting}
+Il sistema a griglia di Bootstrap è reattivo e le colonne si riorganizzeranno automaticamente a seconda delle dimensioni dello schermo.
+\\ È indivisuato quindi dalla classe \texttt{.col-(nome breakpont)-*}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{Images/grid_system.png}
+\end{figure}
+È possibile innestare griglie nelle colonne creando delle \texttt{.row} nelle colonne, reiterando il meccanismo.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{Images/grid_system2.png}
+\end{figure}
+È possibile gestire i salti di colonna con gli offset \texttt{col-md-offset-*}.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{Images/grid_system3.png}
+\end{figure}
+Di default è possibe gestire 5 dimensioni del viewport:
+\begin{itemize}
+    \item Extra small (\texttt{.col-xs-*}), per gli smartphone.
+    \item Small (\texttt{.col-sm-*}), per i tablet.
+    \item Medium (\texttt{.col-md-*}), per i desktop.
+    \item Large (\texttt{.col-lg-*}), per i desktop larghi.
+    \item Extra large (\texttt{.col-xl-*}), per i desktop molto larghi.
+\end{itemize}
+\subsection{Nuovo Flexbox grid system}
+Con il nuovo Grid System non dobbiamo più indicare il numero nella classe della colonna, basterà usare solo la classe \texttt{.col-(nome breakpoint)} e si adatteranno in automatico allo spazio disponibile.
+\begin{lstlisting}[style=htmlstyle]
+<div class="row">
+    <div class="col-xs"> 1 of 3 </div>
+    <div class="col-xs"> 2 of 3 </div>
+    <div class="col-xs"> 3 of 3 </div>
+</div>
+\end{lstlisting}
+Possiamo allineare le righe in verticale:
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{Images/nuovo_flexbox.png}
+\end{figure}
+... e anche le colonne
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{Images/nuovo_flexbox2.png}
+\end{figure}
+Riordino orizzontale
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{Images/nuovo_flexbox3.png}
+\end{figure}
+Riordino della posizione
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{Images/nuovo_flexbox4.png}
+\end{figure}
+\subsection{Classi di griglia}
+Il sistema di griglia di Bootstrap ha quattro classi:
+\begin{itemize}
+    \item xs;
+    \item sm;
+    \item md;
+    \item lg.
+\end{itemize}
+Le classi di cui sopra possono essere combinate per creare layout più dinamici e flessibili.
+\subsubsection{Struttura di base di una griglia Bootstrap}
+\begin{lstlisting}[style=htmlstyle]
+<div class="row">
+    <div class="col-*-*"></div>
+</div>
+<div class="row">
+    <div class="col-*-*"></ div>
+    <div class="col-*-*"></div>
+    <div class="col-*-*"></div>
+</div>
+<div class="row">
+...
+< /div>
+\end{lstlisting}
+Primo; creare una riga (\texttt{<div class="row"}). Quindi, aggiungere il numero desiderato di colonne (tag con classi \texttt{.col-*-*} appropriate). Nota che in numeri in \texttt{.col-*-*} dovrebbero sempre sommare fino a 12 per ogni riga.
+\subsection{Tabelle Bootstrap}
+Un tavolo Bootstrap di base ha una \textbf{leggera imbottitura e solo divisori orizzontali}. La classe \texttt{.table} aggiunge uno stile di base a una tabella:
+\begin{itemize}
+    \item \textbf{righe a strisce}: la classe \texttt{.table-striped} aggiunge strisce zebrate a una tabella.
+    \item \textbf{Tavolo bordato}: la classe \texttt{.table-bordered} aggiunge bordi su tutti i lati della tabella e delle celle.
+    \item \textbf{Righe al passaggio del mouse}: la classe \texttt{.table-hover} abilita uno stato hover sulle righe della tabella.
+    \item \textbf{Tabelle reattive}: la classe \texttt{.table-responsibe} crea una tabella reattiva. La tabella scorrerà quindi orizzontalmente su dispositivi di piccole dimensioni (768 px). Quando si visualizza su qualcosa di più largo di 768 px, non c'è differenza.
+\end{itemize}
+\subsection{Immagini Bootstrap}
+\begin{itemize}
+    \item \textbf{Angoli arrotondati}: la classe \texttt{.img-rounded} aggiunge angoli arrotondati a un'immagine.
+    \item \textbf{Cerchio}: la classe \texttt{.img-circle} modella l'immagine in un cerchio.
+    \item \textbf{Miniatura}: la classe \texttt{.img-thumbnail} modella l'immagine in una miniatura.
+    \item \textbf{Immagine reattive}: le immagini sono disponibili in tutte le dimensioni. Così fanno gli schermi. Le immagini reattive si adattano automaticamente alle dimensioni dello schermo. Crea immagine reattive aggiungendo una classe \texttt{.img-responsive} al tag \texttt{<img>}. L'immagine verrà quindi ridimensionata in modo corretto rispetto all'elemento genitore. La classe \texttt{.img-responsive} applica \texttt{display: block}; e larghezza massima: 100\%: e altezza: \texttt{auto}; all'immagine.
+\end{itemize}
+\subsection{Bottoni Bootstrap}
+Stili dei pulsanti: Bootstrap fornisce 7 stili di pulsanti con le seguenti classi:
+\begin{itemize}
+    \item \texttt{.btn-predefinito};
+    \item \texttt{.btn-primary};
+    \item \texttt{.btn-success};
+    \item \texttt{.btn-info};
+    \item \texttt{.btn-warning};
+    \item \texttt{.btn-danger};
+    \item \texttt{.btn-link}.
+\end{itemize}
+\subsubsection{Elementi del pulsante Bootstrap}
+Le classi di pulsanti possono essere utilizzaate sui seguenti elementi:
+\begin{itemize}
+    \item \texttt{<a>};
+    \item \texttt{<pulsante>};
+    \item \texttt{<input>}.
+\end{itemize}
+\subsubsection{Dimensioni dei pulsanti}
+Bootstrap fornisce quattro dimensioni di pulante con le seguenti classi:
+\begin{itemize}
+    \item \texttt{.btn-lg};
+    \item \texttt{.btn-md} (dimensione predefinita);
+    \item \texttt{.btn-sm};
+    \item \texttt{.btn-xs}.
+\end{itemize}
+\subsubsection{Pulsanti a livello di blocco}
+Un pulsante a livello di blocco copre l'\textbf{intera larghezza} dell'elemento genitore. Per fare ciò si aggiunge la classe \texttt{.btn-block}. 
+\subsubsection{Pulsanti attivi/disabilitati}
+Un pulsante può essere impsotato su uno stato attivo (appare premuto) o disabilitato (non cliccabile): la classe \texttt{.active} fa apparire premuto un pulsante e la classe \texttt{.disabled} rende un pulsante non cliccabile.
+\subsection{Personalizzazione}
+Il codice sorgente di Bootstrap può essere personalizzato:
+\begin{itemize}
+    \item Attraverso un tool online (V3).
+    \item Less (V3).
+    \item Sass (V3 e V4).
+\end{itemize}
+\subsection{Cards}
+Wells, thumbnails e panels ci lasciano in favore delle cards.
+\subsection{Nuovi helpers}
+Nuovi classi di supporto per gestire margin, padding e proprietà display
+\begin{itemize}
+    \item \texttt{.pb-0} (padding-bottom: 0;);
+    \item \texttt{-p-3} (padding: 3rem;);
+    \item \texttt{mt-0} (margin-top: 0;);
+    \item \texttt{.ml-1} (margin-left: 1rem;);
+    \item \texttt{.mx-auto} (margin-left: auto; margin-right: auto;);
+\end{itemize}
+Migliorate le classi di supporto per allineare il testo in base al breakpoint:
+\begin{itemize}
+    \item \texttt{text-xs-left} (-right, -center);
+    \item \texttt{text-sm-left} (-right, -center);
+    \item \texttt{text-md-left} (-right, -center);
+    \item \texttt{text-lg-left} (-right, -center);
+    \item \texttt{text-xl-left} (-right, -center);
+\end{itemize}
+Migliorate le classi di supporto per allineare gli elementi in base al breakpoint:
+\begin{itemize}
+    \item .float-xs-left (-right);
+    \item .float-sm-left (-right);
+    \item .float-md-left (-right);
+    \item .float-lg-left (-right);
+    \item .float-xl-left (-right);
+\end{itemize}
+Migliorate le classi per nascondere o mostrare elementi in base al breakpoint: \texttt{.hidden-xs} diventa \texttt{.hidden-xs-up}.
+\\ Ad esempio: \texttt{.hidden-md-up} nasconderà tutti gli elementi dal breakpoint md in su.
+\subsection{Introduzione a SASS}
+\textbf{SASS}: è un \textbf{pre-processore CSS}, un meta-linguaggio che ci permette di usare una sintassi più simile a quella dei linguaggi di programmazione offrendo moltissimi vantaggi tra cui una \textbf{maggiore manutenibilità del codice}.
+SASS è nato per rimediare a disordine e ripetizioni, per introdurre una strututra formale dei CSS, migliorare la scrittura del codice e renderlo più manutenibile e ottimizzare la gestione delle media queries e andare incontro alle esigenze del mercato in crescita di dispositivi mobili.
+\subsubsection{Come funziona}
 \end{document}
