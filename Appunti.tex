@@ -962,4 +962,51 @@ Migliorate le classi per nascondere o mostrare elementi in base al breakpoint: \
 \textbf{SASS}: è un \textbf{pre-processore CSS}, un meta-linguaggio che ci permette di usare una sintassi più simile a quella dei linguaggi di programmazione offrendo moltissimi vantaggi tra cui una \textbf{maggiore manutenibilità del codice}.
 SASS è nato per rimediare a disordine e ripetizioni, per introdurre una strututra formale dei CSS, migliorare la scrittura del codice e renderlo più manutenibile e ottimizzare la gestione delle media queries e andare incontro alle esigenze del mercato in crescita di dispositivi mobili.
 \subsubsection{Come funziona}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.25\textwidth]{Images/sass.png}
+\end{figure}
+\pagebreak
+\subsubsection{Caratteristiche di Sass}
+\begin{itemize}
+    \item \textbf{Nesting}: possibilità di nidificare i selettori ottenendo un codice pulito.
+    \item \textbf{Variabili}: come in altri linguaggi è un insieme di dati modificabili istuati in una porzione di memoria;
+    \item \textbf{Importazione}: permette di importare altri file \texttt{scss} o \texttt{css} senza generare un grosso numero di richieste HTTP che rallenterebbero inevitabilmente il sito.
+    \item \textbf{Funzioni}: in Sass esistono dei set di funzioni preconfezionate per effettuare diverse operazioni, è inoltre possibile sviluppare funzioni personalizzate;
+    \item \textbf{Mixin}: permette di realizzare dei set riutilizzabili di regole CSS;
+    \item \textbf{Logica condizionale}: @if, @else, @else if.
+    \item \textbf{Cicli}: @for, @each, @while.
+    \item \textbf{Compass, scount, ecc...}: framework opensource che offrono un'ampia gamma di mixin, funzioni e variabili preconfezionati.
+\end{itemize}
+\subsubsection{Nesting}
+Con il \textbf{nesting} basta dichiarare una sola volta il nome dell'elemento radice per inestare le altre regole figlie all'interno.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{Images/nesting.png}
+\end{figure}
+\textbf{SASS} fornisce il selettore speciale "\textbf{\&}" che, utilizzato all'interno di un \textbf{nesting} farà riferimento all'elemento radice.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{Images/nesting2.png}
+\end{figure}
+\pagebreak
+"\textbf{\&}" può essere utilizzato per definire le pseudoclassi di un elemento.
+ \begin{figure}[H]
+     \centering
+     \includegraphics[width=0.75\textwidth]{Images/nesting3.png}
+ \end{figure}
+\subsubsection{Variabili}
+\textbf{Variabili}: come nei linguaggi di programmazione il concetto di variabile è pressoché identico, una variabile \textbf{SASS} è un contenitore virtuale di:
+\begin{itemize}
+    \item stringhe di testo;
+    \item valori numerici;
+    \item numeri in virgola mobile;
+    \item valori booleani.
+\end{itemize}
+Ad esempio possiamo creare dei set di colori:
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{Images/colori.png}
+\end{figure}
+Oppure gestire facilmente le media queries.
 \end{document}
