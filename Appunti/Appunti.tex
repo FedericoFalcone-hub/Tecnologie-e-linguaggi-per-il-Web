@@ -27,6 +27,37 @@
     showstringspaces=false
 }
 
+\lstdefinelanguage{JavaScript}{
+  keywords={typeof, new, true, false, catch, function, return, null, catch, switch, var, if, in, while, do, else, case, break},
+  keywordstyle=\color{blue}\bfseries,
+  ndkeywords={class, export, boolean, throw, implements, import, this},
+  ndkeywordstyle=\color{darkgray}\bfseries,
+  identifierstyle=\color{black},
+  sensitive=false,
+  comment=[l]{//},
+  morecomment=[s]{/*}{*/},
+  commentstyle=\color{purple}\ttfamily,
+  stringstyle=\color{red}\ttfamily,
+  morestring=[b]',
+  morestring=[b]"
+}
+
+\lstset{
+   language=JavaScript,
+   backgroundcolor=\color{gray!10},
+   extendedchars=true,
+   basicstyle=\footnotesize\ttfamily,
+   showstringspaces=false,
+   showspaces=false,
+   numbers=left,
+   numberstyle=\footnotesize,
+   numbersep=9pt,
+   tabsize=2,
+   breaklines=true,
+   showtabs=false,
+   captionpos=b
+}
+
 % Titolo
 \title{Appunti di Linguaggi e Tecnologie per il Web}
 \author{Federico Falcone}
@@ -1045,7 +1076,391 @@ Le risorse in rete identificata tramite URL è di 3 tipi:
 Un programma è un insieme di istruzioni, mentre i linguaggi di programmazione sono linguaggi per scrivere programmi. Un linguaggio è composto da:
 \begin{itemize}
     \item \textbf{Alfabeto}: insieme di simboli con cui si possono costruire i termini del linguaggio (lessico).
-    \item \textbf{Sintassi}: definita da una grammatica che fornisce regole di composizione dei termini in frasi bene formate 
+    \item \textbf{Sintassi}: definita da una grammatica che fornisce regole di composizione dei termini in frasi bene formate del linguaggio.
+    \item \textbf{Semantica}: definisce il significato delle frasi ben formate del linguaggio.
 \end{itemize}
-
+Un \textbf{analizzazatore sintattico} (parser) analizza frasi e decide se sono frasi ben formate del linguaggi o no.
+\\ Lingiaggio di programmazione: 
+\begin{itemize}
+    \item lessico: "keywords" del linguaggio;
+    \item frasi ben formate: istruzioni (programmi);
+    \item semantica: esecuzione del programma.
+\end{itemize}
+Il programmatore scrive il programma sorgente utilizzando un linguaggio ad "alto livello". Occore però tradurre il programma sorgente in un programma composto da istruzioni
+in un linguaggio macchina (programma eseguibile). Le tecniche per effettuare questa traduzione sono:
+\begin{itemize}
+    \item \textbf{Compilazione}: traduzione effettuata da strumenti chiamati compilatori.
+    \item \textbf{Interpretatori}: traduzione effettuata da strumenti chiamati interpreti.
+    \item \textbf{Approccio misto}.
+\end{itemize}
+La traduzione effettuata dal compilatore è specifica per una data macchina. Inoltre genera un \textcolor{red}{file eseguibile} (.exe). Il vantaggio è che è efficiente. Lo svantaggio è che è poco flessibile.
+\\ La traduzione effettuata dall'interprete interpreta un programma (traduzione simultanea). Ogni istruzione viene tradotta in un insieme di istruzioni nel linguaggio macchina della piattaforma specifica ed eseguita. C'è un interprete specifico per ogni piattaforma. Il vantaggio è che è flessibile, di contro però è poco efficiente.
+\\ Nell'approccio misto, il programma sorgente viene tradotto in formato intermedio (bytecode) indipendente dalla macchina (compilatore). Il programma in formato intermedio verrà poi interpretato dall'interprete.
+\\ L'approccio misto somma i vantaggi dei due approcci. È efficiente e flessibile. 
+\pagebreak
+\subsubsection{Applicazioni Web}
+Pagine web "dinamiche": il contenuto viene generato al momento della richiesta/visualizzazione. Si basano su linguaggi di programmazione e scripting:
+\begin{itemize}
+    \item tecnologie client-side (pagine "debolmente" dinamiche): 
+    \begin{itemize}
+        \item elaborazione lato client (browser);
+        \item scripting client-side (JavaScript), Java Applet, Adobe Flash.
+    \end{itemize}
+    \item tecnologie server-side (pagine "fortemente" dinamiche): \begin{itemize}
+        \item elaborazione lato server (web server);
+        \item scripting server-side (PHP, Active Server Pages, Java Server Page), programmi (Java Servlet), Ruby, Python, Perl, (Javascript).
+    \end{itemize}
+\end{itemize}
+Le applicazioni web si sviluppano su 3 livelli logici:
+\begin{itemize}
+    \item Presentazione - HTML, CSS.
+    \item Intermedio - JavaServlet, JSP, PHP, ASP, JavaScript, Flash.
+    \item Dati - RDBMS, XML, JSON.
+\end{itemize}
+Client-side:
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Images/client_side.png}
+\end{figure}
+Server-side:
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Images/server_side.png}
+\end{figure}
+\subsubsection{Architettura server-side}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Images/arch_server_side.png}
+\end{figure}
+\pagebreak
+\subsubsection{Architettura client-side}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{Images/client_side.png}
+\end{figure}
+Per visualizzare una pagina Web "debolmente" dinamica NON HO bisogno di un server: posso aprire la pagina fornendo al browser il path sul file system locale.
+\\ Per visualizzare una pagine Web autenticamente dinamica H(che utilizza una tecnologia server-side) HO bisogno di un server: devo connettermi al server (e richiedere la pagina) tramite un URL.
+\\ Se chiedo al browser di visualizzare il codice sorgente della pagina:
+\begin{itemize}
+    \item Nel caso di una pagina Web "debolmente" dinamica vedo l'HTML + il codice "dinamico" client-side.
+    \item Nel caso di una pagina Web autenticamente dinamica vedo solo l'HTML: al posto del codice "dinamico" server-side, il server ha infatti sostituito il risultato dell'alaborazione (cioè codice HTML).
+\end{itemize}
+Esistono degli approcci ibridi, utilizzando sia tecnologie client-side che teconologie server-side. Un esempio è AJAX e JQuery.
+\subsubsection{AJAX}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Images/ajax}
+\end{figure}
+\pagebreak
+\subsection{JavaScript}
+JavaScript è un linguaggio di scripting, tipicamente utilizzato client-side. Nonostante la somiglianza nel nome, è un linguaggio completamente distinto da Java. Come tutti i linguaggi di scripting, è interpretato: il sorgente non deve essere compilato per essere eseguito.
+L'interprete di JavaScript è generalmente contenuto all'interno del browser.
+\\A differenza di HTML, JavaScript è case-sensitive.
+\\Putroppo possono esserci incompatibilità e differenze tra i diversi browser: a volte si comportano in maniera diversa o non funzionano.
+\\ Si basa su due concetti principali:
+\begin{itemize}
+    \item DOM (Document Object Model).
+    \item Eventi (script event-driven).
+\end{itemize}
+\subsection{Tipi}
+JavaScript è un linguaggio debolmente tipato. Il tipo delle variabili non viene dichiarato esplicitamente, ma definito implicitamente al primo assegnamento. Javascript converte automaticamente i tipi durante l'esecuzione (quando possibile).
+\\ Tipi principali in JavaScript:
+\begin{itemize}
+    \item \textcolor{red}{Number}: interi e decimali (virgola mobile);
+    \item \textcolor{red}{Boolean}: valori booleani;
+    \item \textcolor{red}{String}: sequenze di caratteri.
+\end{itemize}
+\subsection{Variabili e istruzioni}
+Nella dichiarazione delle variabili non è obbligatorio l'uso della keyword \texttt{var}, inoltre sono senza tipo: \texttt{var variabile}.
+\\ Nella dichiarazione delle variabili locali è obbligatorio l'uso della keyword \texttt{var} e sono senzaa tipo.
+\\ Le inizializzazioni sono facoltative (ma è buona norma farle all'atto della definizione e prima di utilizzare le variabili). Tutte le istruzioni JavaScript devono terminare con ;.
+\subsection{Variabili}
+Sono loosely typed: è possibile assegnare a una stessa variabile prima un valore stringa, poi un numero poi un altro ancora.
+\\ Due possibili scope:
+\begin{itemize}
+    \item \textcolor{red}{globale}, per le variabili definite fuori da funzioni;
+    \item \textcolor{red}{locale}, per le variabili definite esplicitamente dentro a funzioni (compresi i parametri ricevuti). 
+\end{itemize}
+ATTENZIONE: un blocco NON delimita uno scope! Tutte le variabili definite fuori da funzioni, anche se dentro a blocchi innestati, sono globali.
+\subsection{Tipo dinamico}
+L'operatore \texttt{typeof} ritorna il tipo di una espressione. Il tipo è \textcolor{red}{dinamico}: rappresenta il tipo di quel momento temporale e corrispondente al valore attuale della variabile.
+\subsection{Istruzioni}
+Le istruzioni devono essere separate da un fine riga o da un punto e virgola.
+\subsection{Costanti e commenti}
+Le costanti numeriche sono sequenze di caratteri numerici non racchiuse da virgolette o apici.
+\subsection{Operatori}
+Gli operatori sono:
+\begin{itemize}
+    \item aritmetici: +, -, *, /, ++, --;
+    \item di confronto: ==, !=, >, <, >=, <=, === (fa anche il controllo del tipo);
+    \item booleani: \&\&, ||, !;
+    \item assegnamento: =;
+\end{itemize}
+\subsection{Specifica dello script}
+Il codice di un programma JavaScript viene incluso in un file HTML per mezzo del tag \texttt{<SCRIPT>}. Sono possibili più programmi nella stessa pagina.
+\\ Le definizioni delle funzioni vengono generalmente incluse nella sezione \texttt{<HEAD>}. I richiami alle funzioni (predefinite nel linguaggio o definite dal programmatore) avvengono dove occorre, nel body della pagina HTML.
+\subsection{Costrutto If-Else}
+Il costrutto If-Else serve per esprimere un'azione condizionale.
+\begin{lstlisting}[language=JavaScript]
+if (condizione1){
+    sequenza_di_azioni_1
+}
+else if (condizione2){
+    sequenza_di_azioni_2
+}
+else {
+    sequenza_di_azioni_n
+}
+\end{lstlisting}
+\subsection{Liste}
+Una lista è una sequenza ordinata di elementi. Le operazioni sono:
+\begin{itemize}
+    \item calcolo lunghezza;
+    \item stampa di tutti gli elementi;
+    \item aggiunta di un elemento;
+    \item cancellazione di un elemento.
+\end{itemize}
+\subsection{Array}
+Un array è una lista rappresentata come array con indice a partire da 0.
+Le celle diipt non hanno il vincolo di omogeneità in tipo: ogni cella può contenere indistintamente numeri, stringe, oggetti, altri array, ... .
+\\ Creazione e inizalizzazione di un array:
+\begin{lstlisting}[language=JavaScript]
+var lista=new Array();
+lista[0]="caludio
+\end{lstlisting}
+Oppure lo si può inizializzare in fase di definizione:
+\begin{lstlisting}[language=JavaScript]
+lista=new Array("Claudio", "Erika", "Denise");
+\end{lstlisting}
+Inserimento di valori: i singoli elementi sono referenziaati con l'usuale notazione a parentesi quadre:
+\begin{lstlisting}[language=JavaScript]
+lista[i]="stringa";
+\end{lstlisting}
+La lunghezza di un array si ottiene:
+\begin{lstlisting}[language=JavaScript]
+var lunghezza=lista.length;
+\end{lstlisting}
+Per (sovra)scrivere l'ultimo elemento dell'array:
+\begin{lstlisting}[language=JavaScript]
+lista[lunghezza-1]="stringa";
+\end{lstlisting}
+Ogni scrittura sovrascrive l'elemento che era memorizzato in precedenza. 
+\subsection{Cicli}
+Strutture di controllo per l'accesso sequenziale a un set di elementi. I cicli sono generalmente basati sul concetto di indice: l'indice scorre lungo la lista indicando, via via, posizioni successive.
+\subsubsection{Ciclo for}
+\begin{lstlisting}[language=JavaScript]
+for(inizio;test;incremento){
+    istruzioni
+}
+\end{lstlisting}
+Le istruzioni eseguite a partire da inizio, finchè test è vero, avanzando ad ogni passo di quanto è indicato da incremento. 
+\subsubsection{Ciclo while}
+\begin{lstlisting}[language=JavaScript]
+while(condizione){
+    istruzioni
+}
+\end{lstlisting}
+Finchè la condizione è vera esegui le istruzioni.
+\subsection{Document Object Model (DOM)}
+Definisce uno standard per accedere ai documenti. È separato in 3 parti:
+\begin{itemize}
+    \item core DOM: modello standard per tutti i tipi di documenti;
+    \item XML DOM: modello standard per documenti XML;
+    \item HTML DOM: modello standard per documenti HTML.
+\end{itemize}
+\subsubsection{HTML DOM}
+È uno standard object model e programing interface per HTML. Esso definisce:
+\begin{itemize}
+    \item Elementi HTML come oggetti.
+    \item Proprietà degli elementi HTML.
+    \item I metodi per accedere agli elementi HTML.
+    \item Gli eventi per tutti gli elementi HTML.
+\end{itemize}
+In altre parole, è uno standard che definisce come ottenere, cambiare aggiungere o modificare elementi HTML.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Images/html_dom.png}
+\end{figure}
+JavaScript usa HTML DOM per modificare tutti gli elemetni di una pagina Web:
+\begin{itemize}
+    \item Quando una pagina è caricata il browser crea il DOM della pagina.
+    \item La pagina è rappresentata come un albero.
+    \item DOM è definito dal browser.
+\end{itemize}
+\subsection{Oggetti (DOM)}
+Tramite il modello DOM a oggetti, Javascript può:
+\begin{itemize}
+    \item Cambiare tutti gli elementi e attributi HTML di una pagina.
+    \item Cambiare tutti gli stili CSS.
+    \item Rimuovere elementi e attributi HTML.
+    \item Aggiungere elementi e attributi HTML.
+    \item Reagire a eventi nella pagina.
+    \item Creare nuovi eventi.
+\end{itemize}
+\subsubsection{Oggetti (DOM): Liste di oggetti}
+Il DOM è organizzato seconod una gerarchia:
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Images/DOM_liste_oggetti.png}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Images/oggetti_DOM.png}
+\end{figure}
+\subsubsection{Oggetti (DOM): Window}
+Windows (this) = la finestra corrente del browser. Figli dell'oggetto window:
+\begin{itemize}
+    \item navigator: il browser;
+    \item document: il contenuto della finestra;
+    \item location: informazioni sull'URL corrente;
+    \item history: elendo degli URL visitati di recente.
+\end{itemize}
+\subsection{Window: componenti principale (estesi)}
+\begin{itemize}
+    \item self;
+    \item windows;
+    \item parent;
+    \item top;
+    \item navigator;
+    \item frames (array);
+    \item location;
+    \item history;
+    \item document;
+\end{itemize}
+\subsection{WIndow}
+Radice della gerarchia DOM: rapprenta la finestra del browser e fornisce diversi metodi.
+\\ Metodo Alert: \texttt{window.alert(messaggio)} propone una finestra di avviso con messaggio.
+La funzione alert è usabile anche in un link e non restituisce nessun valore.
+\\ Altri metodi:
+\begin{itemize}
+    \item confirm, che fa apparire una finestra di conferma con il messaggio dato: restituisce \texttt{true} o \texttt{false}.
+    \item prompt, che fa apparire una finestra di dialogo per immettere un valore: resituisce il valore string.
+\end{itemize}
+\subsection{Document}
+Rappresenta il documento corrente: il contenuto della oagina web attuale. I componenti principali di document sono:
+\begin{itemize}
+    \item forms (array): lista dei moduli (form) contenute nella pagina;
+    \item elements (array di Buttons, Checkboc, ...)
+    \item anchors (array);
+    \item links (arrays);
+    \item images (array): lista delle immagini contenute nella pagina;
+    \item applets (array);
+    \item ambeds (array).
+\end{itemize}
+Diversi metodi disponibili: \texttt{document.write} stampa un valore a video.
+\subsection{Oggetti: proprietà e funzioni}
+Un oggetto è una collezione di:
+\begin{itemize}
+    \item proprietà (variabili): sono a loro volta oggetti;
+    \item funzioni (metodi, operazioni).
+\end{itemize}
+L'invocazione di una funzione apparentemente senza alcun oggetto si riferisce all'oggetto window. Un riferimento all'oggetto document non preceduto da un riferimento all'oggetto window, è equivalente al caso in cui document è preceduto da window (implicito).
+\subsection{Accesso agli oggetti nella pagina}
+Lista dei moduli contenuti in una pagina: \texttt{window.cocument.forms[i]}.
+\\ Lista delle immagini contenute in una pagina: \texttt{window.document.images[i]}.
+\\ I campi di testo sono oggetti dotati di nome posti all'interno di un oggetto form pure esso dotato di nome. Come tali sono referenziabili con la "dot notation": \texttt{documen.nomeform.nomeTextField}.
+\\ Il campo di testo è caratterizzato dalla proprietà values.
+\\ Esempio
+\begin{lstlisting}[style=htmlstyle]
+<FORM name="myform">
+<INPUT type="text" name="cognome" size=20>
+<INPUT type="button" name="bottone" value="Show"
+onClick="alert(document.myform.cognome.value)">
+</FORM>
+\end{lstlisting}
+Attributo NAME:
+\begin{lstlisting}[style=htmlstyle]
+<INPUT TYPE="text" NAME="codice_fiscale">
+\end{lstlisting}
+\begin{lstlisting}[language=JavaScript]
+window.document.modulo.codice_fiscale.value=...
+\end{lstlisting}
+Metodo \texttt{getElementById(idname)}: ritorna l'elemento con uno specifico id. Ritorna \texttt{null} se non esiste l'elemento.
+\begin{lstlisting}[style=htmlstyle]
+<INPUT TYPE="text" ID="codice_fiscale">
+\end{lstlisting}
+\begin{lstlisting}[language=JavaScript]
+window.document.getElementById("codice_fiscale").value=...
+\end{lstlisting}
+\subsection{Eventi}
+I programmi JavaScript sono tipicamente "guidati dagli eventi" (event-driven). Gli eventi sono scatenati da azioni dell'utene sulla pagina Web: ogni volta che l'utente scrive qualcosa in una casella, preme un pulsante, ridimensiona una finestra ecc... genera un "evento".
+\\ Un programma JavaScript deve contenere un gestore di eventi (event handler), che sia in grado di ricevere e interpretare le azioni dell'utente (eventi). Il DOM fornisce una serie di gestori di eventi predefiniti: l'accadere di un evento nella pagine Web mette automaticamente in azione il corrispondente gestore di eventi.
+\begin{lstlisting}[style=htmlstyle]
+<a href="#" onClick = "window.print()" >
+\end{lstlisting}
+Attributo \texttt{onClick}:evento click innesca il gestore. 
+\\ Un'istruzione JavaScript può essere inserita all'interno di un tag HTML. In questi casi, il gestore di evento invocato farà riferimento al tag in cui si trova l'istruzione.
+\\ Gli eventi intercettabili su un link: \texttt{onClick}, \texttt{onMouseOver}, \texttt{onMouseOut}. 
+\\ Gli eventi intercettabili su una finestra: \texttt{onLoad}, \texttt{onUnload}, \texttt{onBlur}.
+\subsection{Gestione eventi}
+Per sfruttare il valore restituito da confirm, prompt o qualsiasi altra funzione JavaScript occorre inserire come valore dell'attributo onClick un programma JavaScript.
+\begin{lstlisting}[language=JavaScript]
+onClick = "x = prompt('Cognome e Nome:') ;
+document.write(x)"
+\end{lstlisting}
+\subsubsection{Eventi (form)}
+JavaScript permette di: intercettare eventi che "accadono" nei campi di un modulo e modificare i campi di un modulo.
+\\ Un form contiene solitamente campi di testo e bottoni. Quando il bottone viene premuto è possibile invocare una funzione JavaScript.
+\begin{lstlisting}[style=htmlstyle]
+<FORM name="myform">
+    <INPUT type="button" name="bottone"
+    value="Premi qui"
+    onClick = "alert('Mi hai premuto')" >
+</FORM>
+\end{lstlisting}
+ALTERNATIVA: quando si preme il bottone, far scrivere il risultato di una funzione.
+\begin{lstlisting}[style=htmlstyle]
+<FORM name="myform"> 
+    <INPUT type="button" name="bottone"
+    value="Premi qui"
+    onClick = "document.write(15)" >
+</FORM>
+\end{lstlisting}
+Modifica di un campo del messaggio tramite proprietà \texttt{onMouseOver} e \texttt{onMouseOut}.
+\begin{lstlisting}[style=htmlstyle]
+    <DIV ALIGN="CENTER">
+    <FORM NAME="modulo">
+        <INPUT TYPE="text" NAME="over" VALUE="Il mouse e sopra
+            la scritta1 o la scritta2?" size="50px">
+    </FORM>
+    <A HREF="" onMouseOver= "window.document.modulo.over.value='scritta1';"
+    onmouseout="window.document.modulo.over.value='Il mouse e sopra la
+    scritta1 o la scritta2?'">scritta1</A>
+    ...
+\end{lstlisting}
+Selezionare/deselezionare le checkbox al click su un link/bottone:
+\begin{figure}[H]
+    \includegraphics[width=0.5\textwidth]{Images/eventi_form_checkbox.png}
+\end{figure}
+Impostare dinamicamente le voci di un menu (a), intercettare il click del mouse sul pulsante di invio di un form e di conseguenza mostrare un alert (b).
+\\ Menù:
+\begin{lstlisting}[style=htmlstyle]
+<FORM NAME="modulo" onSubmit=" warn(); return false;">
+    <SELECT NAME="menu" id="menuid">
+        <OPTION ID="fr" VALUE="inter">Inter</OPTION>
+        <OPTION ID="pt" VALUE="milan">Milan</OPTION>
+        <OPTION ID="st" VALUE="juve">Juve</OPTION>
+    </SELECT>
+    <INPUT TYPE="Submit" VALUE="OK">
+</FORM>
+\end{lstlisting}
+\textcolor{red}{\textbf{return false} evita il refresh della pagina che avviene di default con il pulsante submit}.
+Impostare dinamicamente le voci di un menu (a).
+\begin{lstlisting}[style=htmlstyle]
+<SCRIPT language="JavaScript">
+    var nazione = prompt("Sei Italiano o Inglese?", "Italiano");
+    if (nazione == "inglese") {
+        window.document.modulo.menu.options[0].text="Chelsea";
+        window.document.modulo.menu.options[1].text="Manchester United";
+        window.document.modulo.menu.options[2].text="Manchester City";
+        var select = document.getElementById('menuid');
+        var opt = document.createElement('option');
+        opt.id = "tt";
+        opt.value = "liverpool";
+        opt.innerHTML = "Liverpool";
+        select.appendChild(opt);
+}
+</SCRIPT>
+\end{lstlisting}
 \end{document}
+
