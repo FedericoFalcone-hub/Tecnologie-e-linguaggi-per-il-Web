@@ -1,0 +1,30 @@
+.navbar-custom {
+    background-color: #032541;
+}
+
+.navbar-custom .nav-link {
+    color: #ffffff;
+    font-weight: 600;
+}
+
+.navbar-custom .nav-link:hover,
+.navbar-custom .nav-link:focus,
+.navbar-custom .nav-link.show {
+    color: #ffffff;
+}
+
+.navbar-custom .dropdown-item:hover,
+.navbar-custom .dropdown-item:focus {
+    background-color: #1f496c;
+    color: #ffffff;
+}
+
+.hero-backdrop {
+    background-image:
+        linear-gradient(90deg, rgba(10, 10, 12, 0.72) 0%, rgba(35, 8, 8, 0.58) 45%, rgba(60, 10, 10, 0.52) 100%),
+        radial-gradient(circle at 15% 35%, rgba(120, 24, 24, 0.4) 0%, rgba(120, 24, 24, 0) 48%),
+        url("Images/sfondo.webp");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
