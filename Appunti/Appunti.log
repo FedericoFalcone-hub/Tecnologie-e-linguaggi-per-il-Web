@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2026.3.23)  9 APR 2026 16:15
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2026.3.23)  16 APR 2026 15:27
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -395,55 +395,55 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 \openout4 = `Appunti.toc'.
 
  [3]
-<Images/bus_lineare.png, id=587, 1154.3125pt x 327.2225pt>
+<Images/bus_lineare.png, id=803, 1154.3125pt x 327.2225pt>
 File: Images/bus_lineare.png Graphic file (type png)
 <use Images/bus_lineare.png>
 Package pdftex.def Info: Images/bus_lineare.png  used on input line 80.
 (pdftex.def)             Requested size: 182.09486pt x 51.61769pt.
-<Images/bus_stella.png, id=588, 825.0825pt x 660.4675pt>
+<Images/bus_stella.png, id=804, 825.0825pt x 660.4675pt>
 File: Images/bus_stella.png Graphic file (type png)
 <use Images/bus_stella.png>
 Package pdftex.def Info: Images/bus_stella.png  used on input line 85.
 (pdftex.def)             Requested size: 182.09486pt x 145.7568pt.
-<Images/centralizzata.png, id=589, 2135.98pt x 867.24pt>
+<Images/centralizzata.png, id=805, 2135.98pt x 867.24pt>
 File: Images/centralizzata.png Graphic file (type png)
 <use Images/centralizzata.png>
 Package pdftex.def Info: Images/centralizzata.png  used on input line 90.
 (pdftex.def)             Requested size: 455.24411pt x 184.8253pt.
  [4 <./Images/bus_lineare.png> <./Images/bus_stella.png> <./Images/centralizzata.png>]
-<Images/protocollo.png, id=595, 1224.575pt x 612.2875pt>
+<Images/protocollo.png, id=811, 1224.575pt x 612.2875pt>
 File: Images/protocollo.png Graphic file (type png)
 <use Images/protocollo.png>
 Package pdftex.def Info: Images/protocollo.png  used on input line 121.
 (pdftex.def)             Requested size: 227.62206pt x 113.80394pt.
-<Images/protocollo2.png, id=596, 1276.77pt x 471.7625pt>
+<Images/protocollo2.png, id=812, 1276.77pt x 471.7625pt>
 File: Images/protocollo2.png Graphic file (type png)
 <use Images/protocollo2.png>
 Package pdftex.def Info: Images/protocollo2.png  used on input line 129.
 (pdftex.def)             Requested size: 227.62206pt x 84.10014pt.
-<Images/protocollo3.png, id=597, 1218.5525pt x 560.0925pt>
+<Images/protocollo3.png, id=813, 1218.5525pt x 560.0925pt>
 File: Images/protocollo3.png Graphic file (type png)
 <use Images/protocollo3.png>
 Package pdftex.def Info: Images/protocollo3.png  used on input line 136.
 (pdftex.def)             Requested size: 455.24411pt x 209.24791pt.
  [5 <./Images/protocollo.png> <./Images/protocollo2.png>]
-<Images/protocollo4.png, id=603, 1230.5975pt x 556.0775pt>
+<Images/protocollo4.png, id=819, 1230.5975pt x 556.0775pt>
 File: Images/protocollo4.png Graphic file (type png)
 <use Images/protocollo4.png>
 Package pdftex.def Info: Images/protocollo4.png  used on input line 142.
 (pdftex.def)             Requested size: 227.62206pt x 102.85574pt.
-<Images/protocollo5.png, id=604, 951.555pt x 260.975pt>
+<Images/protocollo5.png, id=820, 951.555pt x 260.975pt>
 File: Images/protocollo5.png Graphic file (type png)
 <use Images/protocollo5.png>
 Package pdftex.def Info: Images/protocollo5.png  used on input line 153.
 (pdftex.def)             Requested size: 227.62206pt x 62.4282pt.
-<Images/protocollo6.png, id=605, 1770.615pt x 768.8725pt>
+<Images/protocollo6.png, id=821, 1770.615pt x 768.8725pt>
 File: Images/protocollo6.png Graphic file (type png)
 <use Images/protocollo6.png>
 Package pdftex.def Info: Images/protocollo6.png  used on input line 158.
 (pdftex.def)             Requested size: 227.62206pt x 98.84238pt.
  [6 <./Images/protocollo3.png> <./Images/protocollo4.png> <./Images/protocollo5.png> <./Images/protocollo6.png>]
-<Images/browser.png, id=610, 501.875pt x 340.27126pt>
+<Images/browser.png, id=826, 501.875pt x 340.27126pt>
 File: Images/browser.png Graphic file (type png)
 <use Images/browser.png>
 Package pdftex.def Info: Images/browser.png  used on input line 190.
@@ -471,78 +471,78 @@ Underfull \hbox (badness 10000) in paragraph at lines 337--342
  []
 
 [10]
-<Images/div.png, id=668, 3105.6025pt x 1232.605pt>
+<Images/div.png, id=884, 3105.6025pt x 1232.605pt>
 File: Images/div.png Graphic file (type png)
 <use Images/div.png>
 Package pdftex.def Info: Images/div.png  used on input line 362.
 (pdftex.def)             Requested size: 455.24411pt x 180.66977pt.
  [11 <./Images/div.png>] [12] [13] [14] [15] [16] [17] [18] [19] [20]
-<Images/container.png, id=932, 2234.3475pt x 313.17pt>
+<Images/container.png, id=1148, 2234.3475pt x 313.17pt>
 File: Images/container.png Graphic file (type png)
 <use Images/container.png>
 Package pdftex.def Info: Images/container.png  used on input line 821.
 (pdftex.def)             Requested size: 455.24411pt x 63.80841pt.
  [21 <./Images/container.png>]
-<Images/grid_system.png, id=956, 1078.0275pt x 315.1775pt>
+<Images/grid_system.png, id=1172, 1078.0275pt x 315.1775pt>
 File: Images/grid_system.png Graphic file (type png)
 <use Images/grid_system.png>
 Package pdftex.def Info: Images/grid_system.png  used on input line 838.
 (pdftex.def)             Requested size: 455.24411pt x 133.09984pt.
-<Images/grid_system2.png, id=957, 1084.05pt x 222.8325pt>
+<Images/grid_system2.png, id=1173, 1084.05pt x 222.8325pt>
 File: Images/grid_system2.png Graphic file (type png)
 <use Images/grid_system2.png>
 Package pdftex.def Info: Images/grid_system2.png  used on input line 843.
 (pdftex.def)             Requested size: 455.24411pt x 93.57881pt.
-<Images/grid_system3.png, id=958, 1130.2225pt x 329.23pt>
+<Images/grid_system3.png, id=1174, 1130.2225pt x 329.23pt>
 File: Images/grid_system3.png Graphic file (type png)
 <use Images/grid_system3.png>
 Package pdftex.def Info: Images/grid_system3.png  used on input line 848.
 (pdftex.def)             Requested size: 455.24411pt x 132.60898pt.
  [22 <./Images/grid_system.png> <./Images/grid_system2.png> <./Images/grid_system3.png>]
-<Images/nuovo_flexbox.png, id=969, 1284.8pt x 435.6275pt>
+<Images/nuovo_flexbox.png, id=1185, 1284.8pt x 435.6275pt>
 File: Images/nuovo_flexbox.png Graphic file (type png)
 <use Images/nuovo_flexbox.png>
 Package pdftex.def Info: Images/nuovo_flexbox.png  used on input line 870.
 (pdftex.def)             Requested size: 455.24411pt x 154.35304pt.
-<Images/nuovo_flexbox2.png, id=970, 1270.7475pt x 291.0875pt>
+<Images/nuovo_flexbox2.png, id=1186, 1270.7475pt x 291.0875pt>
 File: Images/nuovo_flexbox2.png Graphic file (type png)
 <use Images/nuovo_flexbox2.png>
 Package pdftex.def Info: Images/nuovo_flexbox2.png  used on input line 875.
 (pdftex.def)             Requested size: 455.24411pt x 104.28062pt.
-<Images/nuovo_flexbox3.png, id=971, 1202.4925pt x 399.4925pt>
+<Images/nuovo_flexbox3.png, id=1187, 1202.4925pt x 399.4925pt>
 File: Images/nuovo_flexbox3.png Graphic file (type png)
 <use Images/nuovo_flexbox3.png>
 Package pdftex.def Info: Images/nuovo_flexbox3.png  used on input line 880.
 (pdftex.def)             Requested size: 455.24411pt x 151.24182pt.
-<Images/nuovo_flexbox4.png, id=972, 1168.365pt x 192.72pt>
+<Images/nuovo_flexbox4.png, id=1188, 1168.365pt x 192.72pt>
 File: Images/nuovo_flexbox4.png Graphic file (type png)
 <use Images/nuovo_flexbox4.png>
 Package pdftex.def Info: Images/nuovo_flexbox4.png  used on input line 885.
 (pdftex.def)             Requested size: 455.24411pt x 75.09285pt.
  [23 <./Images/nuovo_flexbox.png> <./Images/nuovo_flexbox2.png> <./Images/nuovo_flexbox3.png> <./Images/nuovo_flexbox4.png>] [24] [25]
-<Images/sass.png, id=1004, 513.92pt x 568.1225pt>
+<Images/sass.png, id=1221, 513.92pt x 568.1225pt>
 File: Images/sass.png Graphic file (type png)
 <use Images/sass.png>
 Package pdftex.def Info: Images/sass.png  used on input line 998.
 (pdftex.def)             Requested size: 113.81102pt x 125.81087pt.
  [26 <./Images/sass.png>]
-<Images/nesting.png, id=1009, 1088.065pt x 439.6425pt>
+<Images/nesting.png, id=1226, 1088.065pt x 439.6425pt>
 File: Images/nesting.png Graphic file (type png)
 <use Images/nesting.png>
 Package pdftex.def Info: Images/nesting.png  used on input line 1016.
 (pdftex.def)             Requested size: 341.43307pt x 137.95815pt.
-<Images/nesting2.png, id=1010, 1041.8925pt x 445.665pt>
+<Images/nesting2.png, id=1227, 1041.8925pt x 445.665pt>
 File: Images/nesting2.png Graphic file (type png)
 <use Images/nesting2.png>
 Package pdftex.def Info: Images/nesting2.png  used on input line 1021.
 (pdftex.def)             Requested size: 341.43307pt x 146.04306pt.
  [27 <./Images/nesting.png> <./Images/nesting2.png>]
-<Images/nesting3.png, id=1015, 833.1125pt x 303.1325pt>
+<Images/nesting3.png, id=1232, 833.1125pt x 303.1325pt>
 File: Images/nesting3.png Graphic file (type png)
 <use Images/nesting3.png>
 Package pdftex.def Info: Images/nesting3.png  used on input line 1027.
 (pdftex.def)             Requested size: 341.43307pt x 124.23424pt.
-<Images/colori.png, id=1016, 1092.08pt x 429.605pt>
+<Images/colori.png, id=1233, 1092.08pt x 429.605pt>
 File: Images/colori.png Graphic file (type png)
 <use Images/colori.png>
 Package pdftex.def Info: Images/colori.png  used on input line 1040.
@@ -558,17 +558,17 @@ Overfull \hbox (18.02536pt too wide) in paragraph at lines 1096--1101
  []
 
 [29]
-<Images/client_side.png, id=1025, 1059.96pt x 377.41pt>
+<Images/client_side.png, id=1242, 1059.96pt x 377.41pt>
 File: Images/client_side.png Graphic file (type png)
 <use Images/client_side.png>
 Package pdftex.def Info: Images/client_side.png  used on input line 1123.
 (pdftex.def)             Requested size: 227.62206pt x 81.04366pt.
-<Images/server_side.png, id=1026, 983.675pt x 349.305pt>
+<Images/server_side.png, id=1243, 983.675pt x 349.305pt>
 File: Images/server_side.png Graphic file (type png)
 <use Images/server_side.png>
 Package pdftex.def Info: Images/server_side.png  used on input line 1128.
 (pdftex.def)             Requested size: 227.62206pt x 80.82881pt.
-<Images/arch_server_side.png, id=1027, 1322.9425pt x 782.925pt>
+<Images/arch_server_side.png, id=1244, 1322.9425pt x 782.925pt>
 File: Images/arch_server_side.png Graphic file (type png)
 <use Images/arch_server_side.png>
 Package pdftex.def Info: Images/arch_server_side.png  used on input line 1133.
@@ -578,55 +578,107 @@ File: Images/client_side.png Graphic file (type png)
 <use Images/client_side.png>
 Package pdftex.def Info: Images/client_side.png  used on input line 1139.
 (pdftex.def)             Requested size: 455.24411pt x 162.0931pt.
-<Images/ajax.png, id=1033, 1242.6425pt x 788.9475pt>
+<Images/ajax.png, id=1249, 1242.6425pt x 788.9475pt>
 File: Images/ajax.png Graphic file (type png)
 <use Images/ajax.png>
 Package pdftex.def Info: Images/ajax.png  used on input line 1152.
 (pdftex.def)             Requested size: 227.62206pt x 144.50839pt.
  [31 <./Images/ajax.png>] [32] [33]
-<Images/html_dom.png, id=1068, 1120.185pt x 435.6275pt>
+<Images/html_dom.png, id=1284, 1120.185pt x 435.6275pt>
 File: Images/html_dom.png Graphic file (type png)
 <use Images/html_dom.png>
 Package pdftex.def Info: Images/html_dom.png  used on input line 1282.
 (pdftex.def)             Requested size: 227.62206pt x 88.51985pt.
  [34 <./Images/html_dom.png>]
-<Images/DOM_liste_oggetti.png, id=1081, 845.1575pt x 728.7225pt>
+<Images/DOM_liste_oggetti.png, id=1297, 845.1575pt x 728.7225pt>
 File: Images/DOM_liste_oggetti.png Graphic file (type png)
 <use Images/DOM_liste_oggetti.png>
 Package pdftex.def Info: Images/DOM_liste_oggetti.png  used on input line 1304.
 (pdftex.def)             Requested size: 227.62206pt x 196.25732pt.
-<Images/oggetti_DOM.png, id=1082, 1094.0875pt x 829.0975pt>
+<Images/oggetti_DOM.png, id=1298, 1094.0875pt x 829.0975pt>
 File: Images/oggetti_DOM.png Graphic file (type png)
 <use Images/oggetti_DOM.png>
 Package pdftex.def Info: Images/oggetti_DOM.png  used on input line 1308.
 (pdftex.def)             Requested size: 227.62206pt x 172.48363pt.
  [35 <./Images/DOM_liste_oggetti.png> <./Images/oggetti_DOM.png>] [36] [37]
-<Images/eventi_form_checkbox.png, id=1122, 1240.635pt x 662.475pt>
+<Images/eventi_form_checkbox.png, id=1338, 1240.635pt x 662.475pt>
 File: Images/eventi_form_checkbox.png Graphic file (type png)
 <use Images/eventi_form_checkbox.png>
 Package pdftex.def Info: Images/eventi_form_checkbox.png  used on input line 1433.
 (pdftex.def)             Requested size: 227.62206pt x 121.5451pt.
- [38 <./Images/eventi_form_checkbox.png>] (./Appunti.aux)
+ [38 <./Images/eventi_form_checkbox.png>]
+Overfull \hbox (19.921pt too wide) in paragraph at lines 1512--1514
+\OT1/cmr/m/n/10 L'oggetto \OT1/cmtt/m/n/10 window \OT1/cmr/m/n/10 per-me-tte di agire e ge-stire le finestre del browser: \OT1/cmtt/m/n/10 window.open(URL, nome, [propriet^^Ra])\OT1/cmr/m/n/10 ,
+ []
+
+
+Overfull \hbox (0.34003pt too wide) in paragraph at lines 1517--1518
+[]\OT1/cmr/m/n/10 Propriet^^Ra (opzionale): lista delle pro-priet^^Ra della nuova fines-tra (se omesso, la nuova fines-tra mantiene
+ []
+
+
+Overfull \hbox (137.1421pt too wide) in paragraph at lines 1520--1525
+\OT1/cmr/m/n/10 Esempio: aper-tura fines-tra nella stessa fines-tra/scheda: \OT1/cmtt/m/n/10 <a href="#" onClick = "window.open('http://www.di.unimi.it','pippo'
+ []
+
+
+Overfull \hbox (259.25049pt too wide) in paragraph at lines 1520--1525
+\OT1/cmr/m/n/10 Un al-tro es-em-pio: \OT1/cmtt/m/n/10 <a href="#" onClick = "window.open('http://www.di.unimi.it', 'pippo', 'scrollbars=yes,resizable=yes,width=730,height=600,
+ []
+
+
+Overfull \hbox (6.75186pt too wide) in paragraph at lines 1520--1525
+\OT1/cmtt/m/n/10 status=no,location=no,toolbar=no,menubar=no'); return false;">finestra con propriet^^Ra</a> 
+ []
+
+[39]
+<Images/html_dom_js.png, id=1420, 1200.485pt x 491.8375pt>
+File: Images/html_dom_js.png Graphic file (type png)
+<use Images/html_dom_js.png>
+Package pdftex.def Info: Images/html_dom_js.png  used on input line 1547.
+(pdftex.def)             Requested size: 227.62206pt x 93.25496pt.
+
+Overfull \hbox (177.391pt too wide) in paragraph at lines 1567--1570
+\OT1/cmr/m/n/10 Accesso al primo nodo figlio: \OT1/cmtt/m/n/10 document.getElementById("intro").childNodes[0]\OT1/cmr/m/n/10 , op-pure \OT1/cmtt/m/n/10 document.getElementById("intro").firstChild\OT1/cmr/m/n/10 . 
+ []
+
+
+Overfull \hbox (75.00372pt too wide) in paragraph at lines 1567--1570
+\OT1/cmr/m/n/10 Il val-ore tes-tuale di un el-e-mento ^^Re a sua volta un nodo: \OT1/cmtt/m/n/10 document.getElementById("intro").childNodes[0].nodeValue\OT1/cmr/m/n/10 . 
+ []
+
+[40 <./Images/html_dom_js.png>] [41]
+<Images/dichiarazione_variabili.png, id=1469, 1096.095pt x 293.095pt>
+File: Images/dichiarazione_variabili.png Graphic file (type png)
+<use Images/dichiarazione_variabili.png>
+Package pdftex.def Info: Images/dichiarazione_variabili.png  used on input line 1654.
+(pdftex.def)             Requested size: 227.62206pt x 60.86302pt.
+ [42 <./Images/dichiarazione_variabili.png>] [43]
+Overfull \hbox (27.64383pt too wide) in paragraph at lines 1742--1744
+\OT1/cmr/m/n/10 L'operatore di chia-mata () ^^Re quello che ef-fet-ti-va-mente in-voca il metodo: \OT1/cmtt/m/n/10 document.write(p1.getX()+"<br/>")\OT1/cmr/m/n/10 . 
+ []
+
+[44] [45] [46] [47] (./Appunti.aux)
  ***********
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-01-22>
  ***********
 Package rerunfilecheck Info: File `Appunti.out' has not changed.
-(rerunfilecheck)             Checksum: 09880D1AD0080A3B2EA1512A63C98CE3;16536.
+(rerunfilecheck)             Checksum: 4B736D054592F89BC95FB5C24A4DF963;24287.
  ) 
 Here is how much of TeX's memory you used:
- 13147 strings out of 476171
- 199090 string characters out of 5795119
- 2162975 words of memory out of 5000000
- 34462 multiletter control sequences out of 15000+600000
+ 13407 strings out of 476171
+ 203391 string characters out of 5795119
+ 2186975 words of memory out of 5000000
+ 34548 multiletter control sequences out of 15000+600000
  567690 words of font info for 75 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  75i,7n,79p,623b,2092s stack positions out of 10000i,1000n,20000p,200000b,200000s
  </home/federico/.texlive2023/texmf-var/fonts/pk/ljfour/jknappen/ec/tcrm1000.600pk></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt9.pfb>
-Output written on Appunti.pdf (38 pages, 2740716 bytes).
+Output written on Appunti.pdf (47 pages, 2858921 bytes).
 PDF statistics:
- 1346 PDF objects out of 1440 (max. 8388607)
- 1231 compressed objects within 13 object streams
- 536 named destinations out of 1000 (max. 500000)
- 1057 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 1762 PDF objects out of 2073 (max. 8388607)
+ 1631 compressed objects within 17 object streams
+ 710 named destinations out of 1000 (max. 500000)
+ 1411 words of extra memory for PDF output out of 10000 (max. 10000000)
 

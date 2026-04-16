@@ -1462,5 +1462,420 @@ Impostare dinamicamente le voci di un menu (a).
 }
 </SCRIPT>
 \end{lstlisting}
+Intercettare il click del mouse sul pulsante di invio di un form e di conseguenza mostrare un alert:
+\begin{lstlisting}[style=htmlstyle]
+<SCRIPT language="JavaScript">
+    function warn() {
+        if (window.document.modulo.menu.selectedIndex == 0) {
+            alert("Very good!");
+    }
+}
+</SCRIPT>
+\end{lstlisting}
+\subsubsection{Eventi (onLoad)}
+È un evento scatenato quando un oggetto viene caricato. Ad esempio pemette di ridirezionare l'utente ad un altro URL.
+\begin{lstlisting}[style=htmlstyle]
+<SCRIPT language="JavaScript">
+    function jump(){
+        window.location.href="http://www.unimi.it";
+    }
+</SCRIPT>
+</HEAD>
+<BODY onLoad = "jump()" >
+\end{lstlisting}
+onLoad carica il gestore che viene innescato tramite la funzione \texttt{jump()}. Ridirezione all'URL puntata dalla proprietà \texttt{href}
+dell'oggetto \texttt{location}.
+\\ Ridirezione dopo \textcolor{red}{timout}:
+\begin{lstlisting}[style=htmlstyle]
+<HTML>
+    <HEAD>
+    <SCRIPT language="JavaScript">
+        function jump(){
+            window.setTimeout("window.location.href='http://www.di.unimi.it/ardagna';", 5*1000);
+        }
+    </SCRIPT>
+</HEAD>
+<BODY onLoad = "jump()">
+</BODY>
+</HTML>
+\end{lstlisting}
+\subsubsection{Eventi (onMouseOver)}
+L'evento è scatenato al passaggio del mouse su un oggetto. Ad esempio, utilizzato per cambiare lo stile di un oggetto. 
+Un latro utilizzo molto comune è l'\textcolor{red}{image swap} (o roll-over), ovvero il cambiamento dell'aspetto di un'immagine.
+\begin{lstlisting}[style=htmlstyle]
+<p ALIGN="CENTER" style="background-color:green" onMouseOver="style='background-color:yellow';" onMouseOut="style='background-color:green';">
+    Cambia il colore dello sfondo.
+</p>
+\end{lstlisting}
+onMouseOver/Out cambia il valore src dell'immagine.
+\subsection{Gestione finestre (open)}
+L'oggetto \texttt{window} permette di agire e gestire le finestre del browser: \texttt{window.open(URL, nome, [proprietà])}, apre una nuova finestra 
+(o una nuoca scheda):
+\begin{itemize}
+    \item URL: indirizzo della pagina da caricare.
+    \item Nome = identificatore della finestra.
+    \item Proprietà (opzionale): lista delle proprietà della nuova finestra (se omesso, la nuova finestra mantiene le proprietà della corrente).
+    \item Ritorna un riferimento alla finestra aperta (\texttt{null} se c'è errore).
+\end{itemize}
+Esempio: apertura finestra nella stessa finestra/scheda: \texttt{<a href="\#" onClick = "window.open('http://www.di.unimi.it','pippo' ); return false;">nuova finestra!</a>}
+\\ Un altro esempio: \texttt{<a href="\#" onClick = "window.open('http://www.di.unimi.it', 'pippo',
+'scrollbars=yes,resizable=yes,width=730,height=600,
+status=no,location=no,toolbar=no,menubar=no'); return
+false;">finestra con proprietà</a>}
+\begin{itemize}
+    \item Presenza barre di scorrimento.
+    \item Possibilità di ridimensionare la finestra.
+    \item Larghezza e altezza (in pixel).
+    \item Presenza della barra di stato (status).
+    \item Presenza della barra dei pulsanti (toolbar).
+    \item Presenza della barra del menù.
+\end{itemize}
+Se stabilisco delle proprietà. verrà sicurmante aprta una nuova finestra (con quelle proprietà) e NON una scheda.
+\subsection{Funzioni come link}
+Una funzione JavaScript costituisce un valido link utilizzabile nel tag HTML \texttt{<a href=...></a>}. L'effetto del click su tale link è l'esecuzione della funzione e l'apparizione
+del risultato in una pagina HTML all'interno però della stessa finestra.
+\subsection{Accesso agli oggetti di una pagina tramite nodi}
+Ogni oggetto è un nodo (HTML DOM).
+\begin{itemize}
+    \item ogni elemento è un nodo;
+    \item ogni testo è un nodo testo;
+    \item ogni attributo è un nodo attributo;
+    \item i commenti sono dei nodi commenti.
+\end{itemize}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Images/html_dom_js.png}
+\end{figure}
+\subsubsection{Relazione tra nodi}
+È definita attraverso diverse funzioni:
+\begin{itemize}
+    \item parent, child, sibling;
+    \item \textbf{root} è la radice del documento (<html>);
+    \item ogni nodo ha un solo nodo padre a parte la root;
+    \item ogni nodo può avere 0 o più figli;
+    \item sibling sono nodi con lo \textbf{stesso padre}.
+\end{itemize}
+Proprietà per la navigazione tra nodi:
+\begin{itemize}
+    \item parentNode;
+    \item childNodes[nodenumber];
+    \item fistChild;
+    \item lastChild;
+    \item nextSibling;
+    \item previousSibling.
+\end{itemize}
+Accesso al primo nodo figlio: \texttt{document.getElementById("intro").childNodes[0]}, oppure \texttt{document.getElementById("intro").firstChild}.
+\\ Il valore testuale di un elemento è a sua volta un nodo: \texttt{document.getElementById("intro").childNodes[0].nodeValue}.
+\\ Altre proprietà olte a nodeValue: \texttt{nodeName}, \texttt{nodeType} entrambi in sola lettura. 
+\subsubsection{Aggiunta elementi}
+Aggiunta di elementi all'albero DOM:
+\begin{lstlisting}[style=htmlstyle]
+<div id="div1">
+    <p id="p1">This is a paragraph.</p>
+    <p id="p2">This is another paragraph.</p>
+</div>
+<script>
+    var para = document.createElement("p");
+    var node = document.createTextNode("This is new.");
+    para.appendChild(node);
+    var element = document.getElementById("div1");
+    element.appendChild(para);
+</script>
+\end{lstlisting}
+Il metodo \texttt{appendChild()} può essere sostituito da \texttt{insertBefore()}.
+\subsubsection{Rimozione degli elementi}
+Rimozione di elementi dall'albero DOM:
+\begin{lstlisting}[style=htmlstyle]
+<div id="div1">
+    <p id="p1">This is a paragraph.</p>
+    <p id="p2">This is another paragraph.</p>
+</div>
+<script>
+    var parent = document.getElementById("div1");
+    var child = document.getElementById("p1");
+    parent.removeChild(child);
+</script>
+\end{lstlisting}
+\subsubsection{Sostituzione eleemtni}
+Sostituzione di elementi nell'albero DOM:
+\begin{lstlisting}[style=htmlstyle]
+<div id="div1">
+    <p id="p1">This is a paragraph.</p>
+    <p id="p2">This is another paragraph.</p>
+</div>
+<script>
+    var para = document.createElement("p");
+    var node = document.createTextNode("This is new.");
+    para.appendChild(node);
+    var parent = document.getElementById("div1");
+    var child = document.getElementById("p1");
+    parent.replaceChild(para,child);
+</script>
+\end{lstlisting}
+\subsubsection{Collezione di nodi}
+\texttt{Node list} è una collezione di nodi: simile agli array di oggetti \texttt{images[]} e \texttt{forms[]} visti prima. Ad esempio
+il metodo \texttt{getElementsByTagName()} ritorna una lista di nodi. La lista di nodi è una collection di nodi simile ad array. La proprietà
+\texttt{lenght} ritorna la lunghrzza della lista di nodi.
+\subsubsection{Metodo getElementsByClassName}
+Il metodo \texttt{getElementsByClassName(classname)} ritorna una lista NodeList di tutti gli elemetni con una specifica classe. Gli eleemtni in
+NodeList sono acceduti tramite indici.
+\begin{lstlisting}[style=htmlstyle]
+<div class="example">First div element with class="example".</div>
+<div class="example">Second div element with class="example".</div>
+var x=window.document.getElementByClassName("example")
+document.write(x[0].innerHTML)
+\end{lstlisting}
+\subsection{Funzioni}
+\subsubsection{Introduzione}
+Object-based language (ma non object-oriented): usa l'idea di incapsulare stato e operazioni all'interno di oggetti, non applicando però i concetti di 
+ereditarietà e sottotipi. JavaScript a volte riperito come prototype-based language: non esistono classi, ma gli oggetti ereditano codice e dati da altri oggetti template.
+Vengono clonati oggetti che servono come "prototipi".
+\subsubsection{Definizioen di funzioni}
+Le funzioni sono definite tramite keyword \texttt{function} e sempre racchiuso in un blocco. Posso essere considerate sia \textbf{procedure}, sia \textbf{funzioni} in senso proprio. 
+I parametri formali sono senza dichiarazione di tipo.
+\subsubsection{Chiamata a funzione}
+Le funzioni sono chiamate come in un linguaggio di programmazione tradizionale, fornendo la lista dei parametri attuali. Se i tipi non hanno senso per le operazioni fornite, l'inerprete
+JavaSCript ritorna un errore a runtime. Non viene mostrato il risultato.
+\subsubsection{Parametri di funzione}
+Passaggio di parametro per valore: nel caso di oggetti, si copiano i riferimenti. A differenza di C e Java, è lecito definire una funzione dentro un'altra funzione. Se i parametri attuali sono 
+più di quelli necessari, non c'è nessun errore, semplicemente vengono ignorati. Se i parametri attuali sono meno di quelli necessari, quelli mancanti sono inizializazti a \texttt{undefined}.
+\subsection{Variabili: tipi di dichiarazione}
+La dichiarazione delle variabili è:
+\begin{itemize}
+    \item implicita o esplicita per le variabili globali;
+    \item necessariamente \textbf{esplicita}, per variabili locali.
+\end{itemize}
+\subsubsection{Variabili: dichiarazione esplicita}
+FUori da funzioni, la parole chiave \texttt{var} è ininfluente: la variabile definita è \textbf{globale}. All'interno di funzioni,
+la parole chiave \texttt{var} ha un significato preciso: indica che la nuova variabile è locale, ossia ha come scope la funzione. 
+All'interno di funzioni, una dichiarazione senza la parola chiave \texttt{var} introcuce una variabile globale.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Images/dichiarazione_variabili.png}
+\end{figure}
+\subsubsection{Variabili: environment di riferimento}
+Quando ci si riferisce a una variabile, prima si cerca \textbf{localmente} e se non è definita si accede a quella \textbf{globale}.
+\\ Il parser prima analizza tutto il codice e crea tutte le variabili e strututre lasciandole \texttt{undefined}. Poi esegue una riga alla volta.
+\subsection{Funzioni e chiusure}
+La natura interpretata di JavaScript e l'esistenza di un ambiente globale pongono una domanda: quando una funzione usa un simbolo non definito al suo interno, quale definizione vale per esso? La definizione
+che esso ha nell'ambiente in cui la funzione è definita, oppure la definizione che esso ha nell'ambiente in cui la funzione è chiamata?
+\\ Si consideri il seguente programma:
+\begin{lstlisting}[language=JavaScript]
+var x = 20;
+function provaEnv(z) { return z + x; }
+alert(provaEnv(18)) // visualizza certamente 38
+function testEnv() {
+    var x = -1;
+    alert(provaEnv(18)); // COSA visualizza ???
+}
+\end{lstlisting}
+Nella funzione \texttt{testEnv} si ridefinisce il simbolo x, poi si invoca la funzione \texttt{provaEnv}, che usa il simbolo x, ma quale x? Nell'ambiente in cui 
+provaEnv è definita, il simbolo x aveva un altro significato rispetto a quello che ha ora! Se vale l'ambiente esistente all'atto dell'uso di provaEnv, si parla di chiusura \textbf{dinamica};
+se prevale l'ambiente di definizione di provaEnv, si parla di chiusura \textbf{lessicale}. JavaScript adotta la chiusura lessicale.
+\subsubsection{Funzioni come dati}
+Variabili possono riferirsi a funzioni: la funzione non ha un nome: \texttt{var f = function (z) { return z*z; }}. La funzione viene invocata tramite il nome della variabile:
+\begin{lstlisting}[language=JavaScript]
+var result = f(4);
+g = f produce aliasing
+\end{lstlisting}
+È possibile passare funzioni come prametro ad altre funzioni.
+\\ Ciò cosegue varie conseguenze:
+\begin{itemize}
+    \item per utilizzare una funzione come dato occorre avere effettivamente un oggetto funzione;
+    \item non si può sfruttare questa caratteristica per far eseguire una funzione di cui sia noto solo il nome;
+    \item o di cui sia noto solo il codice;
+    \item il problema è risolvibile: si costruisce esplicitamente un "oggetto funzione", oppure si accede alla funzione tramite le proprietà dell'oggetto globale (si usa il primo). 
+\end{itemize}
+\subsection{Oggetti}
+Un oggetto JavaScript è una collezione di dati dotata di nome:
+\begin{itemize}
+    \item ogni dato interpretabile come una proprietà:
+    \item per accedere alle proprietà si usa la "dot notation": \texttt{nomeOggetto.nomeProprietà};
+    \item tutte le proprietà sono accessibili.
+\end{itemize}
+Un oggetto JavaScript è costruito tramite \textbf{costruttore}: sstabilisce la struttura dell'oggetto e quindi le sue proprietà. I costruttori sono invocati mediante l'operatore \texttt{new}. 
+In JavaScript non esistono classi e sottoclassi. Il nome del costruttore è a scelta dell'utente. La struttura di un oggetto non è stabilita dalla classe.
+\subsubsection{Definizione}
+La struttura di oggetto JavaScript viene definita dal costruttore usato per crearlo. È all'interno del costruttore che si specificano le proprietà (iniziali) dell'oggetto, elencandole con la dot notation e la keyword \texttt{this}.
+\\ Identificatore \textbf{globale} (function expression):
+\begin{lstlisting}[language=JavaScript]
+Point=function(i,j){
+    this.x=i;
+    this.y=j;
+}
+\end{lstlisting}
+Identificatore \textbf{locale} (function declaration):
+\begin{lstlisting}[language=JavaScript]
+function Point(i,j){
+    this.x=i;
+    this.y=j;
+}
+\end{lstlisting}
+La keyword \texttt{this} è necessaria, altrimenti ci si riferirebbe all'environment locale della funzione costruttore.
+\subsubsection{Costruzione}
+Per costruire oggetti si applica l'operatore \texttt{new} a una funzione costruttore: 
+\begin{lstlisting}[language=JavaScript]
+p1 = new Point(3,4);
+\end{lstlisting}
+A partire da JavaScript 1.2, si possono creare oggetti anche elencando direttamente le proprietà con i rispettivi valori: sequenza di coppie nome:valore separate da virgole e racchiusa fra parentesi graffe: \texttt{p3= {x:10, y:7}}.
+\subsubsection{Accesso alle proprietà}
+Le proprietà di un oggetto sono pubbliche e accessibili: esistono anche proprietà "di sistema" e come tali non visibili, nè enumerabili con gli appositi costrutti. Accesso attraverso la dot notation: \texttt{p1.x=10}.
+\subsubsection{Aggiunta e rimozione di proprietà}
+Le proprietà specificate nel costruttore sono le proprietà \textbf{iniziali}. È possibile aggiungere dinamicamente nuove proprietà semplicemente nominandole e usandole. \texttt{p1.z=-3}. È possibile rimuovere dinamicamente proprietà, mediante l'operatore
+\texttt{delete}: \texttt{delete p1.x}.
+\subsubsection{Metodi per (singoli) oggetti}
+Definire metodi è semplicemente un caso particolare dell'aggiunta di proprietà. Non esistendo il concetto di classe, un metodo viene definito per uno specifico oggetto e non per tutti gli oggetti della stessa "classe"-
+\begin{lstlisting}[language=JavaScript]
+p1.getX = function() { return this.x; }
+\end{lstlisting}
+\subsubsection{Metodi per una "classe" di oggetti}
+In assenza del concetto di classe, assicurare che oggetti "dello stesso tipo" abbiano lo stesso funzionamento richiede un'opportuna metodologia. Un possibile approccio consiste nel deifnire tali metodi dentro al costruttore:
+\begin{lstlisting}[language=JavaScript]
+Point = function(i,j) {
+    this.x = i; this.y = j;
+    this.getX = function(){ return this.x }
+    this.getY = function(){ return this.y }
+}
+\end{lstlisting}
+
+\subsubsection{Metodi: invocazione}
+L'operatore di chiamata () è quello che effettivamente invoca il metodo: \texttt{document.write(p1.getX()+"<br/>")}.
+\\ ATTENZIONE: se si invoca un metodo inesistente si ha un errore a run-time. NB: se l'interprete JavaSCript incontra un errore a run-time, non esegue le istruzioni successive e spesso non visualizza alcun messaggio di errore!
+\subsection{Oggetti Function}
+Gli oggetti Function permettono di definire \textbf{funzioni}. Ogni funzione JavaScript è un oggetto:
+\begin{itemize}
+    \item definizione \textbf{implicita} tramite il costrutto \texttt{function};
+    \item definizione \textbf{esplicita} tramite il costruttore \texttt{Function}.
+\end{itemize}
+\subsubsection{Definizione implicita}
+Nella definizione implicita gli argomenti sono i parametri formali della funzione. Il corpo della funzione è racchiuso tra parentesi graffe:
+\begin{lstlisting}[language=JavaScript]
+funzione=function(x){ return f(x)}
+\end{lstlisting}
+Viene costruito dentro il programma JavaScript: valutato una sola volta, è efficiente, ma non flessibile.
+\subsubsection{Definizione esplicita}
+Nella definizione esplicita gli argometni sono tutte le stringhe e rappresentano i parametri della funzione definita. Solo l'ultimo argomento ha un comportamento diverso e rappresenta il corpo della funzione.
+\begin{lstlisting}[language=JavaScript]
+funzione= new Function("x","return f(x)")
+\end{lstlisting}
+Viene costruito a partire da stringhe. Valutato ogni volta, è poco efficiente, ma molto flessibile.
+\subsection{Funzioni come dati: Esempio}
+Funzione on demand:
+\begin{itemize}
+    \item Inserire la funzione da calcolare:
+    \begin{lstlisting}[language=JavaScript]
+    var funzione = prompt("Scrivere f(x): ")
+    \end{lstlisting}
+    \item Inserire il/i parametri da usare:
+    \begin{lstlisting}[language=JavaScript]
+    var x = prompt("Calcolare per x = ? ")
+    \end{lstlisting}
+    \item Calcolare la funzione (invocazione riflessiva):
+    \begin{lstlisting}[language=JavaScript]
+    var f = new Function("x", "return " + funzione)
+    \end{lstlisting}
+    \item Mostrare il risultato:
+    \begin{lstlisting}[language=JavaScript]
+    confirm("Risultato: " + f(x))
+    \end{lstlisting}
+\end{itemize}
+\subsubsection{Funzioni come dati: problema}
+I valori immessi da linea di comando (prompt) sono stringhe. Contromisure:
+\begin{itemize}
+    \item l'utente specifica il tipo del dato attraverso una conversione esplicita;
+    \item il programma implementa la conversione esplicita dopo il prompt:
+    \begin{lstlisting}[language=JavaScript]
+    var x = parseInt(prompt("Calcolare per x = ? "))
+    typeof(x) = number
+    \end{lstlisting}
+\end{itemize}
+\subsection{Oggetti Function: proprietà}
+Proprietà \textbf{statiche} (esistono anche mentre non esegue):
+\begin{itemize}
+    \item \texttt{length} - numero di parametri formali (attesi).
+\end{itemize}
+Proprietà \textbf{dinamiche} (mentre la funzione è in esecuzione):
+\begin{itemize}
+    \item \texttt{arguments} - array contente i parametri attuali;
+    \item \texttt{arguments.length} - numero dei parametri attuali;
+    \item \texttt{arguments.callee} - la funzione stessa in esecuzione;
+    \item \texttt{caller} - il chiamante (\texttt{null} se invocata da top level);
+    \item \texttt{constructor} - riferimento all'oggetto costruttore;
+    \item \texttt{prototype} - riferimento all'oggetto prototipo.
+\end{itemize}
+\subsection{Oggetti Function: metodi}
+Metodi invocabili sun una funzione:
+\begin{itemize}
+    \item \texttt{toString} - chiamata automaticamente quando la funzione deve essere rappresentata come testo: ritorna una rappresentazione a stringa dell'oggetto funzione;
+    \item \texttt{valuesOf} - ritorna la funzione stessa come oggetto;
+    \item \texttt{call} e \texttt{apply} - funzioni applicate all'oggetto passato com primo argomento (identifica il contesto this), fornendo a tale oggetto i restanti parametri:
+    \begin{lstlisting}[language=JavaScript]
+    funz.apply(ogg, arrayDiParametri )
+    \end{lstlisting}
+    \begin{lstlisting}[language=JavaScript]
+    funz.call(ogg, arg1, arg2, ... )
+    \end{lstlisting}
+\end{itemize}
+\subsection{Funzioni come dati - Conseguenze}
+Per utilizzare una funzione come dato occorre avere effettivamente un oggetto funzione. Non si può sfruttare questa caratteristica per far eseguire una funzione di cui sia noto solo il nome (letto da tastiera), 
+o di cui sia noto solo il codice. Il problema è risolvibile accedendo alla funzione tramite le proprietà dell'oggetto globale.
+\subsection{Oggetto globale}
+PROBLEMA: come può JavaScript distringuere fra metodi di oggetti e funzioni "globali"? Semplicemente non distingue: le funzioni "globali" non sono altro che metodi di un "oggetto globlae" definito dal sistema.
+\\ L'oggetto "globale" ha come metodi le funzioni non attribuite a uno specifico oggetto nonchè a quelle globali; come dati, le variabili incluse quelle predefinite; oggetti predefiniti.
+\subsection{[Costruttori di] Oggetti predefiniti}
+Oggetti di uso generale: 
+\begin{itemize}
+    \item Array, Boolean, Function, Number, Object, String.
+    \item L'oggetto Math contiene la libreria matematica: costanti e funzioni di ogni tipo. Non va istanziato ma usato come componente "statico".
+    \item L'ggetto Date definisce i concetti per esprimere date e orari e lavorare su di essi: va istanziato nei modi opportuni.
+    \item L'oggetto REgExp fornisce il supporto per le espressioni regolari.
+\end{itemize}
+Oggetti di uso grafico: Anchor, Applet, Area, Button, Checkbox, Document, Event,
+FileUpload, Form, Frame, Hidden, History, Image, Layer, Link,
+Location, Navigator, Option, Password, Radio, Reset, Screen, Select,
+Submit, Text, Textarea, Window
+\subsection{Date}
+\subsubsection{Costruzione}
+Costruttore:
+\begin{itemize}
+    \item Date(), Date(millisecondi), Date(stringa), Date(anno, mese, giorno [, hh, mm, ss, msec]).
+    \item Date(): ciene creato un oggetto corrispondente alla data e all'ora correnti, come risultano sul sistema in uso.
+    \item Date(millisecondi): i millesecondi sono calcolati dalle ore 00:00:00 del 1° gennaio 1970 usando il giorno standard UTC di 86.400.000 ms.
+    \item Date(string): string è nel formato riconosciuto da Date.parse.
+    \item Date(anno, mese, giorno, ...): anno, mese e giorno devono essere forniti, gli altri sono opzionali.
+\end{itemize}
+\subsubsection{Metodi}
+Metodi:
+\begin{itemize}
+    \item \texttt{getDay}: restituisce il giorno della settimana, da 0 (dom) a 6 (sab)
+    \item \texttt{getDate}: restituisce il numero del giorno, da 1 a 31
+    \item \texttt{getMonth}: restituisce il mese, da 0 (gennaio) a 11 (dicembre)
+    \item \texttt{getFullYear}: restituisce l'anno (su quattro cifre)
+    \item \texttt{getHours}: restituisce l'ora, da 0 a 23
+    \item \texttt{getMinutes}: restituisce i minuti, da 0 a 59
+    \item \texttt{getSeconds}: restituisce i secondi, da 0 a 59
+\end{itemize}
+\subsection{Oggetto globale}
+L'oggetto "globale" è \textbf{UNICO} e viene sempre creato dall'interprete prima di eseguire alcunchè. Però non esiste un identificatore "global": in ogni situazione c'è un dato oggetto usato come globale. 
+\\ In un browser Web, l'ggetto globale solitamente coincide con l'oggetto \texttt{window}, ma non sempre è così: a lato server, per esempio, sarà probabilmente l'oggetto response a svolgere quel ruolo. Quindi, in un browser, per scoprire tutte le proprietà dell'oggetto globale, basta invocare
+\texttt{show(window)}.
+\\ Oltre all'apporccio basato sul costruttore \texttt{Function}, si può sfruttare l'oggetto globale per ottenere un riferimento all'oggetto funzione corrispondente a un dato nome di funzione purchè la funzione richiesta sia già definita nel sistema. Se  $p$ è un riferimento a un oggetto, e $s$ è il nome di una sua
+proprietà $x$, la notazione "array-like" $p[s]$ fornisce un riferimento all'oggetto (proprietà) x. Ad esempio, la notazione
+var math = Math; var nome = math["sin"]
+
+Pone nella variabile nome un riferimento all'oggetto funzione
+Math.sin (Nota: l'assegnamento math = Math è necessario
+perché la notazione array-like è ammessa solo su variabili, e
+Math non lo è)
+\\ A seguito di ciò, definita la funzione
+function calc(f,x) { return f(x) }
+È ora possibile effettuare l'invocazione
+calc(nome, .8)
+che dà 0.7173560908995228
+ Il nome "sin" viene trasformato in un riferimento all'oggetto
+Math.sin, utilizzabile per la chiamata
+
+
 \end{document}
+
 
