@@ -1875,6 +1875,14 @@ che dà 0.7173560908995228
  Il nome "sin" viene trasformato in un riferimento all'oggetto
 Math.sin, utilizzabile per la chiamata
 
+\subsection{API}
+Per eseguire una fetch dobbiamo:
+\begin{lstlisting}[language=JavaScript]
+fetch('link')
+    .then(response => response.json())
+    .then(data => console.log(data))
+\end{lstlisting}
+dove response è un oggetto che rappresenta la risposta alla richiesta HTTP, e data è un oggetto che rappresenta i dati restituiti dal server. Traduce da json ad oggetto js.
 
 \end{document}
 
