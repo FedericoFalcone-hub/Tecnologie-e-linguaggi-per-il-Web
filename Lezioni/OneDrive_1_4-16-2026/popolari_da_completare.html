@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bootstrap demo</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+</head>
+
+<body>
+  <h1>Popolari</h1>
+
+  <div class="row">
+    <div class="col d-none" id="modello">
+      <div class="card" style="width: 18rem;">
+        <img src="https://media.themoviedb.org/t/p/w440_and_h660_face/" class="card-img-top" alt="...">
+        <div class="card-body">
+          <h5 class="card-title"></h5>
+          <p class="card-text"></p>
+          <a href="scheda_film.html?id=" class="btn btn-primary">Scheda Film</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+    crossorigin="anonymous"></script>
+  <script>
+    fetch('https://api.themoviedb.org/3/movie/popular?api_key=995cc3bf239ca2e0c6345391570a3f06')
+      .then(response => response.json())
+      .then(data => {
+        var popolari = data;
+        for (let i = 0; i < popolari.results.length; i++) {
+          var film = popolari.results[i];
+          var modello = document.getElementById('modello');
+          var clone = modello.cloneNode(true);
+          clone.getElementsByTagName('img')[0].src += film.poster_path;
+          clone.getElementsByTagName('h5')[0].innerHTML = film.title;
+          clone.getElementsByTagName('p')[0].innerHTML = film.overview;
+          clone.getElementsByTagName('a')[0].href += film.id;
+          clone.classList.remove('d-none');
+          clone.id = i;
+          modello.before(clone);
+
+          console.log(film.title);
+          console.log(film.overview);
+        }
+      });
+  </script>
+
+</body>
+
+</html>
