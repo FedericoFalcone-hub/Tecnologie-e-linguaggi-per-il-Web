@@ -75,20 +75,20 @@
 Ogni tipologia di rete può essere fisicamente realizata sfruttando topologie differenti:
 \begin{itemize}
     \item topologia logica a Bus, cablata a stella
-    \begin{figure}[H]
-        \centering
-        \includegraphics[width=0.4\textwidth]{Images/bus_lineare.png}
-    \end{figure}
+          \begin{figure}[H]
+              \centering
+              \includegraphics[width=0.4\textwidth]{Images/bus_lineare.png}
+          \end{figure}
     \item topologia a stella
-    \begin{figure}[H]
-        \centering
-        \includegraphics[width=0.4\textwidth]{Images/bus_stella.png}
-    \end{figure}
+          \begin{figure}[H]
+              \centering
+              \includegraphics[width=0.4\textwidth]{Images/bus_stella.png}
+          \end{figure}
     \item centralizzata
-    \begin{figure}[H]
-        \centering
-        \includegraphics[width=1\textwidth]{Images/centralizzata.png}
-    \end{figure}
+          \begin{figure}[H]
+              \centering
+              \includegraphics[width=1\textwidth]{Images/centralizzata.png}
+          \end{figure}
 \end{itemize}
 
 \subsection{Standard}
@@ -105,7 +105,7 @@ Strati ISO/OSI possono essere separati in due categorie
     \item funzioni dipendenti dalla rete (\textbf{Media layers});
     \item funzioni orientate all'applicazione (\textbf{Host layers}).
 \end{itemize}
-La funzione di ogni strato è codificata in una serie di regole e convenzioni usate per comunicare con lo strato remoto corrispondente (\textbf{protocollo}). 
+La funzione di ogni strato è codificata in una serie di regole e convenzioni usate per comunicare con lo strato remoto corrispondente (\textbf{protocollo}).
 Ogni strato fornisce dei servizi allo strato immediatamente superiore e utilizza inoltre dei servizi forniti dallo strato immediatamente inferiore.
 
 \subsection{Protocollo}
@@ -115,7 +115,7 @@ per la comunicazione tra nodi.
 \\ \textbf{Sintassi}: insieme e struttura dei comandi e delle risposte, formato dei messaggi.
 \\ \textbf{Semantica}: significato dei comandi, delle azioni, delle risposte da effettuare al momento della trasmissione e ricezione dei messaggi.
 \\ \textbf{Temporizzazione}: specifica delle possibilo sequenze temporali di emissione dei comandi e dei messaggi, nonchè eventuali risposte.
-\\ Ciascun protoccolo ha un'interfaccia "interna" verso il livello superiore o inferiore, e un'interfaccia "esterna" verso il livello equivalente di un altro modo. 
+\\ Ciascun protoccolo ha un'interfaccia "interna" verso il livello superiore o inferiore, e un'interfaccia "esterna" verso il livello equivalente di un altro modo.
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.5\textwidth]{Images/protocollo.png}
@@ -137,10 +137,10 @@ per la comunicazione tra nodi.
 \end{figure}
 \begin{itemize}
     \item Comunicazione fisica (indiretta): la comunicazione tra \textit{peer entity} è diretta solo a livello hardware.
-    \begin{figure}[H]
-        \centering
-        \includegraphics[width=0.5\textwidth]{Images/protocollo4.png}
-    \end{figure}
+          \begin{figure}[H]
+              \centering
+              \includegraphics[width=0.5\textwidth]{Images/protocollo4.png}
+          \end{figure}
 \end{itemize}
 Un messaggio si compone di:
 \begin{itemize}
@@ -204,35 +204,35 @@ I tag sono marcatori che identificano porzioni di testo. Permettono la personali
 \\ Nome tag = nome funzione.
 \\ Il tag ha la seguente struttura
 \begin{center}
-\texttt{<tag attributi>contenuto</tag>}
+    \texttt{<tag attributi>contenuto</tag>}
 \end{center}
 \subsection{Struttura della pagina}
 Una pagina è formata da:
 \begin{itemize}
     \item \textbf{Riga di intestazione}: \texttt{<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01
-Transitional//IT">}. Indichiamo le specifiche W3C adottate. Esso dice al browser quale linguaggio è stato usato per il rendering.
-    \item Il tag \textbf{\texttt{<html>}}: indica l'inizio di una pagina HTML. Tutto ciò compreso all'interno del tag \texttt{html} è il codice HTML.   
-\begin{lstlisting}[language=HTML]
+              Transitional//IT">}. Indichiamo le specifiche W3C adottate. Esso dice al browser quale linguaggio è stato usato per il rendering.
+    \item Il tag \textbf{\texttt{<html>}}: indica l'inizio di una pagina HTML. Tutto ciò compreso all'interno del tag \texttt{html} è il codice HTML.
+          \begin{lstlisting}[language=HTML]
 <html>
     ...
 </html>
 \end{lstlisting}
-\item Documento HTML diviso in due:
-\begin{itemize}
-    \item Testa
-    \item Corpo
-\end{itemize}
+    \item Documento HTML diviso in due:
+          \begin{itemize}
+              \item Testa
+              \item Corpo
+          \end{itemize}
 \end{itemize}
 
 \subsubsection{Testa}
 La testa contiene informazioni non immediate. Descrive come il documento deve essere letto e interpretato. Contiene \textcolor{red}{meta-tag}, \textcolor{red}{script}, \textcolor{red}{stili}.
 \\ È racchiuso nel tag \texttt{\textbf{<head>}}.
 \subsubsection{Corpo}
-Il corpo contiene il documento vero e proprio. Contiene tutti i tag per la realizzazione del sito Web. 
+Il corpo contiene il documento vero e proprio. Contiene tutti i tag per la realizzazione del sito Web.
 \\ È raachiuso nel tag \texttt{\textbf{<body>}}.
 \subsection{Identazione}
 Una buona norma è utilizzare caratteri di tabulazione. Aumenta la leggibilità, diminuendo così i tempi di modifica.
-\subsection{Annidamento} 
+\subsection{Annidamento}
 Una caratteristica di HTML sono i \textcolor{red}{tag annidati}.
 \subsection{Commenti}
 I commenti aumentano la leggibilità del codice. Una buona norma è commentare \textbf{solo} le parti significative. Permettono di orientarsi meglio all'interno del codice.
@@ -245,7 +245,7 @@ HTML è case unsensitive, mentre XHTML lo è. È consigliabile usare il caratter
 \subsection{Testa (\texttt{<head>})}
 La testa contiene le informazioni/metadati relativi al documento. I browser di solito non presentano elementi che compaiono nella testa.
 \subsubsection{Titolo}
-L'elemento \texttt{<title>} permette di indicare il titolo della pagina. 
+L'elemento \texttt{<title>} permette di indicare il titolo della pagina.
 \subsubsection{Metadati}
 L'elemento \texttt{<meta>} definisce le informazioni relative alla pagina piuttosto che contenuto vero e proprio. Contiene 3 attributi principali:
 \begin{itemize}
@@ -258,7 +258,7 @@ L'elemento \texttt{<meta>} definisce le informazioni relative alla pagina piutto
 \end{lstlisting}
 \subsubsection{Meta Tag - Keywords}
 I meta tag indicano alcune informazioni sul contenuto del sito. Sono separate da virgole, punto e virgola e spazio.
-Esse inoltre sono chiavi di ricerca. 
+Esse inoltre sono chiavi di ricerca.
 \\ Il motore di ricerca ricava le chiavi di indicizzazione. Bisogna fare attenzione nella scrittura delle keywords:
 \begin{itemize}
     \item evitare termini generici e particolari;
@@ -318,10 +318,10 @@ Il paragrafo è l'unità base di suddivisione del testo.
 \begin{lstlisting}[style=htmlstyle]
 <div>Blocco 1</div>
 \end{lstlisting}
-Non impone rappresentazioni di default. 
+Non impone rappresentazioni di default.
 \paragraph{Contenitore} \mbox{} \\
 È un contenitore generico e può essere annidato. È un elemento inline (continua sulla stessa riga del tag che lo contiene). Non va a capo.
-\\ Non impone rappresentazioni di default (a parte il fatto di essere un elemento inline). 
+\\ Non impone rappresentazioni di default (a parte il fatto di essere un elemento inline).
 \paragraph{Esempio} \mbox{}
 \begin{lstlisting}[style=htmlstyle]
 <h2>Titolo della pagina</h2>
@@ -334,10 +334,10 @@ Non impone rappresentazioni di default.
 </div>
 \end{lstlisting}
 \subsubsection{Struttura della pagina con tag \texttt{<div>}}
-\texttt{<div>} è uno tra i tag più utilizzati nella creazione di pagine Web, sopratutto nella creazione di layout. 
+\texttt{<div>} è uno tra i tag più utilizzati nella creazione di pagine Web, sopratutto nella creazione di layout.
 Esso fornisce un vero e proprio elemento strutturale della pagina.
 Suddivide gli spazi in zone per progettare il sito in modo \textcolor{red}{semplice} e \textcolor{red}{dettagliato}.
-\\ Molto utile quando usato insieme a fogli di stile.\\ 
+\\ Molto utile quando usato insieme a fogli di stile.\\
 \\ Facciamo un esempio: immaginando di dover costruire un sito, pensiamo a come esso debba essere strutturato, tipicamente abbiamo:
 \begin{itemize}
     \item un contenitore (container);
@@ -411,14 +411,14 @@ LA scelta del colore e del carattere può essere fatta nello \textcolor{red}{ste
 Si utilizza l'attributo \texttt{size} del tag \texttt{font}. Ci sono 2 modi per impostare la dimensione:
 \begin{itemize}
     \item Valore tra 1 e 7.
-    \begin{lstlisting}[language=html]
+          \begin{lstlisting}[language=html]
     <font size="3">Dimensione 3</font>
     \end{lstlisting}
     \item Valori relativi alla dimensione del font.
-    \begin{lstlisting}[language=html]
+          \begin{lstlisting}[language=html]
     <font size="+2">Dimensione +2</font>
     \end{lstlisting}
-    Utilizza la dimensione del font di base. Il tag \texttt{<basefont>} permette di cambiare il font di base.
+          Utilizza la dimensione del font di base. Il tag \texttt{<basefont>} permette di cambiare il font di base.
 \end{itemize}
 \subsubsection{Elenchi}
 Gli elenchi possono essere:
@@ -495,17 +495,17 @@ Le destinazioni dei link possono essere:
     \item Pagina HTML: aperta nel browser.
     \item Immagine (.gif, .jpeg): aperta nel browser.
     \item Altri documenti (.doc, .pdf):
-    \begin{itemize}
-        \item visualizzata nel browser;
-        \item richiesta di salvataggio.
-    \end{itemize}
+          \begin{itemize}
+              \item visualizzata nel browser;
+              \item richiesta di salvataggio.
+          \end{itemize}
     \item Altri file (.zip, .exe): richiesta di salvataggio.
 \end{itemize}
 \subsubsection{Caratteristiche dei link}
 I link possono avere diversi stati:
 \begin{itemize}
-\item link a riposo: \textcolor[HTML]{0000FF}{blu};    
-\item link visitato: \textcolor[HTML]{800080}{violetto};
+    \item link a riposo: \textcolor[HTML]{0000FF}{blu};
+    \item link visitato: \textcolor[HTML]{800080}{violetto};
     \item link attivo: passaggio da una pagina all'altra. Utile nel passato.
     \item link al passaggio del mouse: solo con fogli di stile.
 \end{itemize}
@@ -534,15 +534,15 @@ I percorsi dei link possono essere:
 Permette di creare un indice.
 \begin{itemize}
     \item Ancora
-    \begin{lstlisting}[style=htmlstyle]
+          \begin{lstlisting}[style=htmlstyle]
     <a name="primo">ancora</a>
     \end{lstlisting}
     \item Riferimento all'ancora
-    \begin{lstlisting}[style=htmlstyle]
+          \begin{lstlisting}[style=htmlstyle]
     <a href="#primo"> vai all'ancora </a>
     \end{lstlisting}
     \item Riferimento ad inizio pagina
-    \begin{lstlisting}[style=htmlstyle]
+          \begin{lstlisting}[style=htmlstyle]
     <a href='#'>torna su</a>
     \end{lstlisting}
 \end{itemize}
@@ -650,7 +650,7 @@ Il radio button definisce un input che permette \textbf{una} scelta tra diverse 
     <input type="radio" name="sex" value="female">Female
 </form>
 \end{lstlisting}
-\paragraph{Checkbox input} \mbox{} \\ 
+\paragraph{Checkbox input} \mbox{} \\
 La checkbox input definisce una serie di checkbox che permettono la scelta \textbf{multipla} tra diverse opzioni.
 \begin{lstlisting}[style=htmlstyle]
 <form>
@@ -737,7 +737,7 @@ Per raggruppare campi di una form, si utilizza \texttt{<fieldset>}. Si può defi
 \subsection{XHTML}
 XHTML è quasi identito ad HTML, ma è più stringente. È supportato dai principali browser.
 \paragraph{Perchè utilizzare XHTML} \mbox{}
-\\ Molte pagine Web contengono HTML errato. Il seguente codice viene visualizzato bene nella maggior parte dei casi anche 
+\\ Molte pagine Web contengono HTML errato. Il seguente codice viene visualizzato bene nella maggior parte dei casi anche
 se non segue le regole di HTML:
 \begin{lstlisting}[style=htmlstyle]
 <html>
@@ -754,7 +754,7 @@ Diversi browser che eseguo su device diversi richiedono maggiori risorse o poten
 \\ XHTML combina HTML e XML.
 \section{Bootstrap}
 \paragraph{Web design reattivo} \mbox{} \\
- Il responsive web design riguarda la creazione di siti web che si adattano automaticamente per avere un bell'aspetto su tutti i dispositivi, dai piccoli
+Il responsive web design riguarda la creazione di siti web che si adattano automaticamente per avere un bell'aspetto su tutti i dispositivi, dai piccoli
 telefoni ai desktop di grandi dimensioni. \\ Bootstrap è il framework HTML, CSS e JavaScript più popolare per lo sviluppo di siti Web responsive e mobile-first.
 \paragraph{} Bootstrap è un framework front-end gratuito per uno sviluppo web più rapido e semplice. Bootstrap include modelli di progettazione basati su HTML e CSS per tipografia, moduli, pulsanti, tabelle, navigazione, modali, caroselli di immagini e molti altri, oltre al plug-in JavaScript opzionali.
 \\ Bootstrap dà anche la possibilità di creare facilmente design reattivi.
@@ -804,7 +804,7 @@ Bootstrap è un mobile-first:
 \begin{itemize}
     \item Bootstrap 3 è progettato per rispondere ai dispositivi mobili. Gli stili mobile-first fanno parte del frameword principale.
     \item Per garantire un rendering e uno zoom al tocco corretti, bisogna aggiongere il tag \texttt{<meta>} all'interno dell'elemento \texttt{<head>}.
-    \begin{lstlisting}[style=htmlstyle]
+          \begin{lstlisting}[style=htmlstyle]
     <meta name="viewport" content="width=device-width, initial-scale=1">
     \end{lstlisting}
     \item La parte \texttt{width=device-width} imposta la larghezza della pagina in modo che segue la larghezza dello schermo del dispositivo (che varierà a seconda del dispositivo).
@@ -950,7 +950,7 @@ Bootstrap fornisce quattro dimensioni di pulante con le seguenti classi:
     \item \texttt{.btn-xs}.
 \end{itemize}
 \subsubsection{Pulsanti a livello di blocco}
-Un pulsante a livello di blocco copre l'\textbf{intera larghezza} dell'elemento genitore. Per fare ciò si aggiunge la classe \texttt{.btn-block}. 
+Un pulsante a livello di blocco copre l'\textbf{intera larghezza} dell'elemento genitore. Per fare ciò si aggiunge la classe \texttt{.btn-block}.
 \subsubsection{Pulsanti attivi/disabilitati}
 Un pulsante può essere impsotato su uno stato attivo (appare premuto) o disabilitato (non cliccabile): la classe \texttt{.active} fa apparire premuto un pulsante e la classe \texttt{.disabled} rende un pulsante non cliccabile.
 \subsection{Personalizzazione}
@@ -1022,10 +1022,10 @@ Con il \textbf{nesting} basta dichiarare una sola volta il nome dell'elemento ra
 \end{figure}
 \pagebreak
 "\textbf{\&}" può essere utilizzato per definire le pseudoclassi di un elemento.
- \begin{figure}[H]
-     \centering
-     \includegraphics[width=0.75\textwidth]{Images/nesting3.png}
- \end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{Images/nesting3.png}
+\end{figure}
 \subsubsection{Variabili}
 \textbf{Variabili}: come nei linguaggi di programmazione il concetto di variabile è pressoché identico, una variabile \textbf{SASS} è un contenitore virtuale di:
 \begin{itemize}
@@ -1060,10 +1060,10 @@ Le risorse in rete identificata tramite URL è di 3 tipi:
     \item pagina \textbf{statica} (HTML) il cui contenuto è \textbf{fisso}, definito nel momento in cui la pagina è stata scritta;
     \item pagina \textbf{dinamica} il cui contenuto viene generato (selezionato, composto) al momento della richiesta (o della visualizzazione);
     \item \textbf{applicazione web}: software sviluppato e utilizzato attraverso attraverso tecnologie web;
-    \begin{itemize}
-        \item linguaggi di mark-up, scripting e programmazione;
-        \item teconologie client-side e server-side;
-    \end{itemize}
+          \begin{itemize}
+              \item linguaggi di mark-up, scripting e programmazione;
+              \item teconologie client-side e server-side;
+          \end{itemize}
 \end{itemize}
 \subsubsection{Applicazioni web: linguaggi}
 \begin{itemize}
@@ -1080,7 +1080,7 @@ Un programma è un insieme di istruzioni, mentre i linguaggi di programmazione s
     \item \textbf{Semantica}: definisce il significato delle frasi ben formate del linguaggio.
 \end{itemize}
 Un \textbf{analizzazatore sintattico} (parser) analizza frasi e decide se sono frasi ben formate del linguaggi o no.
-\\ Lingiaggio di programmazione: 
+\\ Lingiaggio di programmazione:
 \begin{itemize}
     \item lessico: "keywords" del linguaggio;
     \item frasi ben formate: istruzioni (programmi);
@@ -1096,20 +1096,20 @@ in un linguaggio macchina (programma eseguibile). Le tecniche per effettuare que
 La traduzione effettuata dal compilatore è specifica per una data macchina. Inoltre genera un \textcolor{red}{file eseguibile} (.exe). Il vantaggio è che è efficiente. Lo svantaggio è che è poco flessibile.
 \\ La traduzione effettuata dall'interprete interpreta un programma (traduzione simultanea). Ogni istruzione viene tradotta in un insieme di istruzioni nel linguaggio macchina della piattaforma specifica ed eseguita. C'è un interprete specifico per ogni piattaforma. Il vantaggio è che è flessibile, di contro però è poco efficiente.
 \\ Nell'approccio misto, il programma sorgente viene tradotto in formato intermedio (bytecode) indipendente dalla macchina (compilatore). Il programma in formato intermedio verrà poi interpretato dall'interprete.
-\\ L'approccio misto somma i vantaggi dei due approcci. È efficiente e flessibile. 
+\\ L'approccio misto somma i vantaggi dei due approcci. È efficiente e flessibile.
 \pagebreak
 \subsubsection{Applicazioni Web}
 Pagine web "dinamiche": il contenuto viene generato al momento della richiesta/visualizzazione. Si basano su linguaggi di programmazione e scripting:
 \begin{itemize}
-    \item tecnologie client-side (pagine "debolmente" dinamiche): 
-    \begin{itemize}
-        \item elaborazione lato client (browser);
-        \item scripting client-side (JavaScript), Java Applet, Adobe Flash.
-    \end{itemize}
+    \item tecnologie client-side (pagine "debolmente" dinamiche):
+          \begin{itemize}
+              \item elaborazione lato client (browser);
+              \item scripting client-side (JavaScript), Java Applet, Adobe Flash.
+          \end{itemize}
     \item tecnologie server-side (pagine "fortemente" dinamiche): \begin{itemize}
-        \item elaborazione lato server (web server);
-        \item scripting server-side (PHP, Active Server Pages, Java Server Page), programmi (Java Servlet), Ruby, Python, Perl, (Javascript).
-    \end{itemize}
+              \item elaborazione lato server (web server);
+              \item scripting server-side (PHP, Active Server Pages, Java Server Page), programmi (Java Servlet), Ruby, Python, Perl, (Javascript).
+          \end{itemize}
 \end{itemize}
 Le applicazioni web si sviluppano su 3 livelli logici:
 \begin{itemize}
@@ -1179,7 +1179,7 @@ Sono loosely typed: è possibile assegnare a una stessa variabile prima un valor
 \\ Due possibili scope:
 \begin{itemize}
     \item \textcolor{red}{globale}, per le variabili definite fuori da funzioni;
-    \item \textcolor{red}{locale}, per le variabili definite esplicitamente dentro a funzioni (compresi i parametri ricevuti). 
+    \item \textcolor{red}{locale}, per le variabili definite esplicitamente dentro a funzioni (compresi i parametri ricevuti).
 \end{itemize}
 ATTENZIONE: un blocco NON delimita uno scope! Tutte le variabili definite fuori da funzioni, anche se dentro a blocchi innestati, sono globali.
 \subsection{Tipo dinamico}
@@ -1244,7 +1244,7 @@ Per (sovra)scrivere l'ultimo elemento dell'array:
 \begin{lstlisting}[language=JavaScript]
 lista[lunghezza-1]="stringa";
 \end{lstlisting}
-Ogni scrittura sovrascrive l'elemento che era memorizzato in precedenza. 
+Ogni scrittura sovrascrive l'elemento che era memorizzato in precedenza.
 \subsection{Cicli}
 Strutture di controllo per l'accesso sequenziale a un set di elementi. I cicli sono generalmente basati sul concetto di indice: l'indice scorre lungo la lista indicando, via via, posizioni successive.
 \subsubsection{Ciclo for}
@@ -1253,7 +1253,7 @@ for(inizio;test;incremento){
     istruzioni
 }
 \end{lstlisting}
-Le istruzioni eseguite a partire da inizio, finchè test è vero, avanzando ad ogni passo di quanto è indicato da incremento. 
+Le istruzioni eseguite a partire da inizio, finchè test è vero, avanzando ad ogni passo di quanto è indicato da incremento.
 \subsubsection{Ciclo while}
 \begin{lstlisting}[language=JavaScript]
 while(condizione){
@@ -1388,9 +1388,9 @@ I programmi JavaScript sono tipicamente "guidati dagli eventi" (event-driven). G
 \begin{lstlisting}[style=htmlstyle]
 <a href="#" onClick = "window.print()" >
 \end{lstlisting}
-Attributo \texttt{onClick}:evento click innesca il gestore. 
+Attributo \texttt{onClick}:evento click innesca il gestore.
 \\ Un'istruzione JavaScript può essere inserita all'interno di un tag HTML. In questi casi, il gestore di evento invocato farà riferimento al tag in cui si trova l'istruzione.
-\\ Gli eventi intercettabili su un link: \texttt{onClick}, \texttt{onMouseOver}, \texttt{onMouseOut}. 
+\\ Gli eventi intercettabili su un link: \texttt{onClick}, \texttt{onMouseOver}, \texttt{onMouseOut}.
 \\ Gli eventi intercettabili su una finestra: \texttt{onLoad}, \texttt{onUnload}, \texttt{onBlur}.
 \subsection{Gestione eventi}
 Per sfruttare il valore restituito da confirm, prompt o qualsiasi altra funzione JavaScript occorre inserire come valore dell'attributo onClick un programma JavaScript.
@@ -1500,7 +1500,7 @@ dell'oggetto \texttt{location}.
 </HTML>
 \end{lstlisting}
 \subsubsection{Eventi (onMouseOver)}
-L'evento è scatenato al passaggio del mouse su un oggetto. Ad esempio, utilizzato per cambiare lo stile di un oggetto. 
+L'evento è scatenato al passaggio del mouse su un oggetto. Ad esempio, utilizzato per cambiare lo stile di un oggetto.
 Un latro utilizzo molto comune è l'\textcolor{red}{image swap} (o roll-over), ovvero il cambiamento dell'aspetto di un'immagine.
 \begin{lstlisting}[style=htmlstyle]
 <p ALIGN="CENTER" style="background-color:green" onMouseOver="style='background-color:yellow';" onMouseOut="style='background-color:green';">
@@ -1509,7 +1509,7 @@ Un latro utilizzo molto comune è l'\textcolor{red}{image swap} (o roll-over), o
 \end{lstlisting}
 onMouseOver/Out cambia il valore src dell'immagine.
 \subsection{Gestione finestre (open)}
-L'oggetto \texttt{window} permette di agire e gestire le finestre del browser: \texttt{window.open(URL, nome, [proprietà])}, apre una nuova finestra 
+L'oggetto \texttt{window} permette di agire e gestire le finestre del browser: \texttt{window.open(URL, nome, [proprietà])}, apre una nuova finestra
 (o una nuoca scheda):
 \begin{itemize}
     \item URL: indirizzo della pagina da caricare.
@@ -1519,9 +1519,9 @@ L'oggetto \texttt{window} permette di agire e gestire le finestre del browser: \
 \end{itemize}
 Esempio: apertura finestra nella stessa finestra/scheda: \texttt{<a href="\#" onClick = "window.open('http://www.di.unimi.it','pippo' ); return false;">nuova finestra!</a>}
 \\ Un altro esempio: \texttt{<a href="\#" onClick = "window.open('http://www.di.unimi.it', 'pippo',
-'scrollbars=yes,resizable=yes,width=730,height=600,
-status=no,location=no,toolbar=no,menubar=no'); return
-false;">finestra con proprietà</a>}
+    'scrollbars=yes,resizable=yes,width=730,height=600,
+    status=no,location=no,toolbar=no,menubar=no'); return
+    false;">finestra con proprietà</a>}
 \begin{itemize}
     \item Presenza barre di scorrimento.
     \item Possibilità di ridimensionare la finestra.
@@ -1566,7 +1566,7 @@ Proprietà per la navigazione tra nodi:
 \end{itemize}
 Accesso al primo nodo figlio: \texttt{document.getElementById("intro").childNodes[0]}, oppure \texttt{document.getElementById("intro").firstChild}.
 \\ Il valore testuale di un elemento è a sua volta un nodo: \texttt{document.getElementById("intro").childNodes[0].nodeValue}.
-\\ Altre proprietà olte a nodeValue: \texttt{nodeName}, \texttt{nodeType} entrambi in sola lettura. 
+\\ Altre proprietà olte a nodeValue: \texttt{nodeName}, \texttt{nodeType} entrambi in sola lettura.
 \subsubsection{Aggiunta elementi}
 Aggiunta di elementi all'albero DOM:
 \begin{lstlisting}[style=htmlstyle]
@@ -1627,17 +1627,17 @@ document.write(x[0].innerHTML)
 \end{lstlisting}
 \subsection{Funzioni}
 \subsubsection{Introduzione}
-Object-based language (ma non object-oriented): usa l'idea di incapsulare stato e operazioni all'interno di oggetti, non applicando però i concetti di 
+Object-based language (ma non object-oriented): usa l'idea di incapsulare stato e operazioni all'interno di oggetti, non applicando però i concetti di
 ereditarietà e sottotipi. JavaScript a volte riperito come prototype-based language: non esistono classi, ma gli oggetti ereditano codice e dati da altri oggetti template.
 Vengono clonati oggetti che servono come "prototipi".
 \subsubsection{Definizioen di funzioni}
-Le funzioni sono definite tramite keyword \texttt{function} e sempre racchiuso in un blocco. Posso essere considerate sia \textbf{procedure}, sia \textbf{funzioni} in senso proprio. 
+Le funzioni sono definite tramite keyword \texttt{function} e sempre racchiuso in un blocco. Posso essere considerate sia \textbf{procedure}, sia \textbf{funzioni} in senso proprio.
 I parametri formali sono senza dichiarazione di tipo.
 \subsubsection{Chiamata a funzione}
 Le funzioni sono chiamate come in un linguaggio di programmazione tradizionale, fornendo la lista dei parametri attuali. Se i tipi non hanno senso per le operazioni fornite, l'inerprete
 JavaSCript ritorna un errore a runtime. Non viene mostrato il risultato.
 \subsubsection{Parametri di funzione}
-Passaggio di parametro per valore: nel caso di oggetti, si copiano i riferimenti. A differenza di C e Java, è lecito definire una funzione dentro un'altra funzione. Se i parametri attuali sono 
+Passaggio di parametro per valore: nel caso di oggetti, si copiano i riferimenti. A differenza di C e Java, è lecito definire una funzione dentro un'altra funzione. Se i parametri attuali sono
 più di quelli necessari, non c'è nessun errore, semplicemente vengono ignorati. Se i parametri attuali sono meno di quelli necessari, quelli mancanti sono inizializazti a \texttt{undefined}.
 \subsection{Variabili: tipi di dichiarazione}
 La dichiarazione delle variabili è:
@@ -1647,7 +1647,7 @@ La dichiarazione delle variabili è:
 \end{itemize}
 \subsubsection{Variabili: dichiarazione esplicita}
 FUori da funzioni, la parole chiave \texttt{var} è ininfluente: la variabile definita è \textbf{globale}. All'interno di funzioni,
-la parole chiave \texttt{var} ha un significato preciso: indica che la nuova variabile è locale, ossia ha come scope la funzione. 
+la parole chiave \texttt{var} ha un significato preciso: indica che la nuova variabile è locale, ossia ha come scope la funzione.
 All'interno di funzioni, una dichiarazione senza la parola chiave \texttt{var} introcuce una variabile globale.
 \begin{figure}[H]
     \centering
@@ -1669,7 +1669,7 @@ function testEnv() {
     alert(provaEnv(18)); // COSA visualizza ???
 }
 \end{lstlisting}
-Nella funzione \texttt{testEnv} si ridefinisce il simbolo x, poi si invoca la funzione \texttt{provaEnv}, che usa il simbolo x, ma quale x? Nell'ambiente in cui 
+Nella funzione \texttt{testEnv} si ridefinisce il simbolo x, poi si invoca la funzione \texttt{provaEnv}, che usa il simbolo x, ma quale x? Nell'ambiente in cui
 provaEnv è definita, il simbolo x aveva un altro significato rispetto a quello che ha ora! Se vale l'ambiente esistente all'atto dell'uso di provaEnv, si parla di chiusura \textbf{dinamica};
 se prevale l'ambiente di definizione di provaEnv, si parla di chiusura \textbf{lessicale}. JavaScript adotta la chiusura lessicale.
 \subsubsection{Funzioni come dati}
@@ -1684,7 +1684,7 @@ g = f produce aliasing
     \item per utilizzare una funzione come dato occorre avere effettivamente un oggetto funzione;
     \item non si può sfruttare questa caratteristica per far eseguire una funzione di cui sia noto solo il nome;
     \item o di cui sia noto solo il codice;
-    \item il problema è risolvibile: si costruisce esplicitamente un "oggetto funzione", oppure si accede alla funzione tramite le proprietà dell'oggetto globale (si usa il primo). 
+    \item il problema è risolvibile: si costruisce esplicitamente un "oggetto funzione", oppure si accede alla funzione tramite le proprietà dell'oggetto globale (si usa il primo).
 \end{itemize}
 \subsection{Oggetti}
 Un oggetto JavaScript è una collezione di dati dotata di nome:
@@ -1693,7 +1693,7 @@ Un oggetto JavaScript è una collezione di dati dotata di nome:
     \item per accedere alle proprietà si usa la "dot notation": \texttt{nomeOggetto.nomeProprietà};
     \item tutte le proprietà sono accessibili.
 \end{itemize}
-Un oggetto JavaScript è costruito tramite \textbf{costruttore}: sstabilisce la struttura dell'oggetto e quindi le sue proprietà. I costruttori sono invocati mediante l'operatore \texttt{new}. 
+Un oggetto JavaScript è costruito tramite \textbf{costruttore}: sstabilisce la struttura dell'oggetto e quindi le sue proprietà. I costruttori sono invocati mediante l'operatore \texttt{new}.
 In JavaScript non esistono classi e sottoclassi. Il nome del costruttore è a scelta dell'utente. La struttura di un oggetto non è stabilita dalla classe.
 \subsubsection{Definizione}
 La struttura di oggetto JavaScript viene definita dal costruttore usato per crearlo. È all'interno del costruttore che si specificano le proprietà (iniziali) dell'oggetto, elencandole con la dot notation e la keyword \texttt{this}.
@@ -1713,7 +1713,7 @@ function Point(i,j){
 \end{lstlisting}
 La keyword \texttt{this} è necessaria, altrimenti ci si riferirebbe all'environment locale della funzione costruttore.
 \subsubsection{Costruzione}
-Per costruire oggetti si applica l'operatore \texttt{new} a una funzione costruttore: 
+Per costruire oggetti si applica l'operatore \texttt{new} a una funzione costruttore:
 \begin{lstlisting}[language=JavaScript]
 p1 = new Point(3,4);
 \end{lstlisting}
@@ -1763,19 +1763,19 @@ Viene costruito a partire da stringhe. Valutato ogni volta, è poco efficiente, 
 Funzione on demand:
 \begin{itemize}
     \item Inserire la funzione da calcolare:
-    \begin{lstlisting}[language=JavaScript]
+          \begin{lstlisting}[language=JavaScript]
     var funzione = prompt("Scrivere f(x): ")
     \end{lstlisting}
     \item Inserire il/i parametri da usare:
-    \begin{lstlisting}[language=JavaScript]
+          \begin{lstlisting}[language=JavaScript]
     var x = prompt("Calcolare per x = ? ")
     \end{lstlisting}
     \item Calcolare la funzione (invocazione riflessiva):
-    \begin{lstlisting}[language=JavaScript]
+          \begin{lstlisting}[language=JavaScript]
     var f = new Function("x", "return " + funzione)
     \end{lstlisting}
     \item Mostrare il risultato:
-    \begin{lstlisting}[language=JavaScript]
+          \begin{lstlisting}[language=JavaScript]
     confirm("Risultato: " + f(x))
     \end{lstlisting}
 \end{itemize}
@@ -1784,7 +1784,7 @@ I valori immessi da linea di comando (prompt) sono stringhe. Contromisure:
 \begin{itemize}
     \item l'utente specifica il tipo del dato attraverso una conversione esplicita;
     \item il programma implementa la conversione esplicita dopo il prompt:
-    \begin{lstlisting}[language=JavaScript]
+          \begin{lstlisting}[language=JavaScript]
     var x = parseInt(prompt("Calcolare per x = ? "))
     typeof(x) = number
     \end{lstlisting}
@@ -1809,21 +1809,21 @@ Metodi invocabili sun una funzione:
     \item \texttt{toString} - chiamata automaticamente quando la funzione deve essere rappresentata come testo: ritorna una rappresentazione a stringa dell'oggetto funzione;
     \item \texttt{valuesOf} - ritorna la funzione stessa come oggetto;
     \item \texttt{call} e \texttt{apply} - funzioni applicate all'oggetto passato com primo argomento (identifica il contesto this), fornendo a tale oggetto i restanti parametri:
-    \begin{lstlisting}[language=JavaScript]
+          \begin{lstlisting}[language=JavaScript]
     funz.apply(ogg, arrayDiParametri )
     \end{lstlisting}
-    \begin{lstlisting}[language=JavaScript]
+          \begin{lstlisting}[language=JavaScript]
     funz.call(ogg, arg1, arg2, ... )
     \end{lstlisting}
 \end{itemize}
 \subsection{Funzioni come dati - Conseguenze}
-Per utilizzare una funzione come dato occorre avere effettivamente un oggetto funzione. Non si può sfruttare questa caratteristica per far eseguire una funzione di cui sia noto solo il nome (letto da tastiera), 
+Per utilizzare una funzione come dato occorre avere effettivamente un oggetto funzione. Non si può sfruttare questa caratteristica per far eseguire una funzione di cui sia noto solo il nome (letto da tastiera),
 o di cui sia noto solo il codice. Il problema è risolvibile accedendo alla funzione tramite le proprietà dell'oggetto globale.
 \subsection{Oggetto globale}
 PROBLEMA: come può JavaScript distringuere fra metodi di oggetti e funzioni "globali"? Semplicemente non distingue: le funzioni "globali" non sono altro che metodi di un "oggetto globlae" definito dal sistema.
 \\ L'oggetto "globale" ha come metodi le funzioni non attribuite a uno specifico oggetto nonchè a quelle globali; come dati, le variabili incluse quelle predefinite; oggetti predefiniti.
 \subsection{[Costruttori di] Oggetti predefiniti}
-Oggetti di uso generale: 
+Oggetti di uso generale:
 \begin{itemize}
     \item Array, Boolean, Function, Number, Object, String.
     \item L'oggetto Math contiene la libreria matematica: costanti e funzioni di ogni tipo. Non va istanziato ma usato come componente "statico".
@@ -1856,7 +1856,7 @@ Metodi:
     \item \texttt{getSeconds}: restituisce i secondi, da 0 a 59
 \end{itemize}
 \subsection{Oggetto globale}
-L'oggetto "globale" è \textbf{UNICO} e viene sempre creato dall'interprete prima di eseguire alcunchè. Però non esiste un identificatore "global": in ogni situazione c'è un dato oggetto usato come globale. 
+L'oggetto "globale" è \textbf{UNICO} e viene sempre creato dall'interprete prima di eseguire alcunchè. Però non esiste un identificatore "global": in ogni situazione c'è un dato oggetto usato come globale.
 \\ In un browser Web, l'ggetto globale solitamente coincide con l'oggetto \texttt{window}, ma non sempre è così: a lato server, per esempio, sarà probabilmente l'oggetto response a svolgere quel ruolo. Quindi, in un browser, per scoprire tutte le proprietà dell'oggetto globale, basta invocare
 \texttt{show(window)}.
 \\ Oltre all'apporccio basato sul costruttore \texttt{Function}, si può sfruttare l'oggetto globale per ottenere un riferimento all'oggetto funzione corrispondente a un dato nome di funzione purchè la funzione richiesta sia già definita nel sistema. Se  $p$ è un riferimento a un oggetto, e $s$ è il nome di una sua
@@ -1872,7 +1872,7 @@ function calc(f,x) { return f(x) }
 È ora possibile effettuare l'invocazione
 calc(nome, .8)
 che dà 0.7173560908995228
- Il nome "sin" viene trasformato in un riferimento all'oggetto
+Il nome "sin" viene trasformato in un riferimento all'oggetto
 Math.sin, utilizzabile per la chiamata
 
 \subsection{API}
@@ -1883,6 +1883,57 @@ fetch('link')
     .then(data => console.log(data))
 \end{lstlisting}
 dove response è un oggetto che rappresenta la risposta alla richiesta HTTP, e data è un oggetto che rappresenta i dati restituiti dal server. Traduce da json ad oggetto js.
+\section{Node.js}
+Node.js è un ambiente JavaScript multipiattaforma lato server. JavaScript è il linguaggio utilizzato come "\textbf{collante}" per i moduli C++. È basato sul motore JavaScript V8 di Google.
+\\ Node.js utilizza un modello di I/O \textbf{non bloccante} e guidato dagli \textbf{eventi}. Node.js è come un browser web con un diverso insieme di moduli C++. Fornisce moduli per interagire
+con le risorse del sistema, come i processi, il file system, la rete, ecc\dots.
+\subsection{Programmi}
+I programmi Node.js possono essere creati utilizzando file JavaScript che devono essere eseguiti tramite Node.js. I file contengono codice JavaSCript e hanno estension "js". Per eseguire un programma, è necessario eseguire Node.js e passare il nome del file
+(con o senza l'estensione js) come primo parametro.
+\subsection{Gestire pacchetti con NPM}
+NPM è l'acronimo di \textbf{Node.js Package Manager}. Esso fornisce:
+\begin{itemize}
+    \item un repository pubblico di pacchetti;
+    \item una specifica per la creazione di pacchetti;
+    \item uno strumento a riga di comando per lavorare con i pacchetti.
+\end{itemize}
+La società npm, Inc. sviluppa e mantiene NPM.
+\subsection{Pacchetti locali vs globali}
+I pacchetti possono essere installati \textbf{localmente} o \textbf{globalmente}. I pacchetti \textbf{locali} sono memorizzati localmente nella cartella \texttt{node\_modules}. In genere i pacchetti locali sono librerie di codice utilizzate dal progetto.
+I pacchetti \textbf{globali} sono memorizzati globalmente sul sistema.
+\\ I pacchetti locali sono disponibili solo all'interno del progetto specifico, mentre quelli globali sono disponibili in tutto il sistema.
+\subsubsection{Installare e disinstallare pacchetti}
+Il programma npm viene utilizzato per \textbf{gestire} i pacchetti. Il primo argomento del programma npm è il comando da eseguire. I pacchetti possono essere installati ocn il comando \texttt{install} e disinstallati con il comando \texttt{unistall}. Esistono molti altri comandi disponibili per NPM.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Images/npm.png}
+\end{figure}
+\subsection{Creare un semplice Server Web}
+Uno dei moduli principali per Node.js è il modulo \textbf{HTTP} che fornisce un server Web e un client Web. Il \textbf{server Web} è molto flessibile, ma richiede molto codice boilerplate per costruire anche le applicazioni più semplici. I server Web sono applicazioni ad alta intensità I/O che li rendono adatti per Node.js, il quale è ottimo grazie
+alla sua facile gestione dei dati JSON.
+\subsection{Leggere i file dal disco}
+Node.js consente l'\textbf{accesso completo} al sistema a differenza di un browser Web che consente solo l'accesso in modalità sandbox. L'accesso alle disorse del file system può avvenire in modo \textbf{sincrono} o \textbf{asincrono}. L'accesso sincorno può essere utilizzato per il caricamento iniziale del programma, ma solo l'accesso asincrono deve essere
+utilizzato durante il funzionamento del programma. Sia il testo che i dati binari possono essere letti e scritti.
+\subsection{Creare un pacchetto}
+Tutti i progetti (che sono anche pacchetti) devono essere configurati per funzionare con NPM. Il comando \texttt{npm init} viene utilizzato per configurare un progetto. Verrà oista una serie di domande, tutte con risposte predefinite, utilizzate per creare e inizializzare un file \texttt{package.json}.
+\\ Il file \texttt{package.json} contiene metadati sul progetto, nonchè un elenco di \textbf{dipendenze} dell'applicazione e dello sviluppo. Quando i pacchetti NPM sono installati, NPM li salva nel file \texttt{package.json}.
+\subsubsection{Salvare le dipendenza di un pacchetto}
+La semplice installazione dei pacchetti non salva la dipendenza nel file \texttt{package.json}. Oltre all'installazione, è necessario specificare flag aggiuntivi:
+\begin{itemize}
+    \item \texttt{--save} o \texttt{-S} salverà il pacchetto come dipendenza nell'\textbf{applicazione};
+    \item \texttt{--save-dev} o \texttt{-D} salverà il pacchetto come dipendenza per lo \textbf{sviluppo}.
+\end{itemize}
+Le dipendenze dell'applicazione vengono utilizzate dal programma Node.js durante l'esecuzione. Le dipendenze per lo sviluppo vengono utilizzate per sviluppare il programma Node.js.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Images/npm_save.png}
+    \includegraphics[width=0.5\textwidth]{Images/npm_json.png}
+\end{figure}
+I comandi del terminale produrranno un file \texttt{package.json}. IL file è un file JSON e può essere modificato manualmente.
+\\ \texttt{Name} è il nome del pacchetto. La versione segue lo schema SEMVER. Viene monitorata anche la versione di ogni dipendenza. Main è il file principale importanto quando si richiede il modulo.
+
+\subsection{Usare NPM per eseguire un pacchetto}
+Oltre ad essere gestiti NPM, i pacchetti possono essere eseguiti con NPM. Per configurare l'esecuzione dei pacchetti Node, viene configurata l'opzione \texttt{scripts} del file \texttt{package.json}. Per eseguire un programma Node.js, lo script di avvio è configurato.
 
 \end{document}
 

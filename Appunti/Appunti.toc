@@ -178,3 +178,13 @@
 \contentsline {subsubsection}{\numberline {4.38.2}Metodi}{46}{subsubsection.4.38.2}%
 \contentsline {subsection}{\numberline {4.39}Oggetto globale}{47}{subsection.4.39}%
 \contentsline {subsection}{\numberline {4.40}API}{47}{subsection.4.40}%
+\contentsline {section}{\numberline {5}Node.js}{47}{section.5}%
+\contentsline {subsection}{\numberline {5.1}Programmi}{47}{subsection.5.1}%
+\contentsline {subsection}{\numberline {5.2}Gestire pacchetti con NPM}{47}{subsection.5.2}%
+\contentsline {subsection}{\numberline {5.3}Pacchetti locali vs globali}{47}{subsection.5.3}%
+\contentsline {subsubsection}{\numberline {5.3.1}Installare e disinstallare pacchetti}{48}{subsubsection.5.3.1}%
+\contentsline {subsection}{\numberline {5.4}Creare un semplice Server Web}{48}{subsection.5.4}%
+\contentsline {subsection}{\numberline {5.5}Leggere i file dal disco}{48}{subsection.5.5}%
+\contentsline {subsection}{\numberline {5.6}Creare un pacchetto}{48}{subsection.5.6}%
+\contentsline {subsubsection}{\numberline {5.6.1}Salvare le dipendenza di un pacchetto}{48}{subsubsection.5.6.1}%
+\contentsline {subsection}{\numberline {5.7}Usare NPM per eseguire un pacchetto}{49}{subsection.5.7}%
