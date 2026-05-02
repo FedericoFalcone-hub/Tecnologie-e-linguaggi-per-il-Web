@@ -1,8 +1,8 @@
 # Fdb version 4
-["pdflatex"] 1777746512.99327 "/home/federico/Documents/Tecnologie-e-linguaggi-per-il-Web/Appunti/Appunti.tex" "Appunti.pdf" "Appunti" 1777746518.6929 0
+["pdflatex"] 1777747293.58897 "/home/federico/Documents/Tecnologie-e-linguaggi-per-il-Web/Appunti/Appunti.tex" "Appunti.pdf" "Appunti" 1777747298.95565 0
   "/etc/texmf/web2c/texmf.cnf" 1760861718.5102 475 c0e671620eb5563b2130f56340a5fde8 ""
   "/home/federico/.texlive2023/texmf-var/fonts/pk/ljfour/jknappen/ec/tcrm1000.600pk" 1760861786.54029 11524 f0e65b9f20707a96144d1e02adffe1dc ""
-  "/home/federico/Documents/Tecnologie-e-linguaggi-per-il-Web/Appunti/Appunti.tex" 1777746512.38469 99682 5c08a95b56952fbd33bf153cdc98aaf0 ""
+  "/home/federico/Documents/Tecnologie-e-linguaggi-per-il-Web/Appunti/Appunti.tex" 1777747293.13189 99774 96a7d5b2486eac0b33c3170014804c75 ""
   "/usr/share/texlive/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/jknappen/ec/tcrm1000.tfm" 1136768653 1536 e07581a4bb3136ece9eeb4c3ffab8233 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm" 1246382020 1004 54797486969f23fa377b128694d548df ""
@@ -111,10 +111,10 @@
   "/usr/share/texmf/web2c/texmf.cnf" 1707919699 40399 f2c302f7d2af602abb742093540a5834 ""
   "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1774280427.37506 128028 f533b797fba58d231669ea19e894e23e ""
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1776940440 6802365 c2d60b6cd6bfa4f791fc22b51fd47f63 ""
-  "Appunti.aux" 1777746518.62057 24451 90e7460686e01d5f735c75245c4d40c5 "pdflatex"
-  "Appunti.out" 1777746518.62353 26285 597ab43170ad436aa3360e7098cf5d95 "pdflatex"
-  "Appunti.tex" 1777746512.38469 99682 5c08a95b56952fbd33bf153cdc98aaf0 ""
-  "Appunti.toc" 1777746518.62387 16496 c63f3cd5bf725b7821a145352dcc4eae "pdflatex"
+  "Appunti.aux" 1777747298.88648 24451 90e7460686e01d5f735c75245c4d40c5 "pdflatex"
+  "Appunti.out" 1777747298.88883 26285 597ab43170ad436aa3360e7098cf5d95 "pdflatex"
+  "Appunti.tex" 1777747293.13189 99774 96a7d5b2486eac0b33c3170014804c75 ""
+  "Appunti.toc" 1777747298.88921 16496 c63f3cd5bf725b7821a145352dcc4eae "pdflatex"
   "Images/DOM_liste_oggetti.png" 1775741940.19392 79881 9e79712797683f0ebe88577b261353e6 ""
   "Images/ajax.png" 1775738765.28598 230711 cae1442296666322b48637740f0f8367 ""
   "Images/arch_server_side.png" 1775738397.85491 61468 922394ae2292ce54f144eb058dc52a0b ""
