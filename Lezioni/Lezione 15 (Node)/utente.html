@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bootstrap demo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-md bg-body-tertiary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">PWM</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="popolari.html">Popolari</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link " href="scheda-film.html">Scheda Film</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link " href="utente.html">Profilo Utente</a>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="alert alert-danger d-none mt-1 mb-1" id="alert" role="alert">
+        </div>
+        <div id="form">
+            <div class="mb-3">
+                <label for="email" class="form-label">Email address</label>
+                <input type="email" class="form-control" id="email_login" value="mario.rossi@email.it">
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" class="form-control" id="password" value="casa">
+            </div>
+
+            <button class="btn btn-primary" onclick="login()">Submit</button>
+        </div>
+        <div id="scheda" class="">
+
+
+            <div class="mb-3">
+                <label for="nome" class="form-label">Nome</label>
+                <input type="text" class="form-control" id="nome">
+            </div>
+            <div class="mb-3">
+                <label for="cognome" class="form-label">Cognome</label>
+                <input type="text" class="form-control" id="cognome">
+            </div>
+            <div class="mb-3">
+                <label for="email" class="form-label">Email address</label>
+                <input type="email" class="form-control" id="email">
+            </div>
+            <!-- <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="password" value="casa">
+                </div> -->
+            <div class="mb-3">
+                <label for="film_preferito" class="form-label">Film Preferito</label>
+                <input type="text" class="form-control" id="film_preferito">
+            </div>
+            <button type="submit" class="btn btn-primary" onclick="aggiorna()">Aggiorna</button>
+            <button type="submit" class="btn btn-warning" onclick="logout()">Log Out</button>
+            <button type="submit" class="btn btn-danger" onclick="cancella()">Cancella L'utente</button>
+
+
+
+        </div>
+    </div>
+</body>
+<script>
+    function login() {
+        const cEmail = document.getElementById('email_login').value;
+        const cPassword = document.getElementById('password').value;
+
+        const user = {
+            email: cEmail,
+            password: cPassword
+        };
+
+        const options = {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(user)
+        };
+
+        fetch("http://localhost:3005/user/login?api_key=1234567", options)
+            .then(response => response.json())
+            .then(result => checkLogin(result));
+    }
+
+    function isLogged() {
+        var form = document.getElementById('form');
+        if (localStorage.getItem('user_id')) {
+            form.classList.add('d-none');
+            popola_scheda();
+        } else {
+            var scheda = document.getElementById('scheda');
+            scheda.classList.add('d-none');
+            form.classList.remove('d-none');   
+        }
+    }
+    
+    function checkLogin(result) {
+        var alert = document.getElementById('alert');
+        if (result.error) {
+            alert.innerHTML = result.error;
+            alert.classList.remove('d-none');
+        } else {
+            localStorage.setItem('user_id', result._id);
+            alert.classList.add('d-none');
+            var form = document.getElementById('form');
+            form.classList.add('d-none');
+            popola_scheda()   
+        }
+    }
+
+    function popola_scheda(){
+        const localid = localStorage.getItem('user_id');
+        fetch(`http://localhost:3005/user/${localid}?api_key=1234567`)
+                .then(response => response.json())
+                .then(result => saluta(result))
+    }
+
+    function saluta(result) {
+        console.log(result);
+        var scheda = document.getElementById('scheda');
+        const cNome = document.getElementById('nome').value = result.nome;
+        const cCognome = document.getElementById('cognome').value = result.cognome;
+        const cEmail = document.getElementById('email').value = result.email;
+        const cFilmPreferito = document.getElementById('film_preferito').value = result.film_preferito;
+        scheda.classList.remove('d-none');
+    }
+
+    function aggiorna() {
+        //Esercizio: Aggiornare i dati dell'utente
+    }
+
+    function cancella() {
+       //Esercizio: Cancellare l'utente
+
+
+    }
+
+    function logout(){
+        localStorage.removeItem('user_id');
+        isLogged(); // rieseguo la logica
+        //location.reload(); oppure Ricarico la pagina
+    }
+
+
+
+    isLogged();
+</script>
+
+</html>
