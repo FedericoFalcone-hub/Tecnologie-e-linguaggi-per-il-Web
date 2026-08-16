@@ -1,0 +1,13 @@
+{
+    "dependencies": {
+        "cors": "2.8.6",
+        "express": "5.2.1",
+        "mongodb": "7.5.0",
+        "mongoose": "9.8.0",
+        "swagger-ui-express": "5.0.1"
+    },
+    "devDependencies": {
+        "bcrypt": "6.0.0",
+        "swagger-autogen": "^2.23.7"
+    }
+}
