@@ -413,4 +413,65 @@ app.put('/user/:id/ristorante/logo', async (req, res) => {
     res.json(result);
 });
 
+app.put('/user/:id/ristorante', async (req, res) => {
+    // #swagger.description = "Aggiorna i dati del ristorante di un utente"
+
+    const id = req.params.id;
+    const newNomeRistorante = req.body.nomeRistorante;
+    const newPartitaIVA = req.body.partitaIVA;
+    const newTelefonoRistorante = req.body.telefonoRistorante;
+    const newIndirizzoRistorante = req.body.indirizzoRistorante;
+
+    if (!newNomeRistorante || !newPartitaIVA || !newTelefonoRistorante || !newIndirizzoRistorante) {
+        return res.status(400).json({ error: "Dati mancanti" });
+    }
+
+    if (!validateAddress(newIndirizzoRistorante)) {
+        return res.status(400).json({ error: "Indirizzo ristorante non valido" });
+    }
+
+    const user = await getUser(id);
+    if (!user) {
+        return res.status(404).json({ error: "Utente non trovato" });
+    }
+
+    if (!user.ristoratore) {
+        return res.status(403).json({ error: "Utente non autorizzato" });
+    }
+
+    const ristorante = await getRistorante(id);
+    if (!ristorante) {
+        return res.status(404).json({ error: "Ristorante non trovato" });
+    }
+
+    const coordinates = await getCoordinates(newIndirizzoRistorante);
+    if (!coordinates) {
+        return res.status(400).json({ error: "Indirizzo ristorante non valido" });
+    }
+
+    await client.connect();
+    try {
+        const result = await client.db('FastFood').collection('ristoranti').updateOne(
+            { idRistoratore: id },
+            {
+                $set: {
+                    nomeRistorante: newNomeRistorante,
+                    partitaIVA: newPartitaIVA,
+                    telefonoRistorante: newTelefonoRistorante,
+                    indirizzoRistorante: newIndirizzoRistorante,
+                    lat: coordinates.lat,
+                    lon: coordinates.lon
+                }
+            }
+        );
+        await client.close();
+        res.json(result);
+    } catch (error) {
+        if (error.code == 11000) {
+            res.status(409).json({ error: "Partita IVA già registrata" });
+        } else {
+            res.status(500).json({ error: `Errore non gestito ${error.message}` });
+        }
+    }
+});
 app.listen(port, () => console.log(`Server avviato sulla porta ${port}`));

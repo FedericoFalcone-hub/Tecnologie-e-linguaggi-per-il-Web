@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accedi</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link href="style.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div id="navbar-container"></div>
+
+    <div class="profile-header">
+        <div class="container">
+            <div class="d-flex align-items-center gap-4 py-4">
+                <div class="profile-avatar" id="avatar-iniziali"></div>
+                <div>
+                    <h3 class="mb-1" id="profilo-nome-header"></h3>
+                    <p class="text-muted mb-0" id="profilo-email-header" style="font-size: 14px;"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container py-5">
+        <div class="row">
+            <div class="col-lg-3 mb-4">
+                <div class="list-group profile-sidebar">
+                    <a href="#sezione-dati" class="list-group-item list-group-item-action active" data-tab="dati">Dati
+                        personali</a>
+                    <a href="#sezione-sicurezza" class="list-group-item list-group-item-action"
+                        data-tab="sicurezza">Modifica password</a>
+                    <a href="ordini.html" class="list-group-item list-group-item-action">I miei ordini</a>
+                    <a href="#" class="list-group-item list-group-item-action text-danger"
+                        onclick="eliminaAccount()">Elimina account</a>
+
+                </div>
+            </div>
+
+            <div class="col-lg-9">
+
+                <!-- Dati personali -->
+                <div id="sezione-dati" class="profile-section">
+                    <div class="card border-0 shadow-sm p-4">
+                        <h5 class="mb-4">Dati personali</h5>
+                        <form id="form-dati">
+                            <div class="row">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="nome" class="form-label">Nome</label>
+                                        <input type="text" class="form-control" id="nome" name="nome" minlength="2"
+                                            required>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="cognome" class="form-label">Cognome</label>
+                                        <input type="text" class="form-control" id="cognome" name="cognome"
+                                            minlength="2" required>
+                                    </div>
+                                    <div class="col-md-12 mb-3">
+                                        <label for="indirizzo" class="form-label">Indirizzo</label>
+                                        <input type="text" class="form-control" id="indirizzo" name="indirizzo"
+                                            minlength="2" required>
+                                    </div>
+                                    <div class="mb-4">
+                                        <label for="email" class="form-label">Email</label>
+                                        <input type="email" class="form-control" id="email" name="email" required>
+                                    </div>
+                                    <button type="submit" class="btn btn-brand rounded-pill px-4 py-2">Salva
+                                        modifiche</button>
+                                    <p id="dati-messaggio" class="mt-3 mb-0" style="font-size: 14px;"></p>
+                                </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Modifica password -->
+                <div id="sezione-sicurezza" class="profile-section" style="display: none;">
+                    <div class="card border-0 shadow-sm p-4">
+                        <h5 class="mb-4">Modifica password</h5>
+                        <form id="form-sicurezza">
+                            <div class="mb-4">
+                                <label for="password" class="form-label">Password attuale</label>
+                                <input type="password" class="form-control" id="password-attuale"
+                                    name="password-attuale" minlength="6" placeholder="••••••••" required>
+                            </div>
+                            <div class="mb-4">
+                                <label for="password" class="form-label">Nuova password</label>
+                                <input type="password" class="form-control" id="password" name="password" minlength="6"
+                                    placeholder="••••••••" required>
+                            </div>
+                            <div class="mb-4">
+                                <label for="password-conferma" class="form-label">Conferma nuova password</label>
+                                <input type="password" class="form-control" id="password-conferma"
+                                    name="password-conferma" minlength="6" placeholder="••••••••" required>
+                            </div>
+                            <button type="submit" class="btn btn-brand rounded-pill px-4 py-2">Aggiorna
+                                password</button>
+                            <p id="sicurezza-messaggio" class="mt-3 mb-0" style="font-size: 14px;"></p>
+
+                        </form>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
+    <script src="../backend/lib.js"></script>
+
+    <script>
+
+        if (!isLogged()) {
+            window.location.href = "bizarre_bites.html";
+        }
+
+        function aggiornaHeader() {
+            const utente = JSON.parse(localStorage.getItem('utente'));
+            document.getElementById('profilo-nome-header').textContent = utente.nome + ' ' + utente.cognome;
+            document.getElementById('profilo-email-header').textContent = utente.email;
+            document.getElementById('avatar-iniziali').textContent = utente.nome.charAt(0).toUpperCase() + utente.cognome.charAt(0).toUpperCase();
+        }
+
+        function aggiornaDati(result) {
+            if (result.error) {
+                document.getElementById('dati-messaggio').textContent = result.error;
+                document.getElementById('dati-messaggio').classList.add('text-danger');
+            } else {
+                const utenteAggiornato = {
+                    ...JSON.parse(localStorage.getItem('utente')),
+                    nome: document.getElementById('nome').value,
+                    cognome: document.getElementById('cognome').value,
+                    indirizzo: document.getElementById('indirizzo').value,
+                    email: document.getElementById('email').value
+                };
+                localStorage.setItem('utente', JSON.stringify(utenteAggiornato));
+                document.getElementById('dati-messaggio').textContent = 'Dati aggiornati con successo!';
+                document.getElementById('dati-messaggio').classList.remove('text-danger');
+                document.getElementById('dati-messaggio').classList.add('text-success');
+                aggiornaHeader();
+            }
+        }
+
+        function aggiornaPassword(result) {
+            if (result.error) {
+                document.getElementById('password-attuale').classList.remove('text-success');
+                document.getElementById('sicurezza-messaggio').textContent = result.error;
+                document.getElementById('sicurezza-messaggio').classList.add('text-danger');
+            } else {
+                document.getElementById('sicurezza-messaggio').textContent = 'Password aggiornata con successo!';
+                document.getElementById('sicurezza-messaggio').classList.remove('text-danger');
+                document.getElementById('sicurezza-messaggio').classList.add('text-success');
+            }
+        }
+
+        function eliminaAccount() {
+            if (confirm("Sei sicuro di voler eliminare il tuo account? Questa azione è irreversibile.")) {
+                const utente = JSON.parse(localStorage.getItem('utente'));
+                const options = {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                };
+
+                fetch(`http://localhost:3005/user/${utente._id}?api_key=1234567`, options)
+                    .then(response => response.json())
+                    .then(result => {
+                        if (result.error) {
+                            alert("Errore durante l'eliminazione dell'account: " + result.error);
+                        } else {
+                            localStorage.removeItem('utente');
+                            window.location.href = "bizarre_bites.html";
+                        }
+                    });
+            }
+        }
+
+        aggiornaHeader();
+
+        document.querySelectorAll('.profile-sidebar [data-tab]').forEach(link => {
+            link.addEventListener('click', function (e) {
+                e.preventDefault();
+
+                document.querySelectorAll('.profile-sidebar [data-tab]').forEach(l => l.classList.remove('active'));
+                this.classList.add('active');
+
+                document.querySelectorAll('.profile-section').forEach(sezione => sezione.style.display = 'none');
+                document.getElementById(this.getAttribute('href').substring(1)).style.display = 'block';
+            });
+        });
+
+        const utente = JSON.parse(localStorage.getItem('utente'));
+        document.getElementById('nome').value = utente.nome;
+        document.getElementById('cognome').value = utente.cognome;
+        document.getElementById('email').value = utente.email;
+        document.getElementById('indirizzo').value = utente.indirizzo || '';
+
+        //Modifica dati personali
+        document.getElementById('form-dati').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const utente = JSON.parse(localStorage.getItem('utente'));
+            const cNome = capitalize(document.getElementById('nome').value);
+            const cCognome = capitalize(document.getElementById('cognome').value);
+            const cEmail = document.getElementById('email').value.toLowerCase();
+            const cIndirizzo = document.getElementById('indirizzo').value;
+
+            const user = {
+                nome: cNome,
+                cognome: cCognome,
+                email: cEmail,
+                indirizzo: cIndirizzo
+            };
+
+            const options = {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(user)
+            };
+
+            fetch(`http://localhost:3005/user/${utente._id}?api_key=1234567`, options)
+                .then(response => response.json())
+                .then(result => aggiornaDati(result))
+        });
+
+
+        //Modifica password
+        document.getElementById('form-sicurezza').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+
+            const utente = JSON.parse(localStorage.getItem('utente'));
+            const password = document.getElementById('password').value;
+            const passwordConferma = document.getElementById('password-conferma').value;
+            const password_attuale = document.getElementById('password-attuale').value;
+
+            if (password !== passwordConferma) {
+                document.getElementById('sicurezza-messaggio').classList.remove('text-success');
+                document.getElementById('sicurezza-messaggio').textContent = 'Le password non corrispondono';
+                document.getElementById('sicurezza-messaggio').classList.add('text-danger');
+                return;
+            }
+            const user = {
+                passwordAttuale: password_attuale,
+                password: password
+            }
+
+            const options = {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(user)
+            };
+
+
+            fetch(`http://localhost:3005/user/${utente._id}/password?api_key=1234567`, options)
+                .then(response => response.json())
+                .then(result => aggiornaPassword(result))
+        });
+
+
+    </script>
+
+</body>
+
+</html>

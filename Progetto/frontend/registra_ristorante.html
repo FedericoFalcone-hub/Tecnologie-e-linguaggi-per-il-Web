@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registra Ristorante</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link href="style.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+
+
+    <div id="navbar-container"></div>
+
+
+    <div class="auth-page">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-7 col-lg-6">
+
+                    <div class="card auth-card border-0 p-4 p-md-5">
+                        <div class="text-center mb-4">
+                            <h2 class="text-dark" style="font-size: 26px; font-weight: 700;">Registra un ristorante</h2>
+                        </div>
+
+                        <form id="form-registrazione">
+                            <div class="mb-3">
+                                <label class="form-label">Nome<span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="nome" placeholder="Nome ristorante"
+                                    minlength="2" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Partita IVA<span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="piva" placeholder="IT12345678901"
+                                    minlength="13" maxlength="13" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Telefono<span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="telefono" placeholder="3331234567"
+                                    minlength="10" maxlength="10" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Indirizzo<span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-white border-end-0">📍</span>
+                                    <input type="text" class="form-control border-start-0" id="indirizzo"
+                                        placeholder="Via Roma, 1, Milano" required>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-brand rounded-pill w-100 py-2">Registra</button>
+                            <p id="registrazione-messaggio" class="text-center mt-3 mb-0" style="font-size: 14px;"></p>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
+    <script src="../backend/lib.js"></script>
+
+    <script>
+        checkLoggedRistoratore();
+
+        function registra(result) {
+            const messaggio = document.getElementById('registrazione-messaggio');
+            if (result.error) {
+                messaggio.textContent = result.error;
+                messaggio.classList.add('text-danger');
+            } else {
+                messaggio.textContent = 'Ristorante registrato con successo!';
+                messaggio.classList.remove('text-danger');
+                messaggio.classList.add('text-success');
+                setTimeout(() => {
+                    window.location.href = 'gestione_ristorante.html';
+                }, 2000);
+            }
+        }
+
+        document.getElementById('form-registrazione').addEventListener('invalid', function (e) {
+            const messaggio = document.getElementById('registrazione-messaggio');
+            messaggio.textContent = 'Compila correttamente tutti i campi';
+            messaggio.classList.add('text-danger');
+        }, true);
+
+        document.getElementById('form-registrazione').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const utente = JSON.parse(localStorage.getItem('utente'));
+            const cNome = capitalize(document.getElementById('nome').value.trim());
+            const cPiva = document.getElementById('piva').value.trim();
+            const cTelefono = document.getElementById('telefono').value.trim();
+            const cIndirizzo = capitalize(document.getElementById('indirizzo').value.trim());
+
+            const ristorante = {
+                nomeRistorante: cNome,
+                partitaIVA: cPiva,
+                telefonoRistorante: cTelefono,
+                indirizzoRistorante: cIndirizzo
+            };
+
+            const options = {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(ristorante)
+            };
+
+            fetch(`http://localhost:3005/user/${utente._id}/ristorante?api_key=1234567`, options)
+                .then(response => response.json())
+                .then(result => registra(result));
+        });
+
+    </script>
+</body>
+
+</html>
