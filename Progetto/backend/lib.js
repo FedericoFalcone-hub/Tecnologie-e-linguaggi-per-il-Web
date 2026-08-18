@@ -41,7 +41,7 @@ function updateNavbar() {
     } else if (paginaAttuale.includes("accesso.html") || paginaAttuale.includes("registrazione.html")) {
         zonaAccount.innerHTML = '';
     } else {
-        const specialOption = JSON.parse(utente).ristoratore ? `<li><a class="dropdown-item" href="${base}ristorante/gestione_ristorante.html">Gestione ristorante</a></li>` : '<li><a class="dropdown-item" href="/frontend/ordini.html">I miei ordini</a></li>';
+        const specialOption = JSON.parse(utente).ristoratore ? `<li><a class="dropdown-item" href="${base}ristorante/gestione_ristorante.html">Gestione ristorante</a></li>` : '<li><a class="dropdown-item" href="#">I miei ordini</a></li>';
         const nome = JSON.parse(utente).nome;
         zonaAccount.innerHTML = `
       <div class="dropdown">
