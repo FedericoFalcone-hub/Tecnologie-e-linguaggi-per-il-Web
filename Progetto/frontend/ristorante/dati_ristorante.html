@@ -9,228 +9,283 @@
     <link href="../style.css" rel="stylesheet">
 
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap"
-        rel="stylesheet">
+          rel="stylesheet">
 </head>
 
 <body>
 
-    <div id="navbar-container"></div>
+<div id="navbar-container"></div>
 
-    <div class="auth-page">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-md-7 col-lg-6">
+<div class="auth-page">
 
-                    <div class="card auth-card border-0 p-4 p-md-5">
-                        <div class="text-center mb-4">
-                            <h2 class="text-dark" style="font-size: 26px; font-weight: 700;"></h2>
+    <div class="container">
+
+        <div class="row justify-content-center">
+
+            <div class="col-md-7 col-lg-6">
+                <div class="container pt-4">
+                    <a href="gestione_ristorante.html"
+                       class="text-decoration-none text-muted d-inline-flex align-items-center gap-1"
+                       style="font-size: 14px;">
+                        ← Torna alla gestione
+                    </a>
+                </div>
+                <div class="card auth-card border-0 p-4 p-md-5">
+                    <div class="text-center mb-4">
+                        <h2 class="text-dark" style="font-size: 26px; font-weight: 700;"></h2>
+                    </div>
+
+                    <form id="form-dati">
+                        <div id="logo" class="ristorante-logo-form mx-auto mb-3" style="cursor: pointer;"
+                             data-bs-toggle="modal" data-bs-target="#modalLogo" onclick="apriModalLogo()">
+                            <span id="logo-contenuto"></span>
+                            <span class="logo-overlay">✏️ Modifica</span>
+                        </div>
+                        <div class="mb-3">
+                            <label for="nome" class="form-label">Nome<span class="text-danger"></span></label>
+                            <input type="text" class="form-control" id="nome" placeholder="Nome ristorante"
+                                   minlength="2" required>
                         </div>
 
-                        <form id="form-registrazione">
-                            <div id="logo" class="ristorante-logo-form mx-auto mb-3" style="cursor: pointer;"
-                                data-bs-toggle="modal" data-bs-target="#modalLogo" onclick="apriModalLogo()">
-                                <span id="logo-contenuto"></span>
-                                <span class="logo-overlay">✏️ Modifica</span>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Nome<span class="text-danger"></span></label>
-                                <input type="text" class="form-control" id="nome" placeholder="Nome ristorante"
-                                    minlength="2" required>
-                            </div>
+                        <div class="mb-3">
+                            <label for="piva" class="form-label">Partita IVA<span class="text-danger"></span></label>
+                            <input type="text" class="form-control" id="piva" placeholder="IT12345678901"
+                                   minlength="13" maxlength="13" required>
+                        </div>
 
-                            <div class="mb-3">
-                                <label class="form-label">Partita IVA<span class="text-danger"></span></label>
-                                <input type="text" class="form-control" id="piva" placeholder="IT12345678901"
-                                    minlength="13" maxlength="13" required>
+                        <div class="mb-3">
+                            <label for="telefono" class="form-label">Telefono<span class="text-danger"></span></label>
+                            <input type="text" class="form-control" id="telefono" placeholder="3331234567"
+                                   minlength="10" maxlength="10" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="indirizzo" class="form-label">Indirizzo</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-white border-end-0">📍</span>
+                                <input type="text" class="form-control border-start-0" id="indirizzo"
+                                       placeholder="Via Roma, 1, Milano" required>
                             </div>
+                        </div>
 
-                            <div class="mb-3">
-                                <label class="form-label">Telefono<span class="text-danger"></span></label>
-                                <input type="text" class="form-control" id="telefono" placeholder="3331234567"
-                                    minlength="10" maxlength="10" required>
-                            </div>
-
-                            <div class="mb-3">
-                                <label class="form-label">Indirizzo</label>
-                                <div class="input-group">
-                                    <span class="input-group-text bg-white border-end-0">📍</span>
-                                    <input type="text" class="form-control border-start-0" id="indirizzo"
-                                        placeholder="Via Roma, 1, Milano" required>
-                                </div>
-                            </div>
-
-                            <button type="submit" class="btn btn-brand rounded-pill w-100 py-2">Registra</button>
-                            <p id="registrazione-messaggio" class="text-center mt-3 mb-0" style="font-size: 14px;"></p>
-                        </form>
-                    </div>
-
+                        <button type="submit" class="btn btn-brand rounded-pill w-100 py-2">Aggiorna</button>
+                        <p id="aggiornamento-messaggio" class="text-center mt-3 mb-0" style="font-size: 14px;"></p>
+                    </form>
                 </div>
+
             </div>
         </div>
     </div>
+</div>
 
-    <div class="modal fade" id="modalLogo" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content" style="border-radius: 16px;">
+<div class="modal fade" id="modalLogo" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="border-radius: 16px;">
 
-                <div class="modal-header border-0">
-                    <h5 class="modal-title">Modifica logo</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            <div class="modal-header border-0">
+                <h5 class="modal-title">Modifica logo</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <label for="logoUrlInput" class="form-label">URL immagine</label>
+                <input type="url" class="form-control" id="logoUrlInput" placeholder="https://esempio.com/logo.png">
+
+                <div class="text-center mt-3" id="anteprimaModalWrapper" style="display: none;">
+                    <img id="anteprimaModal" src="" alt="Anteprima"
+                         style="width: 100px; height: 100px; border-radius: 16px; object-fit: cover;">
                 </div>
+                <p id="logo-modal-messaggio" class="mt-2 mb-0" style="font-size: 13px;"></p>
+                <button type="button" id="btn-rimuovi-logo" class="btn btn-link text-danger px-0 mt-2"
+                        style="font-size: 13px; display: none;">Rimuovi logo attuale
+                </button>
+            </div>
 
-                <div class="modal-body">
-                    <label for="logoUrlInput" class="form-label">URL immagine</label>
-                    <input type="url" class="form-control" id="logoUrlInput" placeholder="https://esempio.com/logo.png">
-
-                    <div class="text-center mt-3" id="anteprimaModalWrapper" style="display: none;">
-                        <img id="anteprimaModal" src="" alt="Anteprima"
-                            style="width: 100px; height: 100px; border-radius: 16px; object-fit: cover;">
-                    </div>
-                    <p id="logo-modal-messaggio" class="mt-2 mb-0" style="font-size: 13px;"></p>
-                    <button type="button" id="btn-rimuovi-logo" class="btn btn-link text-danger px-0 mt-2"
-                        style="font-size: 13px; display: none;">Rimuovi logo attuale</button>
-                </div>
-
-                <div class="modal-footer border-0">
-                    <button type="button" class="btn btn-outline-dark rounded-pill"
-                        data-bs-dismiss="modal">Annulla</button>
-                    <button type="button" id="btn-salva-logo" class="btn btn-brand rounded-pill">Salva</button>
-                </div>
+            <div class="modal-footer border-0">
+                <button type="button" class="btn btn-outline-dark rounded-pill"
+                        data-bs-dismiss="modal">Annulla
+                </button>
+                <button type="button" id="btn-salva-logo" class="btn btn-brand rounded-pill">Salva</button>
             </div>
         </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 
-    <script src="/backend/lib.js"></script>
+<script src="/backend/lib.js"></script>
 
-    <script>
-        checkLoggedRistoratore();
-        const ristorante = JSON.parse(localStorage.getItem("ristorante"));
-        const utente = JSON.parse(localStorage.getItem("utente"));
-        const logoContainer = document.getElementById("logo-contenuto");
+<script>
+    checkLoggedRistoratore();
+    let ristorante = JSON.parse(localStorage.getItem("ristorante"));
+    const utente = JSON.parse(localStorage.getItem("utente"));
+    const logoContainer = document.getElementById("logo-contenuto");
 
-        async function inizializza() {
-            if (!ristorante) {
-                ristorante = await getRistorante();
+    async function inizializza() {
+        if (!ristorante) {
+            ristorante = await getRistorante();
+            localStorage.setItem("ristorante", JSON.stringify(ristorante));
+        }
+
+        if (ristorante.logoUrl) {
+            try {
+                logoContainer.style.backgroundColor = "#fff";
+                logoContainer.innerHTML = `<img src="${ristorante.logoUrl}" alt="Logo ristorante">`;
+
+            } catch (error) {
+                logoContainer.textContent = ristorante.nomeRistorante.substring(0, 2).toUpperCase();
+            }
+        } else {
+            logoContainer.textContent = ristorante.nomeRistorante.substring(0, 2).toUpperCase();
+        }
+
+        document.getElementById("nome").value = ristorante.nomeRistorante;
+        document.getElementById("piva").value = ristorante.partitaIVA;
+        document.getElementById("telefono").value = ristorante.telefonoRistorante;
+        document.getElementById("indirizzo").value = ristorante.indirizzoRistorante;
+    }
+
+    inizializza();
+
+    function apriModalLogo() {
+        const btnRimuovi = document.getElementById("btn-rimuovi-logo");
+        const inputUrl = document.getElementById("logoUrlInput");
+
+        if (ristorante.logoUrl) {
+            btnRimuovi.style.display = "inline-block";
+            inputUrl.value = ristorante.logoUrl;
+        } else {
+            btnRimuovi.style.display = "none";
+            inputUrl.value = "";
+        }
+    }
+
+    function aggiornaDati(result) {
+        if (result.error) {
+            document.getElementById('aggiornamento-messaggio').classList.remove('text-success');
+            document.getElementById('aggiornamento-messaggio').textContent = result.error;
+            document.getElementById('aggiornamento-messaggio').classList.add('text-danger');
+        } else {
+            const ristoranteAggiornato = {
+                ...JSON.parse(localStorage.getItem('ristornate')),
+                nomeRistorante: document.getElementById('nome').value,
+                partitaIVA: document.getElementById('piva').value,
+                telefonoRistorante: document.getElementById('telefono').value,
+                indirizzoRistorante: document.getElementById('indirizzo').value,
+                lat: result.lat,
+                lon: result.lon,
+                logoUrl: ristorante.logoUrl
+            }
+
+            localStorage.setItem('ristorante', JSON.stringify(ristoranteAggiornato));
+
+            document.getElementById('aggiornamento-messaggio').textContent = 'Dati aggiornati con successo!';
+            document.getElementById('aggiornamento-messaggio').classList.remove('text-danger');
+            document.getElementById('aggiornamento-messaggio').classList.add('text-success');
+
+        }
+    }
+
+    //controllo se input link funziona
+    document.getElementById('logoUrlInput').addEventListener('input', function () {
+        const url = this.value.trim();
+        const wrapper = document.getElementById('anteprimaModalWrapper');
+        const img = document.getElementById('anteprimaModal');
+        const messaggio = document.getElementById('logo-modal-messaggio');
+
+        if (!url) {
+            wrapper.style.display = 'none';
+            return;
+        }
+
+        img.onerror = function () {
+            wrapper.style.display = 'none';
+            messaggio.textContent = 'Impossibile caricare questa immagine';
+            messaggio.className = 'mt-2 mb-0 text-danger';
+        };
+
+        img.onload = function () {
+            wrapper.style.display = 'block';
+            messaggio.textContent = '';
+        };
+
+        img.src = url;
+    });
+
+    //salvataggio nuovo logo
+    document.getElementById('btn-salva-logo').addEventListener('click', function () {
+        const nuovoUrl = document.getElementById('logoUrlInput').value.trim();
+        const messaggio = document.getElementById('logo-modal-messaggio');
+
+        if (!nuovoUrl) {
+            messaggio.textContent = 'Inserisci un URL valido.';
+            messaggio.className = 'mt-2 mb-0 text-danger';
+            return;
+        }
+
+        // Chiamata per salvare il nuovo logoUrl
+        fetch(`http://localhost:3005/user/${utente._id}/ristorante/logo?api_key=1234567`, {
+            method: 'PUT',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({logoUrl: nuovoUrl})
+        })
+            .then(response => response.json())
+            .then(() => {
+                const modale = bootstrap.Modal.getInstance(document.getElementById('modalLogo'));
+                modale.hide();
+                ristorante.logoUrl = nuovoUrl;
                 localStorage.setItem("ristorante", JSON.stringify(ristorante));
-            }
-
-            if (ristorante.logoUrl) {
-                try {
-                    logoContainer.style.backgroundColor = "#fff";
-                    logoContainer.innerHTML = `<img src="${ristorante.logoUrl}" alt="Logo ristorante">`;
-
-                } catch (error) {
-                    const iniziali = ristorante.nomeRistorante.substring(0, 2).toUpperCase();
-                    logoContainer.textContent = iniziali;
-                }
-            } else {
-                const iniziali = ristorante.nomeRistorante.substring(0, 2).toUpperCase();
-                logoContainer.textContent = iniziali;
-            }
-
-            document.getElementById("nome").value = ristorante.nomeRistorante;
-            document.getElementById("piva").value = ristorante.partitaIVA;
-            document.getElementById("telefono").value = ristorante.telefonoRistorante;
-            document.getElementById("indirizzo").value = ristorante.indirizzoRistorante;
-        }
-
-        inizializza();
-
-        function apriModalLogo() {
-            const btnRimuovi = document.getElementById("btn-rimuovi-logo");
-            const inputUrl = document.getElementById("logoUrlInput");
-
-            if (ristorante.logoUrl) {
-                btnRimuovi.style.display = "inline-block";
-                inputUrl.value = ristorante.logoUrl;
-            } else {
-                btnRimuovi.style.display = "none";
-                inputUrl.value = "";
-            }
-        }
-
-        document.getElementById('logoUrlInput').addEventListener('input', function () {
-            const url = this.value.trim();
-            const wrapper = document.getElementById('anteprimaModalWrapper');
-            const img = document.getElementById('anteprimaModal');
-            const messaggio = document.getElementById('logo-modal-messaggio');
-
-            if (!url) {
-                wrapper.style.display = 'none';
-                return;
-            }
-
-            img.onerror = function () {
-                wrapper.style.display = 'none';
-                messaggio.textContent = 'Impossibile caricare questa immagine';
-                messaggio.className = 'mt-2 mb-0 text-danger';
-            };
-
-            img.onload = function () {
-                wrapper.style.display = 'block';
-                messaggio.textContent = '';
-            };
-
-            img.src = url;
-        });
-
-        document.getElementById('btn-salva-logo').addEventListener('click', function () {
-            const nuovoUrl = document.getElementById('logoUrlInput').value.trim();
-            const messaggio = document.getElementById('logo-modal-messaggio');
-
-            if (!nuovoUrl) {
-                messaggio.textContent = 'Inserisci un URL valido.';
-                messaggio.className = 'mt-2 mb-0 text-danger';
-                return;
-            }
-
-            // Chiamata al backend per salvare il nuovo logoUrl
-            fetch(`http://localhost:3005/user/${utente._id}/ristorante/logo?api_key=1234567`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ logoUrl: nuovoUrl })
+                window.location.reload();
             })
-                .then(response => response.json())
-                .then(() => {
-                    const modale = bootstrap.Modal.getInstance(document.getElementById('modalLogo'));
-                    modale.hide();
-                    ristorante.logoUrl = nuovoUrl;
-                    localStorage.setItem("ristorante", JSON.stringify(ristorante));
-                    window.location.reload();
-                })
-                .catch(error => {
+    });
 
-                    messaggio.textContent = 'Errore durante il salvataggio.';
-                    messaggio.className = 'mt-2 mb-0 text-danger';
-                });
-        });
-
-        document.getElementById('btn-rimuovi-logo').addEventListener('click', function () {
-            const messaggio = document.getElementById('logo-modal-messaggio');
-            const options = {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ logoUrl: null })
-            };
+    //rimozione del logo
+    document.getElementById('btn-rimuovi-logo').addEventListener('click', function () {
+        const options = {
+            method: 'PUT',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({logoUrl: null})
+        };
 
 
-            fetch(`http://localhost:3005/user/${utente._id}/ristorante/logo?api_key=1234567`, options)
-                .then(response => response.json())
-                .then(() => {
-                    ristorante.logoUrl = "";
-                    localStorage.setItem("ristorante", JSON.stringify(ristorante));
-                    window.location.reload();
-                })
-                .catch(error => {
-                    messaggio.textContent = 'Errore durante la rimozione.';
-                    messaggio.className = 'mt-2 mb-0 text-danger';
-                });
-        });
+        fetch(`http://localhost:3005/user/${utente._id}/ristorante/logo?api_key=1234567`, options)
+            .then(response => response.json())
+            .then(() => {
+                ristorante.logoUrl = "";
+                localStorage.setItem("ristorante", JSON.stringify(ristorante));
+                window.location.reload();
+            })
+    });
 
+    //aggiornamento dati ristorante
+    document.getElementById('form-dati').addEventListener('submit', function (e) {
+        e.preventDefault();
 
+        const cNome = capitalize(document.getElementById('nome').value.trim());
+        const cPiva = document.getElementById('piva').value.trim().toUpperCase();
+        const cTelefono = document.getElementById('telefono').value.trim();
+        const cIndirizzo = document.getElementById('indirizzo').value.trim();
 
-    </script>
+        const restaurant = {
+            nomeRistorante: cNome,
+            partitaIVA: cPiva,
+            telefonoRistorante: cTelefono,
+            indirizzoRistorante: cIndirizzo,
+        };
+
+        const options = {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(restaurant)
+        };
+
+        fetch(`http://localhost:3005/user/${utente._id}/ristorante?api_key=1234567`, options)
+            .then(response => response.json())
+            .then(result => aggiornaDati(result))
+    });
+
+</script>
 
 </body>
 
