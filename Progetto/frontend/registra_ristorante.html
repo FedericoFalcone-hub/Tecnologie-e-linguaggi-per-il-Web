@@ -91,7 +91,7 @@
         }
     }
 
-    document.getElementById('form-registrazione').addEventListener('invalid', function (e) {
+    document.getElementById('form-registrazione').addEventListener('invalid', function () {
         const messaggio = document.getElementById('registrazione-messaggio');
         messaggio.textContent = 'Compila correttamente tutti i campi';
         messaggio.classList.add('text-danger');

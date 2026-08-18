@@ -6,159 +6,159 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registrati</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+          integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <link href="style.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap"
-        rel="stylesheet">
+          rel="stylesheet">
 </head>
 
 <body>
 
 
-    <div id="navbar-container"></div>
+<div id="navbar-container"></div>
 
 
-    <div class="auth-page">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-md-7 col-lg-6">
+<div class="auth-page">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-7 col-lg-6">
 
-                    <div class="card auth-card border-0 p-4 p-md-5">
-                        <div class="text-center mb-4">
-                            <h2 class="text-dark" style="font-size: 26px; font-weight: 700;">Crea un account</h2>
-                        </div>
-
-                        <form id="form-registrazione">
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label for="nome" class="form-label">Nome<span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" id="nome" placeholder="Mario" minlength="2"
-                                        required>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label for="cognome" class="form-label">Cognome<span
-                                            class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" id="cognome" placeholder="Rossi"
-                                        minlength="2" required>
-                                </div>
-                            </div>
-
-                            <div class="mb-3">
-                                <label class="form-label">Indirizzo<span class="text-danger">*</span></label>
-                                <div class="input-group">
-                                    <span class="input-group-text bg-white border-end-0">📍</span>
-                                    <input type="text" class="form-control border-start-0" id="indirizzo"
-                                        placeholder="Via Roma, 1, Milano" required>
-
-                                </div>
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="email" class="form-label">Email<span class="text-danger">*</span></label>
-                                <div class="input-group">
-                                    <span class="input-group-text bg-white border-end-0">✉️</span>
-                                    <input type="email" class="form-control border-start-0" id="email"
-                                        placeholder="nome@esempio.it" autocomplete="email" required>
-
-                                </div>
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="password" class="form-label">Password<span
-                                        class="text-danger">*</span></label>
-                                <div class="input-group">
-                                    <span class="input-group-text bg-white border-end-0">🔒</span>
-                                    <input type="password" class="form-control border-start-0" id="password"
-                                        name="password" placeholder="••••••••" minlength="6" required>
-                                </div>
-                            </div>
-
-                            <div class="mb-4">
-                                <label for="tipo" class="form-label">Tipo di account</label>
-                                <select class="form-select" id="tipo" name="ristoratore" required>
-                                    <option value="false" selected>Cliente</option>
-                                    <option value="true">Ristoratore</option>
-                                </select>
-                            </div>
-
-                            <button type="submit" class="btn btn-brand rounded-pill w-100 py-2">Registrati</button>
-                            <p id="registrazione-messaggio" class="text-center mt-3 mb-0" style="font-size: 14px;"></p>
-                            <p class="text-center text-muted mt-3 mb-0" style="font-size: 14px;">
-                                Hai già un account? <a href="accesso.html"
-                                    class="text-brand fw-semibold text-decoration-none">Accedi</a>
-                            </p>
-                        </form>
+                <div class="card auth-card border-0 p-4 p-md-5">
+                    <div class="text-center mb-4">
+                        <h2 class="text-dark" style="font-size: 26px; font-weight: 700;">Crea un account</h2>
                     </div>
 
+                    <form id="form-registrazione">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="nome" class="form-label">Nome<span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="nome" placeholder="Mario" minlength="2"
+                                       required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="cognome" class="form-label">Cognome<span
+                                        class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="cognome" placeholder="Rossi"
+                                       minlength="2" required>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="indirizzo" class="form-label">Indirizzo<span
+                                    class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-white border-end-0">📍</span>
+                                <input type="text" class="form-control border-start-0" id="indirizzo"
+                                       placeholder="Via Roma, 1, Milano" required>
+
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email<span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-white border-end-0">✉️</span>
+                                <input type="email" class="form-control border-start-0" id="email"
+                                       placeholder="nome@esempio.it" autocomplete="email" required>
+
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password<span
+                                    class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-white border-end-0">🔒</span>
+                                <input type="password" class="form-control border-start-0" id="password"
+                                       name="password" placeholder="••••••••" minlength="6" required>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="tipo" class="form-label">Tipo di account</label>
+                            <select class="form-select" id="tipo" name="ristoratore" required>
+                                <option value="false" selected>Cliente</option>
+                                <option value="true">Ristoratore</option>
+                            </select>
+                        </div>
+
+                        <button type="submit" class="btn btn-brand rounded-pill w-100 py-2">Registrati</button>
+                        <p id="registrazione-messaggio" class="text-center mt-3 mb-0" style="font-size: 14px;"></p>
+                        <p class="text-center text-muted mt-3 mb-0" style="font-size: 14px;">
+                            Hai già un account? <a href="accesso.html"
+                                                   class="text-brand fw-semibold text-decoration-none">Accedi</a>
+                        </p>
+                    </form>
                 </div>
+
             </div>
         </div>
     </div>
+</div>
 
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
         crossorigin="anonymous"></script>
-    <script src="../backend/lib.js"></script>
+<script src="../backend/lib.js"></script>
 
-    <script>
-        checkLogged();
+<script>
+    checkLogged();
 
-        function registra(result) {
-            var alert = document.getElementById('registrazione-messaggio');
-            if (result.error) {
-                alert.innerHTML = result.error;
-                alert.classList.add('text-danger');
+    function registra(result) {
+        let alert = document.getElementById('registrazione-messaggio');
+        if (result.error) {
+            alert.innerHTML = result.error;
+            alert.classList.add('text-danger');
+        } else {
+            localStorage.setItem('utente', JSON.stringify(result));
+            if (result.ristoratore) {
+                window.location.href = "gestione_ristorante.html";
             } else {
-                localStorage.setItem('utente', JSON.stringify(result));
-                if (result.ristoratore) {
-                    window.location.href = "gestione_ristorante.html";
-                } else {
-                    window.location.href = "bizarre_bites.html";
-                }
+                window.location.href = "bizarre_bites.html";
             }
         }
+    }
 
-        document.getElementById('form-registrazione').addEventListener('invalid', function (e) {
-            const messaggio = document.getElementById('registrazione-messaggio');
-            messaggio.textContent = 'Compila correttamente tutti i campi';
-            messaggio.classList.add('text-danger');
-        }, true);
+    document.getElementById('form-registrazione').addEventListener('invalid', function () {
+        const messaggio = document.getElementById('registrazione-messaggio');
+        messaggio.textContent = 'Compila correttamente tutti i campi';
+        messaggio.classList.add('text-danger');
+    }, true);
 
-        document.getElementById('form-registrazione').addEventListener('submit', async function (e) {
-            e.preventDefault();
+    document.getElementById('form-registrazione').addEventListener('submit', async function (e) {
+        e.preventDefault();
 
-            const indirizzo = document.getElementById('indirizzo').value.trim();
-            const cNome = capitalize(document.getElementById('nome').value);
-            const cCognome = capitalize(document.getElementById('cognome').value);
-            const cEmail = document.getElementById('email').value.toLowerCase();
-            const cPassword = document.getElementById('password').value;
-            const cIndirizzo = capitalize(document.getElementById('indirizzo').value);
-            const cTipo = document.getElementById('tipo');
+        const cNome = capitalize(document.getElementById('nome').value);
+        const cCognome = capitalize(document.getElementById('cognome').value);
+        const cEmail = document.getElementById('email').value.toLowerCase();
+        const cPassword = document.getElementById('password').value;
+        const cIndirizzo = capitalize(document.getElementById('indirizzo').value);
+        const cTipo = document.getElementById('tipo');
 
-            const user = {
-                nome: cNome,
-                cognome: cCognome,
-                email: cEmail,
-                password: cPassword,
-                indirizzo: cIndirizzo,
-                ristoratore: cTipo.value === 'true'
-            };
+        const user = {
+            nome: cNome,
+            cognome: cCognome,
+            email: cEmail,
+            password: cPassword,
+            indirizzo: cIndirizzo,
+            ristoratore: cTipo.value === 'true'
+        };
 
-            const options = {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(user)
-            };
+        const options = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(user)
+        };
 
-            fetch('http://localhost:3005/user?api_key=1234567', options)
-                .then(response => response.json())
-                .then(result => registra(result));
-        });
+        fetch('http://localhost:3005/user?api_key=1234567', options)
+            .then(response => response.json())
+            .then(result => registra(result));
+    });
 
-    </script>
+</script>
 </body>
 
 </html>

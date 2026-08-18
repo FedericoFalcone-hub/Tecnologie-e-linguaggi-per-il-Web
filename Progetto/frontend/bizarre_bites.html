@@ -9,77 +9,77 @@
     <link href="style.css" rel="stylesheet">
 
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap"
-        rel="stylesheet">
+          rel="stylesheet">
 </head>
 
 <body>
 
-    <div id="navbar-container"></div>
+<div id="navbar-container"></div>
 
-    <section class="hero-platform">
-        <div class="container text-center py-5">
-            <h3 class="text-brand mb-2" style="font-size: 15px; font-weight: 700;">Benvenuto su Bizarre Bites</h3>
-            <h1 class="text-dark mb-3" style="font-size: 40px; font-weight: 700;">Cosa ti va di ordinare oggi?</h1>
-            <p class="text-muted mb-4" style="font-size: 16px;">Scopri i migliori ristoranti vicino a te e ordina in
-                pochi click</p>
+<section class="hero-platform">
+    <div class="container text-center py-5">
+        <h3 class="text-brand mb-2" style="font-size: 15px; font-weight: 700;">Benvenuto su Bizarre Bites</h3>
+        <h1 class="text-dark mb-3" style="font-size: 40px; font-weight: 700;">Cosa ti va di ordinare oggi?</h1>
+        <p class="text-muted mb-4" style="font-size: 16px;">Scopri i migliori ristoranti vicino a te e ordina in
+            pochi click</p>
 
-            <form id="form-ricerca" class="search-bar mx-auto">
-                <span class="search-icon">🔍</span>
-                <input type="text" id="ricerca-input" class="form-control border-0"
-                    placeholder="Cerca per nome ristorante o città...">
-                <button type="submit" class="btn btn-brand rounded-pill px-4">Cerca</button>
-            </form>
+        <form id="form-ricerca" class="search-bar mx-auto">
+            <span class="search-icon">🔍</span>
+            <label for="ricerca-input"></label><input type="text" id="ricerca-input" class="form-control border-0"
+                                                      placeholder="Cerca per nome ristorante o città...">
+            <button type="submit" class="btn btn-brand rounded-pill px-4">Cerca</button>
+        </form>
 
-            <div class="quick-categories mt-4">
-                <a href="piatti.html?categoria=Chicken" class="category-pill">🍗 Pollo</a>
-                <a href="piatti.html?categoria=Beef" class="category-pill">🍔 Burger</a>
-                <a href="piatti.html?categoria=Pasta" class="category-pill">🍝 Pasta</a>
-                <a href="piatti.html?categoria=Vegan" class="category-pill">🥗 Vegano</a>
-                <a href="piatti.html?categoria=Dessert" class="category-pill">🍰 Dolci</a>
+        <div class="quick-categories mt-4">
+            <a href="#" class="category-pill">🍗 Pollo</a>
+            <a href="#" class="category-pill">🍔 Burger</a>
+            <a href="#" class="category-pill">🍝 Pasta</a>
+            <a href="#" class="category-pill">🥗 Vegano</a>
+            <a href="#" class="category-pill">🍰 Dolci</a>
+        </div>
+    </div>
+</section>
+
+<section class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h4 class="mb-0" style="font-weight: 700;">Ristoranti in evidenza</h4>
+        <a href="#" class="text-brand fw-semibold text-decoration-none">Vedi tutti →</a>
+    </div>
+
+    <div id="ristoranti-evidenza" class="row g-4">
+        <div class="col-12 text-center text-muted py-5">
+            Nessun ristorante disponibile al momento.
+        </div>
+    </div>
+</section>
+
+<section class="how-it-works py-5">
+    <div class="container">
+        <h4 class="text-center mb-5" style="font-weight: 700;">Come funziona</h4>
+        <div class="row g-4 text-center">
+            <div class="col-md-4">
+                <div class="step-icon mx-auto mb-3">🔍</div>
+                <p class="fw-semibold mb-1">1. Cerca</p>
+                <p class="text-muted" style="font-size: 14px;">Trova il ristorante e i piatti che preferisci</p>
+            </div>
+            <div class="col-md-4">
+                <div class="step-icon mx-auto mb-3">🛒</div>
+                <p class="fw-semibold mb-1">2. Ordina</p>
+                <p class="text-muted" style="font-size: 14px;">Aggiungi al carrello e scegli come ricevere l'ordine
+                </p>
+            </div>
+            <div class="col-md-4">
+                <div class="step-icon mx-auto mb-3">🍽️</div>
+                <p class="fw-semibold mb-1">3. Gusta</p>
+                <p class="text-muted" style="font-size: 14px;">Ritira in loco o ricevi a domicilio</p>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
-    <section class="container py-5">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h4 class="mb-0" style="font-weight: 700;">Ristoranti in evidenza</h4>
-            <a href="ristoranti.html" class="text-brand fw-semibold text-decoration-none">Vedi tutti →</a>
-        </div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 
-        <div id="ristoranti-evidenza" class="row g-4">
-            <div class="col-12 text-center text-muted py-5">
-                Nessun ristorante disponibile al momento.
-            </div>
-        </div>
-    </section>
-
-    <section class="how-it-works py-5">
-        <div class="container">
-            <h4 class="text-center mb-5" style="font-weight: 700;">Come funziona</h4>
-            <div class="row g-4 text-center">
-                <div class="col-md-4">
-                    <div class="step-icon mx-auto mb-3">🔍</div>
-                    <p class="fw-semibold mb-1">1. Cerca</p>
-                    <p class="text-muted" style="font-size: 14px;">Trova il ristorante e i piatti che preferisci</p>
-                </div>
-                <div class="col-md-4">
-                    <div class="step-icon mx-auto mb-3">🛒</div>
-                    <p class="fw-semibold mb-1">2. Ordina</p>
-                    <p class="text-muted" style="font-size: 14px;">Aggiungi al carrello e scegli come ricevere l'ordine
-                    </p>
-                </div>
-                <div class="col-md-4">
-                    <div class="step-icon mx-auto mb-3">🍽️</div>
-                    <p class="fw-semibold mb-1">3. Gusta</p>
-                    <p class="text-muted" style="font-size: 14px;">Ritira in loco o ricevi a domicilio</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
-
-    <script src="../backend/lib.js"></script>
+<script src="../backend/lib.js"></script>
 
 
 </body>
