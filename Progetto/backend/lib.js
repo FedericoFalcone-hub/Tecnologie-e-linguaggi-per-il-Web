@@ -41,7 +41,7 @@ function updateNavbar() {
     } else if (paginaAttuale.includes("accesso.html") || paginaAttuale.includes("registrazione.html")) {
         zonaAccount.innerHTML = '';
     } else {
-        const specialOption = JSON.parse(utente).ristoratore ? `<li><a class="dropdown-item" href="/frontend/ristorante/gestione_ristorante.html">Gestione ristorante</a></li>` : '<li><a class="dropdown-item" href="/frontend/ordini.html">I miei ordini</a></li>';
+        const specialOption = JSON.parse(utente).ristoratore ? `<li><a class="dropdown-item" href="${base}ristorante/gestione_ristorante.html">Gestione ristorante</a></li>` : '<li><a class="dropdown-item" href="/frontend/ordini.html">I miei ordini</a></li>';
         const nome = JSON.parse(utente).nome;
         zonaAccount.innerHTML = `
       <div class="dropdown">
@@ -49,7 +49,7 @@ function updateNavbar() {
           Ciao, ${nome}
         </a>
         <ul class="dropdown-menu dropdown-menu-end shadow border-0;">
-          <li><a class="dropdown-item" href="$profilo.html">Modifica profilo</a></li>
+          <li><a class="dropdown-item" href="${base}profilo.html">Modifica profilo</a></li>
           ${specialOption}
           <li><hr class="dropdown-divider"></li>
           <li><a class="dropdown-item text-danger" href="#" onclick="logout()">Esci</a></li>
