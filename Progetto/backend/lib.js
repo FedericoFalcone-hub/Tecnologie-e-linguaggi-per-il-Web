@@ -9,9 +9,10 @@ function checkLogged() {
 }
 
 function checkLoggedRistoratore() {
+    const base = getBasePath();
     const utente = localStorage.getItem("utente");
     if (!utente || !JSON.parse(utente).ristoratore) {
-        window.location.href = "bizarre_bites.html";
+        window.location.href = `${base}bizarre_bites.html`;
     }
 }
 
@@ -82,6 +83,9 @@ async function getRistorante() {
 
     try {
         const response = await fetch(`http://localhost:3005/user/${id}/ristorante?api_key=1234567`);
+        if (!response.ok) {
+            return null
+        }
         return await response.json();
     } catch (error) {
         console.error('Errore durante il recupero del ristorante:', error);

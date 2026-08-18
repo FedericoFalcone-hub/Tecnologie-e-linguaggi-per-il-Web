@@ -102,6 +102,9 @@
             body: JSON.stringify(user)
         };
 
+        document.getElementById('accesso-messaggio').classList.remove('text-danger');
+        document.getElementById('accesso-messaggio').classList.add('text-muted');
+        document.getElementById('accesso-messaggio').textContent = 'Accesso in corso...';
         fetch("http://localhost:3005/user/login?api_key=1234567", options)
             .then(response => response.json())
             .then(result => login(result));

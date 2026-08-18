@@ -113,7 +113,7 @@
         } else {
             localStorage.setItem('utente', JSON.stringify(result));
             if (result.ristoratore) {
-                window.location.href = "gestione_ristorante.html";
+                window.location.href = "ristorante/gestione_ristorante.html";
             } else {
                 window.location.href = "bizarre_bites.html";
             }
@@ -152,6 +152,10 @@
             },
             body: JSON.stringify(user)
         };
+
+        document.getElementById('registrazione-messaggio').classList.remove('text-danger');
+        document.getElementById('registrazione-messaggio').classList.add('text-muted');
+        document.getElementById('registrazione-messaggio').textContent = 'Registrazione in corso...';
 
         fetch('http://localhost:3005/user?api_key=1234567', options)
             .then(response => response.json())

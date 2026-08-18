@@ -7,7 +7,7 @@
     <title>Registra Ristorante</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-    <link href="style.css" rel="stylesheet">
+    <link href="../style.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap"
           rel="stylesheet">
 </head>
@@ -30,8 +30,9 @@
 
                     <form id="form-registrazione">
                         <div class="mb-3">
-                            <label for="nome" class="form-label">Nome<span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="nome" placeholder="Nome ristorante"
+                            <label for="nomeRistorante" class="form-label">Nome<span
+                                    class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="nomeRistorante" placeholder="Nome ristorante"
                                    minlength="2" required>
                         </div>
 
@@ -71,13 +72,17 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
         crossorigin="anonymous"></script>
-<script src="../backend/lib.js"></script>
+<script src="../../backend/lib.js"></script>
 
 <script>
     checkLoggedRistoratore();
+    if (localStorage.getItem('ristorante')) {
+        window.location.href = 'gestione_ristorante.html';
+    }
 
     function registra(result) {
         const messaggio = document.getElementById('registrazione-messaggio');
+        messaggio.classList.remove('text-muted');
         if (result.error) {
             messaggio.textContent = result.error;
             messaggio.classList.add('text-danger');
@@ -85,9 +90,8 @@
             messaggio.textContent = 'Ristorante registrato con successo!';
             messaggio.classList.remove('text-danger');
             messaggio.classList.add('text-success');
-            setTimeout(() => {
-                window.location.href = 'gestione_ristorante.html';
-            }, 2000);
+            window.location.href = 'gestione_ristorante.html';
+
         }
     }
 
@@ -101,7 +105,7 @@
         e.preventDefault();
 
         const utente = JSON.parse(localStorage.getItem('utente'));
-        const cNome = capitalize(document.getElementById('nome').value.trim());
+        const cNome = capitalize(document.getElementById('nomeRistorante').value.trim());
         const cPiva = document.getElementById('piva').value.trim().toUpperCase();
         const cTelefono = document.getElementById('telefono').value.trim();
         const cIndirizzo = capitalize(document.getElementById('indirizzo').value.trim());
@@ -120,6 +124,10 @@
             },
             body: JSON.stringify(ristorante)
         };
+
+        const messaggio = document.getElementById('registrazione-messaggio');
+        messaggio.textContent = 'Registrazione in corso...';
+        messaggio.classList.add('text-muted');
 
         fetch(`http://localhost:3005/user/${utente._id}/ristorante?api_key=1234567`, options)
             .then(response => response.json())

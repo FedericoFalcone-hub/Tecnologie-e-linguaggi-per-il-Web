@@ -24,15 +24,13 @@ app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 async function getUser(id) {
     await client.connect();
     const filter = {_id: ObjectID.createFromHexString(id)};
-    const user = await client.db('FastFood').collection('users').findOne(filter);
-    return user;
+    return await client.db('FastFood').collection('users').findOne(filter);
 }
 
 async function getRistorante(id) {
     await client.connect();
     const filter = {idRistoratore: id};
-    const ristorante = await client.db('FastFood').collection('ristoranti').findOne(filter);
-    return ristorante;
+    return await client.db('FastFood').collection('ristoranti').findOne(filter);
 }
 
 async function getCoordinates(address) {
@@ -58,7 +56,7 @@ async function getCoordinates(address) {
 function checkApiKeys(req, res, next) {
     console.log("Siamo nel middlware");
 
-    if (req.query.api_key == "1234567") {
+    if (req.query.api_key === "1234567") {
         console.log(req.query.api_key);
 
         next();
@@ -115,7 +113,6 @@ app.post('/user', async (req, res) => {
         return;
     }
 
-    let lat, lon;
     const coordinates = await getCoordinates(indirizzo);
     if (!coordinates) {
         res.status(400).json({error: "Indirizzo non valido"});
@@ -126,6 +123,7 @@ app.post('/user', async (req, res) => {
 
     await client.connect();
 
+    let user_no_psw;
     try {
         const user = {
             nome: nome,
@@ -138,14 +136,14 @@ app.post('/user', async (req, res) => {
             ristoratore: ristoratore
         };
 
-        const result = await client.db('FastFood').collection('users').insertOne(user);
+        await client.db('FastFood').collection('users').insertOne(user);
 
         user_no_psw = {...user, password: undefined}
         await client.close();
 
         res.json(user_no_psw);
     } catch (error) {
-        if (error.code == 11000) {
+        if (error.code === 11000) {
             res.status(409).json({error: "Email già in uso"});
         } else {
             res.status(500).json({error: `Errore non gestito ${error.message}`});
@@ -170,7 +168,7 @@ app.post('/user/login', async (req, res) => {
         return;
     }
     await client.close();
-    user_no_psw = {...user, password: undefined}
+    let user_no_psw = {...user, password: undefined}
     res.json(user_no_psw);
 });
 
@@ -231,7 +229,7 @@ app.put('/user/:id', async (req, res) => {
         res.json(result);
         await client.close();
     } catch (error) {
-        if (error.code == 11000) {
+        if (error.code === 11000) {
             res.status(409).json({error: "Email già in uso"});
         } else {
             res.status(500).json({error: error.message});
@@ -320,7 +318,6 @@ app.post('/user/:id/ristorante', async (req, res) => {
         return res.status(403).json({error: "Utente non autorizzato"});
     }
 
-    let lat, lon;
     const coordinates = await getCoordinates(indirizzoRistorante);
     if (!coordinates) {
         return res.status(400).json({error: "Indirizzo ristorante non valido"});
@@ -339,13 +336,12 @@ app.post('/user/:id/ristorante', async (req, res) => {
             lon: coordinates.lon,
             logoUrl: null
         };
-        const result = await client.db('FastFood').collection('ristoranti').insertOne(risorante);
+        await client.db('FastFood').collection('ristoranti').insertOne(risorante);
         await client.close();
 
         res.json(risorante);
     } catch (error) {
-        console.log(error);
-        if (error.code == 11000) {
+        if (error.code === 11000) {
             if (error.keyPattern && error.keyPattern.partitaIVA) {
                 res.status(409).json({error: "Partita IVA già registrata"});
             } else {
@@ -374,7 +370,6 @@ app.get('/user/:id/ristorante', async (req, res) => {
     await client.connect();
     const ristorante = await client.db('FastFood').collection('ristoranti').findOne({idRistoratore: id});
     await client.close();
-
     if (!ristorante) {
         return res.status(404).json({error: "Ristorante non trovato"});
     }
@@ -410,7 +405,6 @@ app.put('/user/:id/ristorante/logo', async (req, res) => {
         {$set: {logoUrl: logoUrl}}
     );
     await client.close();
-    console.log(result);
     res.json(result);
 });
 
@@ -461,7 +455,7 @@ app.put('/user/:id/ristorante', async (req, res) => {
         lon: coordinates.lon
     }
     try {
-        const result = await client.db('FastFood').collection('ristoranti').updateOne(
+        await client.db('FastFood').collection('ristoranti').updateOne(
             {idRistoratore: id},
             {
                 $set: {
@@ -478,11 +472,35 @@ app.put('/user/:id/ristorante', async (req, res) => {
 
         res.json(datiModificati);
     } catch (error) {
-        if (error.code == 11000) {
+        if (error.code === 11000) {
             res.status(409).json({error: "Partita IVA già registrata"});
         } else {
             res.status(500).json({error: `Errore non gestito ${error.message}`});
         }
     }
 });
+
+app.delete('/user/:id/ristorante', async (req, res) => {
+    // #swagger.description = "elimina ristorante"
+    const id = req.params.id;
+    const user = await getUser(id);
+    if (!user) {
+        return res.status(404).json({error: "Utente non trovato"});
+    }
+
+    if (!user.ristoratore) {
+        return res.status(403).json({error: "Utente non autorizzato"});
+    }
+
+    const ristorante = await getRistorante(id);
+    if (!ristorante) {
+        return res.status(404).json({error: "Ristorante non trovato"});
+    }
+
+    await client.connect();
+    const result = await client.db('FastFood').collection('ristoranti').deleteOne({idRistoratore: id});
+    await client.close();
+
+    res.json(result);
+})
 app.listen(port, () => console.log(`Server avviato sulla porta ${port}`));

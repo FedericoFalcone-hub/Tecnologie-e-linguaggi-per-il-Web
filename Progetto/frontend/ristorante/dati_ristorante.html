@@ -42,8 +42,8 @@
                             <span class="logo-overlay">✏️ Modifica</span>
                         </div>
                         <div class="mb-3">
-                            <label for="nome" class="form-label">Nome<span class="text-danger"></span></label>
-                            <input type="text" class="form-control" id="nome" placeholder="Nome ristorante"
+                            <label for="nomeRistorante" class="form-label">Nome<span class="text-danger"></span></label>
+                            <input type="text" class="form-control" id="nomeRistorante" placeholder="Nome ristorante"
                                    minlength="2" required>
                         </div>
 
@@ -138,7 +138,7 @@
             logoContainer.textContent = ristorante.nomeRistorante.substring(0, 2).toUpperCase();
         }
 
-        document.getElementById("nome").value = ristorante.nomeRistorante;
+        document.getElementById("nomeRistorante").value = ristorante.nomeRistorante;
         document.getElementById("piva").value = ristorante.partitaIVA;
         document.getElementById("telefono").value = ristorante.telefonoRistorante;
         document.getElementById("indirizzo").value = ristorante.indirizzoRistorante;
@@ -160,6 +160,7 @@
     }
 
     function aggiornaDati(result) {
+        document.getElementById('aggiornamento-messaggio').classList.remove('text-muted');
         if (result.error) {
             document.getElementById('aggiornamento-messaggio').classList.remove('text-success');
             document.getElementById('aggiornamento-messaggio').textContent = result.error;
@@ -167,7 +168,7 @@
         } else {
             const ristoranteAggiornato = {
                 ...JSON.parse(localStorage.getItem('ristornate')),
-                nomeRistorante: document.getElementById('nome').value,
+                nomeRistorante: document.getElementById('nomeRistorante').value,
                 partitaIVA: document.getElementById('piva').value,
                 telefonoRistorante: document.getElementById('telefono').value,
                 indirizzoRistorante: document.getElementById('indirizzo').value,
@@ -260,7 +261,7 @@
     document.getElementById('form-dati').addEventListener('submit', function (e) {
         e.preventDefault();
 
-        const cNome = capitalize(document.getElementById('nome').value.trim());
+        const cNome = capitalize(document.getElementById('nomeRistorante').value.trim());
         const cPiva = document.getElementById('piva').value.trim().toUpperCase();
         const cTelefono = document.getElementById('telefono').value.trim();
         const cIndirizzo = document.getElementById('indirizzo').value.trim();
@@ -279,6 +280,9 @@
             },
             body: JSON.stringify(restaurant)
         };
+        document.getElementById('aggiornamento-messaggio').classList.remove('text-danger', 'text-success');
+        document.getElementById('aggiornamento-messaggio').classList.add('text-muted');
+        document.getElementById('aggiornamento-messaggio').textContent = 'Aggiornamento in corso...';
 
         fetch(`http://localhost:3005/user/${utente._id}/ristorante?api_key=1234567`, options)
             .then(response => response.json())
