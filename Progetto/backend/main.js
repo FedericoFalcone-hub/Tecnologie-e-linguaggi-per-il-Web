@@ -502,5 +502,117 @@ app.delete('/user/:id/ristorante', async (req, res) => {
     await client.close();
 
     res.json(result);
-})
+});
+app.get('/piatti', async (req, res) => {
+    // #swagger.description = "Recupera i piatti presenti nel catalogo"
+    await client.connect();
+    const piatti = await client.db('FastFood').collection('catalogo').find({}).toArray();
+    await client.close();
+    res.json(piatti);
+});
+
+app.get('/ristorante/:id/menu', async (req, res) => {
+    // #swagger.description = "Recupera il menu"
+    const id = req.params.id;
+
+    await client.connect();
+
+    const menuDettagliato = await client.db('FastFood').collection('menu').aggregate([
+        {
+            $match: {idRistorante: id}
+        },
+        {
+            $lookup: {
+                from: 'catalogo',
+                let: {idProdottoStr: '$idProdotto'},
+                pipeline: [
+                    {$match: {$expr: {$eq: ['$_id', {$toObjectId: '$$idProdottoStr'}]}}}
+                ],
+                as: 'dettagli'
+            }
+        },
+        {
+            $unwind: '$dettagli'
+        },
+        {
+            $project: {
+                _id: 1,
+                prezzo: 1,
+                idProdotto: 1,
+                nome: '$dettagli.strMeal',
+                foto: '$dettagli.strMealThumb',
+                categoria: '$dettagli.strCategory',
+                ingredienti: '$dettagli.ingredients'
+            }
+        }
+    ]).toArray();
+
+    await client.close();
+
+    res.json(menuDettagliato);
+});
+
+app.post('/ristorante/:id/menu', async (req, res) => {
+    const idUtente = req.params.id;
+    const idProdotto = req.body.idProdotto;
+    const prezzo = req.body.prezzo;
+    const idRistorante = req.body.idRistorante;
+
+    const user = await getUser(idUtente);
+    if (!user) {
+        return res.status(404).json({error: "Utente non trovato"});
+    }
+
+    if (!user.ristoratore) {
+        return res.status(403).json({error: "Utente non autorizzato"});
+    }
+
+    const ristorante = await getRistorante(idUtente);
+    if (!ristorante) {
+        return res.status(404).json({error: "Ristorante non trovato"});
+    }
+
+    if (ristorante.idRistoratore !== idUtente) {
+        return res.status(403).json({error: "Utente non autorizzato a modificare il menu di questo ristorante"});
+    }
+
+    await client.connect();
+    const result = await client.db('FastFood').collection('menu').insertOne({
+        idRistorante: idRistorante,
+        idProdotto: idProdotto,
+        prezzo: prezzo
+    });
+    await client.close();
+
+    res.json(result);
+});
+
+app.delete('/ristorante/:id/menu', async (req, res) => {
+    const idUtente = req.params.id;
+    const idMenu = req.body.id;
+    const idRistorante = req.body.idRistorante;
+
+    user = await getUser(idUtente);
+    if (!user) {
+        return res.status(404).json({error: "Utente non trovato"});
+    }
+
+    if (!user.ristoratore) {
+        return res.status(403).json({error: "Utente non autorizzato"});
+    }
+
+    const ristorante = await getRistorante(idUtente);
+    if (!ristorante) {
+        return res.status(404).json({error: "Ristorante non trovato"});
+    }
+
+    if (ristorante.idRistoratore !== idUtente) {
+        return res.status(403).json({error: "Utente non autorizzato a modificare il menu di questo ristorante"});
+    }
+
+    await client.connect();
+    const result = await client.db('FastFood').collection('menu').deleteOne({_id: ObjectID.createFromHexString(idMenu)});
+    await client.close();
+    res.json(result);
+});
 app.listen(port, () => console.log(`Server avviato sulla porta ${port}`));

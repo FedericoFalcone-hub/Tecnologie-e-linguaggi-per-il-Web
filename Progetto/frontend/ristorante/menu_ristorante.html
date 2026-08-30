@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Menu Ristorante</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../style.css" rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap"
+          rel="stylesheet">
+</head>
+<body>
+
+
+<div id="navbar-container"></div>
+
+<!-- Menù vuoto -->
+<div id="vuoto" class="container py-5" style="display: none;">
+    <div class="text-center mb-5">
+        <h2 class="text-dark mb-2" style="font-size: 32px; font-weight: 700;">Il menù è vuoto
+        </h2>
+        <p class="text-muted" style="font-size: 15px;">Aggiungi i piatti per comporre il menù</p>
+        <button class="btn btn-brand rounded-pill px-4 " data-bs-toggle="modal" data-bs-target="#modalAggiungiPiatto">+
+            Aggiungi piatto
+        </button>
+    </div>
+</div>
+
+<!-- Lista piatti -->
+<div id="pieno" class="container py-5" style="display: none;">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+        <div>
+            <a href="gestione_ristorante.html"
+               class="text-decoration-none text-muted d-inline-flex align-items-center gap-1 mb-2"
+               style="font-size: 14px;">← Torna alla gestione</a>
+            <h2 class="text-dark mb-0" style="font-size: 28px; font-weight: 700;">Il tuo menu</h2>
+        </div>
+        <button class="btn btn-brand rounded-pill px-4 " data-bs-toggle="modal" data-bs-target="#modalAggiungiPiatto">+
+            Aggiungi piatto
+        </button>
+    </div>
+
+    <div id="body" class="row g-4">
+        <div id="modello-menu" class="col-lg-4 col-md-6 d-none menu-item-card">
+            <div class="card border-0 shadow-sm h-100">
+                <img src="" class="card-img-top" alt="" style="height: 200px; object-fit: cover;">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start gap-2 mb-2">
+                        <h5 class="card-title mb-0"></h5>
+                        <span class="badge-categoria categoria-piatto"></span>
+                    </div>
+                    <p class="card-text ingredienti-piatto"></p>
+                    <button class="btn btn-outline-danger rounded-pill w-100 btn-rimuovi">
+                        Rimuovi piatto
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Aggiunta piatto -->
+<div class="modal fade" id="modalAggiungiPiatto" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content" style="border-radius: 16px;">
+
+            <div class="modal-header border-0">
+                <h5 class="modal-title">Aggiungi piatto</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <!-- Nav tabs -->
+                <ul class="nav nav-pills mb-4" id="tabAggiungiPiatto">
+                    <li class="nav-item">
+                        <a class="nav-link active nav-link-menu" data-bs-toggle="pill" data-bs-target="#tabCatalogo"
+                           type="button">Dal
+                            catalogo</a>
+                    </li>
+                    <li class="nav-item">
+                        <button class="nav-link nav-link-menu" data-bs-toggle="pill" data-bs-target="#tabPersonalizzato"
+                                type="button">Personalizzato
+                        </button>
+                    </li>
+                </ul>
+
+                <!-- Contenuto delle tab -->
+                <div class="tab-content">
+                    <!-- Tab Catalogo -->
+                    <div class="tab-pane fade show active" id="tabCatalogo">
+                        <label for="ricerca-catalogo" class="form-label">Cerca piatto nel catalogo</label>
+                        <input name="ricerca-catalogo" type="text" id="ricerca-catalogo" class="form-control mb-3"
+                               placeholder="Cerca nel catalogo...">
+
+                        <!-- Lista piatti catalogo -->
+                        <div id="body-catalogo" class="row g-4">
+                            <div id="modello-catalogo" class="col-lg-4 col-md-6 d-none menu-item-card">
+                                <div class="card border-0 shadow-sm h-100">
+                                    <img src="" class="card-img-top" alt="" style="height: 200px; object-fit: cover;">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-start gap-2 mb-2">
+                                            <h5 class="card-title mb-0"></h5>
+                                            <span class="badge-categoria categoria-piatto"></span>
+                                        </div>
+                                        <p class="card-text ingredienti-piatto"></p>
+                                        <button class="btn btn-brand rounded-pill px-4">Aggiungi</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="toast-container position-fixed top-0 start-50 translate-middle-x end-0 p-3" style="z-index: 1100;">
+    <div id="toastSuccesso" class="toast align-items-center border-0" role="alert" aria-live="assertive"
+         aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body">
+                <span id="toastMessaggio">Piatto aggiunto con successo!</span>
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+
+<script src="../../backend/lib.js"></script>
+
+<script>
+    checkLoggedRistoratore();
+
+    let catalogoCache = null;
+    let menuCache = [];
+
+    function rimuoviDaMenu(menuId) {
+        const user = JSON.parse(localStorage.getItem('utente'));
+        const ristorante = JSON.parse(localStorage.getItem('ristorante'));
+        const options = {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                id: menuId,
+                idRistorante: ristorante._id
+            })
+        }
+        fetch(`http://localhost:3005/ristorante/${user._id}/menu`, options)
+            .then(res => res.json())
+            .then(result => {
+                if (result.error) {
+                    mostraToast("Errore durante la rimozione del piatto: " + result.error);
+                } else {
+                    mostraToast("Piatto rimosso con successo!");
+                    caricaMenu();
+                }
+            });
+    }
+
+    async function caricaMenu() {
+        menuCache = [];
+        const ristorante = JSON.parse(localStorage.getItem('ristorante'));
+        const modello = document.getElementById('modello-menu');
+        const body = document.getElementById('body');
+        body.innerHTML = "";
+        body.append(modello);
+        const vuoto = document.getElementById('vuoto');
+        const pieno = document.getElementById('pieno');
+
+        try {
+            fetch(`http://localhost:3005/ristorante/${ristorante._id}/menu?api_key=1234567`)
+                .then(res => res.json())
+                .then(piatti => {
+                    if (!piatti || piatti.length === 0) {
+                        pieno.style.display = 'none';
+                        vuoto.style.display = 'block';
+                        return;
+                    }
+
+                    vuoto.style.display = 'none';
+                    pieno.style.display = 'block';
+                    for (let i = 0; i < piatti.length; ++i) {
+                        const clone = modello.cloneNode(true);
+                        const piatto = piatti[i];
+
+                        clone.getElementsByClassName('card-title')[0].innerText += piatto.nome;
+                        clone.getElementsByClassName('ingredienti-piatto')[0].innerText += piatto.ingredienti.join(', ');
+                        clone.getElementsByClassName('categoria-piatto')[0].innerText += piatto.categoria;
+                        clone.getElementsByTagName('img')[0].src = piatto.foto;
+
+
+                        const btnRimuovi = clone.getElementsByClassName('btn-rimuovi')[0];
+                        btnRimuovi.addEventListener('click', function () {
+                            rimuoviDaMenu(piatto._id);
+                        });
+                        menuCache.push(piatto.idProdotto);
+                        clone.classList.remove('d-none');
+                        clone.id = piatto._id;
+                        modello.before(clone);
+                    }
+                })
+
+        } catch (error) {
+            console.error('Errore nel caricamento del menu:', error);
+        }
+    }
+
+
+    async function caricaCatalogo() {
+        const modello = document.getElementById('modello-catalogo');
+        const body = document.getElementById('body-catalogo');
+
+        if (!catalogoCache) {
+            const res = await fetch(`http://localhost:3005/piatti?api_key=1234567`);
+            catalogoCache = await res.json();
+        }
+
+        const catalogoFiltrato = catalogoCache.filter(piatto => !menuCache.includes(piatto._id));
+        renderCatalogo(catalogoFiltrato, modello, body);
+    }
+
+    function renderCatalogo(piatti, modello, body) {
+        body.innerHTML = "";
+        body.append(modello);
+
+        for (let i = 0; i < piatti.length; ++i) {
+            const clone = modello.cloneNode(true);
+            const piatto = piatti[i];
+
+            clone.getElementsByClassName('card-title')[0].innerText += piatto.strMeal;
+            clone.getElementsByClassName('ingredienti-piatto')[0].innerText += piatto.ingredients.join(', ');
+            clone.getElementsByClassName('categoria-piatto')[0].innerText += piatto.strCategory;
+            clone.getElementsByTagName('img')[0].src = piatto.strMealThumb;
+
+            clone.classList.remove('d-none');
+            clone.id = piatto._id;
+            const btn = clone.querySelector('button');
+            btn.id = piatto._id;
+            btn.addEventListener("click", (e) => {
+                const user = JSON.parse(localStorage.getItem('utente'));
+                const ristorante = JSON.parse(localStorage.getItem('ristorante'));
+                const piattoId = e.target.id;
+                const options = {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        idProdotto: piattoId,
+                        idRistorante: ristorante._id,
+                        prezzo: 0
+                    })
+                };
+                fetch(`http://localhost:3005/ristorante/${user._id}/menu?api_key=1234567`, options)
+                    .then(res => res.json())
+                    .then(result => {
+                        if (result.error) {
+                            mostraToast("Errore durante l'aggiunta del piatto: " + result.error);
+                        } else {
+                            mostraToast("Piatto aggiunto con successo!");
+                            clone.remove();
+                            caricaMenu();
+                        }
+                    });
+            });
+            modello.before(clone);
+        }
+    }
+
+    caricaMenu();
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const modal = document.getElementById("modalAggiungiPiatto");
+
+        modal.addEventListener("shown.bs.modal", function () {
+            caricaCatalogo();
+        });
+    });
+
+</script>
+</body>
+</html>

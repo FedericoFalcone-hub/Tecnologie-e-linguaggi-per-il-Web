@@ -218,6 +218,26 @@ body {
     padding-top: 12px;
 }
 
+.menu-item-card {
+    height: 100%;
+}
+
+.menu-item-card .card {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.menu-item-card .card-body {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.menu-item-card .card-text {
+    margin-top: auto;
+}
+
 .ristorante-logo {
     width: 80px;
     height: 80px;
@@ -286,4 +306,35 @@ body {
 
 .card-danger-negozio:hover {
     background-color: #fff5f5;
+}
+
+.badge-categoria {
+    display: inline-block;
+    background: rgba(255, 122, 26, 0.1);
+    color: var(--brand);
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 30px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.nav-link-menu {
+    font-weight: 500;
+    color: #1a1a2e;
+    opacity: 0.75;
+}
+
+.nav-link-menu.active,
+.nav-link-menu:hover {
+    opacity: 1;
+    background-color: var(--brand) !important;
+    color: #fff !important;
+}
+
+#toastSuccesso {
+    background-color: var(--brand);
+    color: #fff;
+    border-radius: 12px;
 }

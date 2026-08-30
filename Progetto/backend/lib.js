@@ -92,3 +92,9 @@ async function getRistorante() {
         return null;
     }
 }
+
+function mostraToast(messaggio) {
+    document.getElementById('toastMessaggio').textContent = messaggio;
+    const toast = new bootstrap.Toast(document.getElementById('toastSuccesso'), {delay: 3000});
+    toast.show();
+}

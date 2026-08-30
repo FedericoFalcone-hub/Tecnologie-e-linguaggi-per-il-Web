@@ -71,6 +71,7 @@
 
     function login(result) {
         let alert = document.getElementById('accesso-messaggio');
+        alert.classList.remove('text-muted');
         if (result.error) {
             alert.innerHTML = result.error;
             alert.classList.add('text-danger');
