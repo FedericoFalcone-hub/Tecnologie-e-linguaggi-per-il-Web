@@ -96,7 +96,7 @@
                         <!-- Lista piatti catalogo -->
                         <div id="body-catalogo" class="row g-4">
                             <div id="modello-catalogo" class="col-lg-4 col-md-6 d-none menu-item-card">
-                                <div class="card border-0 shadow-sm h-100">
+                                <div class="card border-0 shadow-sm">
                                     <img src="" class="card-img-top" alt="" style="height: 200px; object-fit: cover;">
                                     <div class="card-body">
                                         <div class="d-flex justify-content-between align-items-start gap-2 mb-2">
@@ -142,7 +142,6 @@
 
     function rimuoviDaMenu(menuId) {
         const user = JSON.parse(localStorage.getItem('utente'));
-        const ristorante = JSON.parse(localStorage.getItem('ristorante'));
         const options = {
             method: 'DELETE',
             headers: {
@@ -150,7 +149,6 @@
             },
             body: JSON.stringify({
                 id: menuId,
-                idRistorante: ristorante._id
             })
         }
         fetch(`http://localhost:3005/ristorante/${user._id}/menu`, options)
@@ -253,7 +251,6 @@
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({
                         idProdotto: piattoId,
-                        idRistorante: ristorante._id,
                         prezzo: 0
                     })
                 };

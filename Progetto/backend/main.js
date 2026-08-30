@@ -513,14 +513,13 @@ app.get('/piatti', async (req, res) => {
 
 app.get('/ristorante/:id/menu', async (req, res) => {
     // #swagger.description = "Recupera il menu"
-    const id = req.params.id;
+    const id = ObjectID.createFromHexString(req.params.id);
 
     await client.connect();
 
     const menuDettagliato = await client.db('FastFood').collection('menu').aggregate([
-        {
-            $match: {idRistorante: id}
-        },
+
+        {$match: {idRistorante: id}},
         {
             $lookup: {
                 from: 'catalogo',
@@ -532,17 +531,15 @@ app.get('/ristorante/:id/menu', async (req, res) => {
             }
         },
         {
-            $unwind: '$dettagli'
+            $addFields: {
+                nome: {$ifNull: [{$arrayElemAt: ['$dettagli.strMeal', 0]}, '$nome']},
+                foto: {$ifNull: [{$arrayElemAt: ['$dettagli.strMealThumb', 0]}, '$foto']},
+                categoria: {$ifNull: [{$arrayElemAt: ['$dettagli.strCategory', 0]}, '$categoria']}
+            }
         },
         {
             $project: {
-                _id: 1,
-                prezzo: 1,
-                idProdotto: 1,
-                nome: '$dettagli.strMeal',
-                foto: '$dettagli.strMealThumb',
-                categoria: '$dettagli.strCategory',
-                ingredienti: '$dettagli.ingredients'
+                _id: 1, prezzo: 1, nome: 1, foto: 1, categoria: 1, ingredienti: 1, personalizzato: 1
             }
         }
     ]).toArray();
@@ -553,10 +550,10 @@ app.get('/ristorante/:id/menu', async (req, res) => {
 });
 
 app.post('/ristorante/:id/menu', async (req, res) => {
+    // #swagger.description = Aggiunge un prodotto al menu del ristorante dell'utente
     const idUtente = req.params.id;
     const idProdotto = req.body.idProdotto;
     const prezzo = req.body.prezzo;
-    const idRistorante = req.body.idRistorante;
 
     const user = await getUser(idUtente);
     if (!user) {
@@ -572,15 +569,14 @@ app.post('/ristorante/:id/menu', async (req, res) => {
         return res.status(404).json({error: "Ristorante non trovato"});
     }
 
-    if (ristorante.idRistoratore !== idUtente) {
-        return res.status(403).json({error: "Utente non autorizzato a modificare il menu di questo ristorante"});
-    }
 
     await client.connect();
+    const ingredienti = await client.db('FastFood').collection('catalogo').findOne({_id: ObjectID.createFromHexString(idProdotto)}, {projection: {ingredients: 1}});
     const result = await client.db('FastFood').collection('menu').insertOne({
-        idRistorante: idRistorante,
+        idRistorante: ristorante._id,
         idProdotto: idProdotto,
-        prezzo: prezzo
+        prezzo: prezzo,
+        ingredienti: ingredienti.ingredients
     });
     await client.close();
 
@@ -588,11 +584,11 @@ app.post('/ristorante/:id/menu', async (req, res) => {
 });
 
 app.delete('/ristorante/:id/menu', async (req, res) => {
+    // #swagger.description = Rimuove un prodotto dal menu del ristorante dell'utente
     const idUtente = req.params.id;
     const idMenu = req.body.id;
-    const idRistorante = req.body.idRistorante;
 
-    user = await getUser(idUtente);
+    let user = await getUser(idUtente);
     if (!user) {
         return res.status(404).json({error: "Utente non trovato"});
     }
@@ -604,10 +600,6 @@ app.delete('/ristorante/:id/menu', async (req, res) => {
     const ristorante = await getRistorante(idUtente);
     if (!ristorante) {
         return res.status(404).json({error: "Ristorante non trovato"});
-    }
-
-    if (ristorante.idRistoratore !== idUtente) {
-        return res.status(403).json({error: "Utente non autorizzato a modificare il menu di questo ristorante"});
     }
 
     await client.connect();
