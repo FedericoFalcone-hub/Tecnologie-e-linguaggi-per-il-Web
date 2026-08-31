@@ -130,6 +130,27 @@
     </div>
 </div>
 
+<!-- Modal impostazione prezzo -->
+<div class="modal fade" id="modalPrezzoCatalogo" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="border-radius: 16px;">
+            <div class="modal-header border-0">
+                <h5 class="modal-title">Imposta il prezzo</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p class="fw-semibold mb-3" id="nomePiattoSelezionato"></p>
+                <label for="prezzoCatalogo" class="form-label">Prezzo (€)</label>
+                <input type="number" step="0.01" min="0" class="form-control" id="prezzoCatalogo" required>
+                <button type="button" id="btn-conferma-catalogo" class="btn btn-brand rounded-pill w-100 py-2 mt-3">
+                    Aggiungi al menu
+                </button>
+                <p id="catalogo-conferma-messaggio" class="text-center mt-3 mb-0" style="font-size: 14px;"></p>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 
 <script src="../../backend/lib.js"></script>
@@ -139,6 +160,7 @@
 
     let catalogoCache = null;
     let menuCache = [];
+    let piattoDaAggiungere = null;
 
     function rimuoviDaMenu(menuId) {
         const user = JSON.parse(localStorage.getItem('utente'));
@@ -215,12 +237,10 @@
     async function caricaCatalogo() {
         const modello = document.getElementById('modello-catalogo');
         const body = document.getElementById('body-catalogo');
-
         if (!catalogoCache) {
             const res = await fetch(`http://localhost:3005/piatti?api_key=1234567`);
             catalogoCache = await res.json();
         }
-
         const catalogoFiltrato = catalogoCache.filter(piatto => !menuCache.includes(piatto._id));
         renderCatalogo(catalogoFiltrato, modello, body);
     }
@@ -242,29 +262,15 @@
             clone.id = piatto._id;
             const btn = clone.querySelector('button');
             btn.id = piatto._id;
-            btn.addEventListener("click", (e) => {
-                const user = JSON.parse(localStorage.getItem('utente'));
-                const ristorante = JSON.parse(localStorage.getItem('ristorante'));
-                const piattoId = e.target.id;
-                const options = {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({
-                        idProdotto: piattoId,
-                        prezzo: 0
-                    })
-                };
-                fetch(`http://localhost:3005/ristorante/${user._id}/menu?api_key=1234567`, options)
-                    .then(res => res.json())
-                    .then(result => {
-                        if (result.error) {
-                            mostraToast("Errore durante l'aggiunta del piatto: " + result.error);
-                        } else {
-                            mostraToast("Piatto aggiunto con successo!");
-                            clone.remove();
-                            caricaMenu();
-                        }
-                    });
+            btn.addEventListener("click", () => {
+                piattoDaAggiungere = {id: piatto._id, nome: piatto.strMeal, clone};
+
+                document.getElementById('nomePiattoSelezionato').textContent = piatto.strMeal;
+                document.getElementById('prezzoCatalogo').value = '';
+                document.getElementById('catalogo-conferma-messaggio').textContent = '';
+
+                const modalePrezzo = new bootstrap.Modal(document.getElementById('modalPrezzoCatalogo'));
+                modalePrezzo.show();
             });
             modello.before(clone);
         }
@@ -278,6 +284,46 @@
         modal.addEventListener("shown.bs.modal", function () {
             caricaCatalogo();
         });
+    });
+
+    document.getElementById("btn-conferma-catalogo").addEventListener("click", function () {
+        const prezzo = document.getElementById("prezzoCatalogo").value;
+        const messaggio = document.getElementById("catalogo-conferma-messaggio");
+
+        if (!prezzo || parseFloat(prezzo) <= 0) {
+            messaggio.textContent = "Inserisci un prezzo valido.";
+            messaggio.style.color = "red";
+            return;
+        }
+
+        const user = JSON.parse(localStorage.getItem('utente'));
+
+        const options = {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                idProdotto: piattoDaAggiungere.id,
+                prezzo: parseFloat(prezzo)
+            })
+        };
+
+        fetch(`http://localhost:3005/ristorante/${user._id}/menu`, options)
+            .then(res => res.json())
+            .then(result => {
+                if (result.error) {
+                    messaggio.textContent = result.error;
+                    messaggio.className = 'text-center mt-3 mb-0 text-danger';
+                } else {
+                    mostraToast("Piatto aggiunto con successo!");
+                    piattoDaAggiungere.clone.remove();
+                    menuCache.push(piattoDaAggiungere.id);
+
+                    const modalePrezzo = bootstrap.Modal.getInstance(document.getElementById('modalPrezzoCatalogo'));
+                    modalePrezzo.hide();
+
+                    caricaMenu();
+                }
+            });
     });
 
 </script>

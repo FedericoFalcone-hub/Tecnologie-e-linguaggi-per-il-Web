@@ -539,7 +539,7 @@ app.get('/ristorante/:id/menu', async (req, res) => {
         },
         {
             $project: {
-                _id: 1, prezzo: 1, nome: 1, foto: 1, categoria: 1, ingredienti: 1, personalizzato: 1
+                _id: 1, prezzo: 1, nome: 1, foto: 1, categoria: 1, ingredienti: 1, personalizzato: 1, idProdotto: 1
             }
         }
     ]).toArray();
