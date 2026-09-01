@@ -98,3 +98,15 @@ function mostraToast(messaggio) {
     const toast = new bootstrap.Toast(document.getElementById('toastSuccesso'), {delay: 3000});
     toast.show();
 }
+
+async function caricaCategorieSuggerite() {
+    try {
+        const response = await fetch('http://localhost:3005/categorie?api_key=1234567');
+        const categorie = await response.json();
+
+        const datalist = document.getElementById('listaCategorie');
+        datalist.innerHTML = categorie.map(cat => `<option value="${cat}">`).join('');
+    } catch (error) {
+        console.error('Errore nel caricamento delle categorie:', error);
+    }
+}

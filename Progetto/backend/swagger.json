@@ -569,7 +569,51 @@
         }
       },
       "post": {
-        "description": "",
+        "description": "Aggiunge un prodotto presente nel catalogo al menu del ristorante dell'utente",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "idProdotto": {
+                    "example": "any"
+                  },
+                  "prezzo": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "description": "Rimuove un prodotto dal menu del ristorante dell'utente",
         "parameters": [
           {
             "name": "id",
@@ -597,13 +641,80 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "idProdotto": {
+                  "id": {
                     "example": "any"
-                  },
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/categorie": {
+      "get": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/ristorante/{id_user}/menu/{id_prodotto}": {
+      "put": {
+        "description": "Aggiorna i dati di un prodotto nel menu del ristorante dell'utente",
+        "parameters": [
+          {
+            "name": "id_user",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id_prodotto",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
                   "prezzo": {
                     "example": "any"
                   },
-                  "idRistorante": {
+                  "ingredienti": {
+                    "example": "any"
+                  },
+                  "categoria": {
+                    "example": "any"
+                  },
+                  "nome": {
+                    "example": "any"
+                  },
+                  "foto": {
                     "example": "any"
                   }
                 }

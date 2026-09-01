@@ -22,13 +22,13 @@ app.use('/user', checkApiKeys);
 app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 async function getUser(id) {
-    await client.connect();
+
     const filter = {_id: ObjectID.createFromHexString(id)};
     return await client.db('FastFood').collection('users').findOne(filter);
 }
 
 async function getRistorante(id) {
-    await client.connect();
+
     const filter = {idRistoratore: id};
     return await client.db('FastFood').collection('ristoranti').findOne(filter);
 }
@@ -121,7 +121,6 @@ app.post('/user', async (req, res) => {
 
     const hashedPassword = await bycrypt.hash(password, 10);
 
-    await client.connect();
 
     let user_no_psw;
     try {
@@ -139,7 +138,7 @@ app.post('/user', async (req, res) => {
         await client.db('FastFood').collection('users').insertOne(user);
 
         user_no_psw = {...user, password: undefined}
-        await client.close();
+
 
         res.json(user_no_psw);
     } catch (error) {
@@ -156,7 +155,7 @@ app.post('/user/login', async (req, res) => {
 
     const email = req.body.email;
     const password = req.body.password;
-    await client.connect();
+
     const user = await client.db('FastFood').collection('users').findOne({email: email});
     if (!user) {
         res.status(404).json({error: "Credenziali non valide"});
@@ -167,7 +166,7 @@ app.post('/user/login', async (req, res) => {
         res.status(401).json({error: "Credenziali non valide"});
         return;
     }
-    await client.close();
+
     let user_no_psw = {...user, password: undefined}
     res.json(user_no_psw);
 });
@@ -212,7 +211,7 @@ app.put('/user/:id', async (req, res) => {
     }
 
     try {
-        await client.connect();
+
         const coll = client.db('FastFood').collection('users');
         const result = await coll.updateOne(
             {_id: ObjectID.createFromHexString(id)},
@@ -227,7 +226,7 @@ app.put('/user/:id', async (req, res) => {
                 }
             });
         res.json(result);
-        await client.close();
+
     } catch (error) {
         if (error.code === 11000) {
             res.status(409).json({error: "Email già in uso"});
@@ -252,19 +251,18 @@ app.put('/user/:id/password', async (req, res) => {
         return res.status(400).json({error: "Password troppo corta"});
     }
 
-    await client.connect();
 
     const coll = client.db('FastFood').collection('users');
     const user = await getUser(id);
 
     if (!user) {
-        await client.close();
+
         return res.status(404).json({error: "Utente non trovato"});
     }
 
     const passwordCorretta = await bycrypt.compare(currentPassword, user.password);
     if (!passwordCorretta) {
-        await client.close();
+
         return res.status(401).json({error: "Password attuale non corretta"});
     }
     const hashedPassword = await bycrypt.hash(newPassword, 10);
@@ -277,18 +275,18 @@ app.put('/user/:id/password', async (req, res) => {
             }
         });
     res.json(result);
-    await client.close();
+
 });
 
 app.delete('/user/:id', async (req, res) => {
     // #swagger.description = "Elimina un utente per ID"
 
     const id = req.params.id;
-    await client.connect();
+
     const result = await client.db('FastFood')
         .collection('users')
         .deleteOne({_id: ObjectID.createFromHexString(id)});
-    await client.close();
+
     res.json(result);
 });
 
@@ -323,7 +321,6 @@ app.post('/user/:id/ristorante', async (req, res) => {
         return res.status(400).json({error: "Indirizzo ristorante non valido"});
     }
 
-    await client.connect();
 
     try {
         const risorante = {
@@ -337,7 +334,7 @@ app.post('/user/:id/ristorante', async (req, res) => {
             logoUrl: null
         };
         await client.db('FastFood').collection('ristoranti').insertOne(risorante);
-        await client.close();
+
 
         res.json(risorante);
     } catch (error) {
@@ -367,9 +364,9 @@ app.get('/user/:id/ristorante', async (req, res) => {
         return res.status(403).json({error: "Utente non autorizzato"});
     }
 
-    await client.connect();
+
     const ristorante = await client.db('FastFood').collection('ristoranti').findOne({idRistoratore: id});
-    await client.close();
+
     if (!ristorante) {
         return res.status(404).json({error: "Ristorante non trovato"});
     }
@@ -399,12 +396,12 @@ app.put('/user/:id/ristorante/logo', async (req, res) => {
         return res.status(404).json({error: "Ristorante non trovato"});
     }
 
-    await client.connect();
+
     const result = await client.db('FastFood').collection('ristoranti').updateOne(
         {idRistoratore: id},
         {$set: {logoUrl: logoUrl}}
     );
-    await client.close();
+
     res.json(result);
 });
 
@@ -445,7 +442,7 @@ app.put('/user/:id/ristorante', async (req, res) => {
         return res.status(400).json({error: "Indirizzo ristorante non valido"});
     }
 
-    await client.connect();
+
     const datiModificati = {
         nomeRistorante: newNomeRistorante,
         partitaIVA: newPartitaIVA,
@@ -468,7 +465,7 @@ app.put('/user/:id/ristorante', async (req, res) => {
                 }
             }
         );
-        await client.close();
+
 
         res.json(datiModificati);
     } catch (error) {
@@ -497,17 +494,17 @@ app.delete('/user/:id/ristorante', async (req, res) => {
         return res.status(404).json({error: "Ristorante non trovato"});
     }
 
-    await client.connect();
+
     const result = await client.db('FastFood').collection('ristoranti').deleteOne({idRistoratore: id});
-    await client.close();
+
 
     res.json(result);
 });
 app.get('/piatti', async (req, res) => {
     // #swagger.description = "Recupera i piatti presenti nel catalogo"
-    await client.connect();
+
     const piatti = await client.db('FastFood').collection('catalogo').find({}).toArray();
-    await client.close();
+
     res.json(piatti);
 });
 
@@ -515,7 +512,6 @@ app.get('/ristorante/:id/menu', async (req, res) => {
     // #swagger.description = "Recupera il menu"
     const id = ObjectID.createFromHexString(req.params.id);
 
-    await client.connect();
 
     const menuDettagliato = await client.db('FastFood').collection('menu').aggregate([
 
@@ -544,13 +540,12 @@ app.get('/ristorante/:id/menu', async (req, res) => {
         }
     ]).toArray();
 
-    await client.close();
 
     res.json(menuDettagliato);
 });
 
 app.post('/ristorante/:id/menu', async (req, res) => {
-    // #swagger.description = Aggiunge un prodotto al menu del ristorante dell'utente
+    // #swagger.description = Aggiunge un prodotto presente nel catalogo al menu del ristorante dell'utente
     const idUtente = req.params.id;
     const idProdotto = req.body.idProdotto;
     const prezzo = req.body.prezzo;
@@ -569,16 +564,21 @@ app.post('/ristorante/:id/menu', async (req, res) => {
         return res.status(404).json({error: "Ristorante non trovato"});
     }
 
+    if (!prezzo || isNaN(prezzo) || prezzo <= 0) {
+        return res.status(400).json({error: "Prezzo non valido"});
+    }
 
-    await client.connect();
-    const ingredienti = await client.db('FastFood').collection('catalogo').findOne({_id: ObjectID.createFromHexString(idProdotto)}, {projection: {ingredients: 1}});
+
+    const piattoCatalogo = await client.db('FastFood').collection('catalogo').findOne({_id: ObjectID.createFromHexString(idProdotto)});
     const result = await client.db('FastFood').collection('menu').insertOne({
         idRistorante: ristorante._id,
-        idProdotto: idProdotto,
+        nome: piattoCatalogo.strMeal,
         prezzo: prezzo,
-        ingredienti: ingredienti.ingredients
+        ingredienti: piattoCatalogo.ingredients,
+        categoria: piattoCatalogo.strCategory,
+        foto: piattoCatalogo.strMealThumb
     });
-    await client.close();
+
 
     res.json(result);
 });
@@ -602,9 +602,66 @@ app.delete('/ristorante/:id/menu', async (req, res) => {
         return res.status(404).json({error: "Ristorante non trovato"});
     }
 
-    await client.connect();
+
     const result = await client.db('FastFood').collection('menu').deleteOne({_id: ObjectID.createFromHexString(idMenu)});
-    await client.close();
+
     res.json(result);
 });
-app.listen(port, () => console.log(`Server avviato sulla porta ${port}`));
+
+app.get('/categorie', async (req, res) => {
+
+    const result = await client.db('FastFood').collection('catalogo').distinct('strCategory');
+
+    res.json(result);
+})
+
+app.put('/ristorante/:id_user/menu/:id_prodotto', async (req, res) => {
+    // #swagger.description = Aggiorna i dati di un prodotto nel menu del ristorante dell'utente
+    const idUtente = req.params.id_user;
+    const idProdotto = req.params.id_prodotto;
+    const newPrezzo = req.body.prezzo;
+    const newIngredienti = req.body.ingredienti;
+    const newCategoria = req.body.categoria;
+    const newNome = req.body.nome;
+    const newFoto = req.body.foto;
+
+    const user = await getUser(idUtente);
+    if (!user) {
+        return res.status(404).json({error: "Utente non trovato"});
+    }
+
+    if (!user.ristoratore) {
+        return res.status(403).json({error: "Utente non autorizzato"});
+    }
+
+    const ristorante = await getRistorante(idUtente);
+    if (!ristorante) {
+        return res.status(404).json({error: "Ristorante non trovato"});
+    }
+
+    if (!newPrezzo || isNaN(newPrezzo) || newPrezzo <= 0) {
+        return res.status(400).json({error: "Prezzo non valido"});
+    }
+
+    const result = await client.db('FastFood').collection('menu').updateOne(
+        {_id: ObjectID.createFromHexString(idProdotto)},
+        {
+            $set: {
+                prezzo: newPrezzo,
+                ingredienti: newIngredienti,
+                categoria: newCategoria,
+                nome: newNome,
+                foto: newFoto
+            }
+        }
+    );
+
+    res.json(result);
+
+})
+
+client.connect()
+    .then(() => {
+        app.listen(port, () => console.log(`Server avviato sulla porta ${port}`));
+    })
+    .catch(err => console.error('Errore connessione MongoDB:', err));
