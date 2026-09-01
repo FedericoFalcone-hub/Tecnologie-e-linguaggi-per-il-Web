@@ -530,12 +530,20 @@ app.get('/ristorante/:id/menu', async (req, res) => {
             $addFields: {
                 nome: {$ifNull: [{$arrayElemAt: ['$dettagli.strMeal', 0]}, '$nome']},
                 foto: {$ifNull: [{$arrayElemAt: ['$dettagli.strMealThumb', 0]}, '$foto']},
-                categoria: {$ifNull: [{$arrayElemAt: ['$dettagli.strCategory', 0]}, '$categoria']}
+                categoria: {$ifNull: [{$arrayElemAt: ['$dettagli.strCategory', 0]}, '$categoria']},
             }
         },
         {
             $project: {
-                _id: 1, prezzo: 1, nome: 1, foto: 1, categoria: 1, ingredienti: 1, personalizzato: 1, idProdotto: 1
+                _id: 1,
+                prezzo: 1,
+                nome: 1,
+                foto: 1,
+                categoria: 1,
+                ingredienti: 1,
+                personalizzato: 1,
+                idProdotto: 1,
+                ricetta: 1
             }
         }
     ]).toArray();
@@ -544,7 +552,7 @@ app.get('/ristorante/:id/menu', async (req, res) => {
     res.json(menuDettagliato);
 });
 
-app.post('/ristorante/:id/menu', async (req, res) => {
+app.post('/ristorante/:id/menu/catalogo', async (req, res) => {
     // #swagger.description = Aggiunge un prodotto presente nel catalogo al menu del ristorante dell'utente
     const idUtente = req.params.id;
     const idProdotto = req.body.idProdotto;
@@ -576,7 +584,8 @@ app.post('/ristorante/:id/menu', async (req, res) => {
         prezzo: prezzo,
         ingredienti: piattoCatalogo.ingredients,
         categoria: piattoCatalogo.strCategory,
-        foto: piattoCatalogo.strMealThumb
+        foto: piattoCatalogo.strMealThumb,
+        ricetta: piattoCatalogo.strInstructions
     });
 
 
@@ -613,7 +622,7 @@ app.get('/categorie', async (req, res) => {
     const result = await client.db('FastFood').collection('catalogo').distinct('strCategory');
 
     res.json(result);
-})
+});
 
 app.put('/ristorante/:id_user/menu/:id_prodotto', async (req, res) => {
     // #swagger.description = Aggiorna i dati di un prodotto nel menu del ristorante dell'utente
@@ -624,6 +633,7 @@ app.put('/ristorante/:id_user/menu/:id_prodotto', async (req, res) => {
     const newCategoria = req.body.categoria;
     const newNome = req.body.nome;
     const newFoto = req.body.foto;
+    const newRicetta = req.body.ricetta;
 
     const user = await getUser(idUtente);
     if (!user) {
@@ -651,14 +661,60 @@ app.put('/ristorante/:id_user/menu/:id_prodotto', async (req, res) => {
                 ingredienti: newIngredienti,
                 categoria: newCategoria,
                 nome: newNome,
-                foto: newFoto
+                foto: newFoto,
+                ricetta: newRicetta
             }
         }
     );
 
     res.json(result);
 
-})
+});
+
+app.post('/ristorante/:id_user/menu/personalizzato', async (req, res) => {
+// #swagger.description = Aggiunge un prodotto personalizzato al menu del ristorante dell'utente
+    const idUtente = req.params.id_user;
+    const nome = req.body.nome;
+    const prezzo = req.body.prezzo;
+    const ingredienti = req.body.ingredienti;
+    const categoria = req.body.categoria;
+    const foto = req.body.foto;
+    const ricetta = req.body.ricetta;
+
+    const user = await getUser(idUtente);
+    if (!user) {
+        return res.status(404).json({error: "Utente non trovato"});
+    }
+
+    if (!user.ristoratore) {
+        return res.status(403).json({error: "Utente non autorizzato"});
+    }
+
+    const ristorante = await getRistorante(idUtente);
+    if (!ristorante) {
+        return res.status(404).json({error: "Ristorante non trovato"});
+    }
+
+    if (!nome || !prezzo || !ingredienti || !categoria || !ricetta || !foto) {
+        return res.status(400).json({error: "Dati mancanti"});
+    }
+
+    if (isNaN(prezzo) || prezzo <= 0) {
+        return res.status(400).json({error: "Prezzo non valido"});
+    }
+
+    const result = await client.db('FastFood').collection('menu').insertOne({
+        idRistorante: ristorante._id,
+        nome: nome,
+        prezzo: prezzo,
+        ingredienti: ingredienti,
+        categoria: categoria,
+        foto: foto,
+        ricetta: ricetta
+    });
+
+    res.json(result);
+});
 
 client.connect()
     .then(() => {

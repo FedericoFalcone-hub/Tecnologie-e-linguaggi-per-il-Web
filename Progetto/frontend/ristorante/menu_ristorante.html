@@ -54,9 +54,9 @@
                         <span class="piatto-card-prezzo prezzo-piatto" style="font-weight: 700;"></span>
                     </div>
                     <div class="d-flex justify-content-between  mt-3 gap-2">
-                        <button class="btn btn-outline-secondary rounded-pill btn-visualizza w-100"
+                        <button class="btn btn-outline-secondary rounded-pill btn-ricetta w-100"
                                 data-bs-toggle="modal"
-                                data-bs-target="#modalModifica">
+                                data-bs-target="#modalVisualizzaRicetta">
                             Ricetta
                         </button>
                         <button class="btn btn-outline-primary rounded-pill btn-modifica w-100"
@@ -124,8 +124,49 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
 
-
+                    <!-- Tab Personalizzato -->
+                    <div class="tab-pane fade show" id="tabPersonalizzato">
+                        <div id="body-personalizzato" class="row g-4">
+                            <form id="formAggiungiPiattoPersonalizzato" class="col-12" autocomplete="off">
+                                <div class="mb-3">
+                                    <label for="nomePiatto" class="form-label">Nome</label>
+                                    <input type="text" class="form-control" id="nomePiatto" required placeholder="Nome">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="categoriaPiatto" class="form-label">Categoria</label>
+                                    <input type="text" class="form-control" id="categoriaPiatto"
+                                           list="listaCategorie"
+                                           required placeholder="Pizza, Pasta, Antipasto, Dessert...">
+                                    <datalist class="listaCategorie" id="listaCategorie"></datalist>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="prezzoPiatto" class="form-label">Prezzo (€)</label>
+                                    <input type="number" step="0.01" min="0" class="form-control" id="prezzoPiatto"
+                                           required placeholder="0.00">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="ingredientiPiatto" class="form-label">Ingredienti (separati da
+                                        virgola)</label>
+                                    <input type="text" class="form-control" id="ingredientiPiatto" required
+                                           placeholder="Ingrediente1, Ingrediente2, ...">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="fotoPiatto" class="form-label">Foto</label>
+                                    <input type="text" class="form-control" id="fotoPiatto" required
+                                           placeholder="URL della foto">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="ricettaPiatto" class="form-label">Ricetta</label>
+                                    <textarea class="form-control" id="ricettaPiatto" rows="3" required
+                                              placeholder="Scrivi la ricetta del piatto..."></textarea>
+                                </div>
+                                <button type="submit"
+                                        class="btn btn-brand rounded-pill w-100 py-2">Aggiungi al menu
+                                </button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -155,11 +196,14 @@
             </div>
             <div class="modal-body">
                 <p class="fw-semibold mb-3" id="nomePiattoSelezionato"></p>
-                <label for="prezzoCatalogo" class="form-label">Prezzo (€)</label>
-                <input type="number" step="0.01" min="0" class="form-control" id="prezzoCatalogo" required>
-                <button type="button" id="btn-conferma-catalogo" class="btn btn-brand rounded-pill w-100 py-2 mt-3">
-                    Aggiungi al menu
-                </button>
+                <form id="formPrezzoCatalogo" class="mb-3">
+                    <div class="mb-3">
+                        <label for="prezzoCatalogo" class="form-label">Prezzo (€)</label>
+                        <input type="number" step="0.01" min="0" class="form-control" id="prezzoCatalogo" required
+                               placeholder="0.00">
+                        <button type="submit" class="btn btn-brand rounded-pill w-100 py-2 mt-3">Imposta prezzo</button>
+                    </div>
+                </form>
                 <p id="catalogo-conferma-messaggio" class="text-center mt-3 mb-0" style="font-size: 14px;"></p>
             </div>
         </div>
@@ -182,9 +226,10 @@
                     </div>
                     <div class="mb-3">
                         <label for="categoriaPiattoModifica" class="form-label">Categoria</label>
-                        <input type="text" class="form-control" id="categoriaPiattoModifica" list="listaCategorie"
+                        <input type="text" class="form-control" id="categoriaPiattoModifica"
+                               list="listaCategorieModifica"
                                required>
-                        <datalist id="listaCategorie"></datalist>
+                        <datalist class="listaCategorie" id="listaCategorieModifica"></datalist>
                     </div>
                     <div class="mb-3">
                         <label for="prezzoPiattoModifica" class="form-label">Prezzo (€)</label>
@@ -200,8 +245,28 @@
                         <label for="fotoPiattoModifica" class="form-label">Foto</label>
                         <input type="text" class="form-control" id="fotoPiattoModifica" required>
                     </div>
+                    <div class="mb-3">
+                        <label for="ricettaPiattoModifica" class="form-label">Ricetta</label>
+                        <textarea class="form-control" id="ricettaPiattoModifica" rows="3" required></textarea>
+                    </div>
                     <button type="submit" class="btn btn-brand rounded-pill w-100 py-2">Salva modifiche</button>
                 </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal visualizza ricetta -->
+<div class="modal fade" id="modalVisualizzaRicetta" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="border-radius: 16px;">
+            <div class="modal-header border-0">
+                <h5 class="modal-title">Ricetta</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p class="fw-semibold mb-3" id="nomePiattoRicetta"></p>
+                <p id="testoRicetta" class="mb-0"></p>
             </div>
         </div>
     </div>
@@ -212,7 +277,10 @@
 <script src="../../backend/lib.js"></script>
 
 <script>
+
     checkLoggedRistoratore();
+    caricaCategorieSuggerite();
+
     let catalogoCache = null;
     let piattoDaAggiungere = null;
     const user = JSON.parse(localStorage.getItem('utente'));
@@ -283,6 +351,7 @@
                             document.getElementById('prezzoPiattoModifica').value = piatto.prezzo.toFixed(2);
                             document.getElementById('ingredientiPiattoModifica').value = piatto.ingredienti.join(', ');
                             document.getElementById('fotoPiattoModifica').value = piatto.foto;
+                            document.getElementById('ricettaPiattoModifica').value = piatto.ricetta || "";
                             const form = document.getElementById('formModificaPiatto');
 
                             form.onsubmit = function (e) {
@@ -300,7 +369,8 @@
                                         categoria: categoria,
                                         prezzo: prezzo,
                                         ingredienti: ingredienti,
-                                        foto: foto
+                                        foto: foto,
+                                        ricetta: document.getElementById('ricettaPiattoModifica').value
                                     })
                                 };
                                 fetch(`http://localhost:3005/ristorante/${user._id}/menu/${piatto._id}`, options)
@@ -316,6 +386,11 @@
                                         }
                                     });
                             }
+                        });
+                        const btnRicetta = clone.getElementsByClassName('btn-ricetta')[0];
+                        btnRicetta.addEventListener('click', function () {
+                            document.getElementById('nomePiattoRicetta').textContent = piatto.nome;
+                            document.getElementById('testoRicetta').textContent = piatto.ricetta || "Nessuna ricetta disponibile.";
                         });
                         clone.classList.remove('d-none');
                         clone.id = piatto._id;
@@ -380,7 +455,9 @@
         });
     });
 
-    document.getElementById("btn-conferma-catalogo").addEventListener("click", function () {
+    document.getElementById("formPrezzoCatalogo").addEventListener("submit", function (e) {
+        e.preventDefault();
+
         const prezzo = document.getElementById("prezzoCatalogo").value;
         const messaggio = document.getElementById("catalogo-conferma-messaggio");
 
@@ -400,7 +477,7 @@
             })
         };
 
-        fetch(`http://localhost:3005/ristorante/${user._id}/menu`, options)
+        fetch(`http://localhost:3005/ristorante/${user._id}/menu/catalogo`, options)
             .then(res => res.json())
             .then(result => {
                 if (result.error) {
@@ -417,7 +494,61 @@
             });
     });
 
-    caricaCategorieSuggerite();
+    document.getElementById("formAggiungiPiattoPersonalizzato").addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        const nome = document.getElementById("nomePiatto").value;
+        const categoria = document.getElementById("categoriaPiatto").value;
+        const prezzo = parseFloat(document.getElementById("prezzoPiatto").value);
+        const ingredienti = document.getElementById("ingredientiPiatto").value.split(",").map(i => i.trim());
+        const foto = document.getElementById("fotoPiatto").value;
+        const ricetta = document.getElementById("ricettaPiatto").value;
+
+        const options = {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                nome: nome,
+                categoria: categoria,
+                prezzo: prezzo,
+                ingredienti: ingredienti,
+                foto: foto,
+                ricetta: ricetta
+            })
+        };
+
+        fetch(`http://localhost:3005/ristorante/${user._id}/menu/personalizzato`, options)
+            .then(res => res.json())
+            .then(result => {
+                if (result.error) {
+                    mostraToast("Errore durante l'aggiunta del piatto: " + result.error);
+                } else {
+                    mostraToast("Piatto aggiunto con successo!");
+                    const modaleAggiungi = bootstrap.Modal.getInstance(document.getElementById('modalAggiungiPiatto'));
+                    modaleAggiungi.hide();
+                    caricaMenu();
+
+                    document.getElementById("formAggiungiPiattoPersonalizzato").reset();
+                }
+            });
+    });
+
+    const inputRicerca = document.getElementById("ricerca-catalogo");
+
+    inputRicerca.addEventListener("input", function () {
+        const testo = inputRicerca.value.toLowerCase();
+
+        const filtrati = catalogoCache.filter(p =>
+            p.strMeal.toLowerCase().includes(testo) ||
+            p.strCategory.toLowerCase().includes(testo) ||
+            p.ingredients.join(" ").toLowerCase().includes(testo)
+        );
+
+        const modello = document.getElementById('modello-catalogo');
+        const body = document.getElementById('body-catalogo');
+
+        renderCatalogo(filtrati, modello, body);
+    });
 
 </script>
 </body>
