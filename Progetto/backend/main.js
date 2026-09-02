@@ -86,6 +86,7 @@ app.post('/user', async (req, res) => {
     const password = req.body.password;
     const ristoratore = req.body.ristoratore;
     const indirizzo = req.body.indirizzo;
+    const preferenze = req.body.preferenze;
 
     if (!nome || !cognome || !email || !password || !indirizzo) {
         res.status(400).json({error: "Dati mancanti"});
@@ -132,7 +133,8 @@ app.post('/user', async (req, res) => {
             password: hashedPassword,
             lat: coordinates.lat,
             lon: coordinates.lon,
-            ristoratore: ristoratore
+            ristoratore: ristoratore,
+            preferenze: preferenze
         };
 
         await client.db('FastFood').collection('users').insertOne(user);

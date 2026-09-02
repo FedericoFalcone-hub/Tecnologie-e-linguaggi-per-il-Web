@@ -82,6 +82,13 @@
                             </select>
                         </div>
 
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="preferenzePersonalizzazione">
+                            <label class="form-check-label" for="preferenzePersonalizzazione" style="font-size: 14px;">
+                                Accetto di ricevere offerte speciali personalizzate in base alle mie preferenze
+                            </label>
+                        </div>
+
                         <button type="submit" class="btn btn-brand rounded-pill w-100 py-2">Registrati</button>
                         <p id="registrazione-messaggio" class="text-center mt-3 mb-0" style="font-size: 14px;"></p>
                         <p class="text-center text-muted mt-3 mb-0" style="font-size: 14px;">
@@ -108,6 +115,7 @@
     function registra(result) {
         let alert = document.getElementById('registrazione-messaggio');
         if (result.error) {
+            alert.classList.remove('text-muted');
             alert.innerHTML = result.error;
             alert.classList.add('text-danger');
         } else {
@@ -135,6 +143,7 @@
         const cPassword = document.getElementById('password').value;
         const cIndirizzo = capitalize(document.getElementById('indirizzo').value);
         const cTipo = document.getElementById('tipo');
+        const cPreferenze = document.getElementById('preferenzePersonalizzazione').checked;
 
         const user = {
             nome: cNome,
@@ -142,7 +151,8 @@
             email: cEmail,
             password: cPassword,
             indirizzo: cIndirizzo,
-            ristoratore: cTipo.value === 'true'
+            ristoratore: cTipo.value === 'true',
+            preferenze: cPreferenze
         };
 
         const options = {
