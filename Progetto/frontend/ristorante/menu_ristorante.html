@@ -541,7 +541,7 @@
         const filtrati = catalogoCache.filter(p =>
             p.strMeal.toLowerCase().includes(testo) ||
             p.strCategory.toLowerCase().includes(testo) ||
-            p.ingredients.join(" ").toLowerCase().includes(testo)
+            p.ingredients.some(ing => ing.toLowerCase().includes(testo))
         );
 
         const modello = document.getElementById('modello-catalogo');

@@ -716,6 +716,41 @@ app.post('/ristorante/:id_user/menu/personalizzato', async (req, res) => {
     res.json(result);
 });
 
+app.get('/ricette', async (req, res) => {
+    // #swagger.description = "Recupera le ricette"
+    const ricette = await client.db('FastFood')
+        .collection('menu')
+        .aggregate([
+            {
+                $project: {
+                    nome: 1,
+                    categoria: 1,
+                    ingredienti: 1,
+                    foto: 1,
+                    ricetta: 1
+                }
+            },
+            {
+                $unionWith: {
+                    coll: "catalogo",
+                    pipeline: [
+                        {
+                            $project: {
+                                nome: "$strMeal",
+                                categoria: "$strCategory",
+                                ingredienti: "$ingredients",
+                                foto: "$strMealThumb",
+                                ricetta: "$strInstructions"
+                            }
+                        }
+                    ]
+                }
+            }
+        ])
+        .toArray();
+    res.json(ricette);
+})
+
 client.connect()
     .then(() => {
         app.listen(port, () => console.log(`Server avviato sulla porta ${port}`));

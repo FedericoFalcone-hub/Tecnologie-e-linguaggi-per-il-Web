@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ricette</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap"
+          rel="stylesheet">
+</head>
+<body>
+
+<div id="navbar-container"></div>
+
+<div class="container py-5">
+
+    <div class="text-center mb-5">
+        <h2 class="text-dark mb-2" style="font-size: 32px; font-weight: 700;">Ricette</h2>
+    </div>
+    <form id="form-ricerca-ricette" class="mb-4">
+        <div class="input-group">
+            <label for="ricerca-ricetta"></label>
+            <input name="ricerca-ricetta" type="text" id="ricerca-ricetta" class="form-control"
+                   placeholder="Cerca per nome ricetta o ingrediente...">
+            <button type="submit" class="btn btn-brand rounded-pill px-4">Cerca</button>
+        </div>
+    </form>
+</div>
+
+
+<div class="container py-5">
+
+    <div id="body" class="row g-4">
+        <div id="modello-ricette" class="col-lg-4 col-md-6 d-none menu-item-card">
+            <div class="card border-0 shadow-sm h-100">
+                <img src="" class="card-img-top" alt="" style="height: 200px; object-fit: cover;">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start gap-2 mb-2">
+                        <h5 class="card-title mb-0"></h5>
+                        <span class="badge-categoria categoria-piatto"></span>
+                    </div>
+                    <div class="d-flex justify-content-between  mt-3 gap-2">
+                        <button class="btn btn-outline-secondary rounded-pill btn-ricetta w-100"
+                                data-bs-toggle="modal"
+                                data-bs-target="#modalVisualizzaRicetta">
+                            Visualizza
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal visualizza ricetta -->
+<div class="modal fade" id="modalVisualizzaRicetta" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="border-radius: 16px;">
+            <div class="modal-header border-0">
+                <h5 class="modal-title">Ricetta</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p class="fw-semibold mb-3" id="nomePiattoRicetta"></p>
+                <h6 class="fw-bold">Ingredienti</h6>
+                <ul id="listaIngredienti" class="mb-3"></ul>
+                <h6 class="fw-bold">Procedimento</h6>
+                <p id="testoRicetta" class="mb-0"></p>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+
+<script src="../backend/lib.js"></script>
+
+<script>
+    let ricette = [];
+
+    function caricaLista() {
+        fetch("http://localhost:3005/ricette")
+            .then(response => response.json())
+            .then(ricette => {
+                ricetteComplete = ricette;
+                renderRicette(ricette);
+            })
+            .catch(error => {
+                console.error("Errore durante il caricamento delle ricette:", error);
+            });
+    }
+
+    function renderRicette(ricette) {
+        const modello = document.getElementById("modello-ricette");
+        const body = document.getElementById("body");
+        body.innerHTML = "";
+        body.append(modello);
+
+
+        for (let i = 0; i < ricette.length; i++) {
+
+            const clone = modello.cloneNode(true);
+            const ricetta = ricette[i];
+            clone.getElementsByClassName('card-title')[0].innerText += ricetta.nome;
+            clone.getElementsByClassName('categoria-piatto')[0].innerText += ricetta.categoria;
+            clone.getElementsByTagName('img')[0].alt = ricetta.nome;
+            clone.getElementsByTagName('img')[0].src = ricetta.foto;
+
+            const btnVisualizza = clone.getElementsByClassName('btn-ricetta')[0];
+            btnVisualizza.addEventListener('click', function () {
+                document.getElementById('nomePiattoRicetta').innerText = ricetta.nome;
+                const listaIngredienti = document.getElementById('listaIngredienti');
+                listaIngredienti.innerHTML = "";
+                for (let j = 0; j < ricetta.ingredienti.length; j++) {
+                    const li = document.createElement('li');
+                    li.innerText = ricetta.ingredienti[j];
+                    listaIngredienti.appendChild(li);
+                }
+                document.getElementById('testoRicetta').innerText = ricetta.ricetta;
+            });
+            clone.classList.remove("d-none");
+            clone.id = ricetta.id;
+            modello.before(clone);
+        }
+    }
+
+    document.getElementById('form-ricerca-ricette').addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        const query = document.getElementById('ricerca-ricetta').value.trim().toLowerCase();
+
+        if (!query) {
+            renderRicette(ricetteComplete);
+            return;
+        }
+
+        const filtrate = ricetteComplete.filter(r =>
+            r.nome.toLowerCase().includes(query) ||
+            r.categoria.toLowerCase().includes(query) ||
+            r.ingredienti.some(ing => ing.toLowerCase().includes(query))
+        );
+
+        renderRicette(filtrate);
+    });
+
+    caricaLista()
+
+</script>
+</body>
+</html>
