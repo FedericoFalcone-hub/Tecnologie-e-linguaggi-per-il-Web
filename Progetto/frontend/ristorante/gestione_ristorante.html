@@ -124,7 +124,9 @@
         let ristorante = JSON.parse(localStorage.getItem("ristorante"));
         if (!ristorante) {
             ristorante = await getRistorante();
+            localStorage.setItem("ristorante", JSON.stringify(ristorante));
         }
+
         if (!ristorante) {
             document.getElementById("libero").style.display = "block";
             return;

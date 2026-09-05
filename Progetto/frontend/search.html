@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Search</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap"
+          rel="stylesheet">
+</head>
+<body>
+
+<div id="navbar-container"></div>
+<div class="container py-5">
+    <div class="container py-5">
+
+        <div class="mb-4">
+            <h2 style="font-weight: 700;">Risultati per: <span id="termine-cercato" class="text-brand"></span></h2>
+        </div>
+
+        <div id="container-result" class="row g-4">
+
+            <div class="text-center w-100" id="loader">
+                <div class="spinner-border text-dark" role="status">
+                    <span class="visually-hidden">Caricamento...</span>
+                </div>
+            </div>
+
+            <div class="col-12 text-center text-muted py-5" id="nessun-risultato" style="display: none;">
+                Nessun risultato trovato.
+            </div>
+
+            <div id="modello-risultati" class="col-lg-4 col-md-6 d-none menu-item-card">
+                <div class="card border-0 shadow-sm h-100">
+                    <img src="" class="card-img-top" alt="" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start gap-2 mb-2">
+                            <h5 class="card-title mb-0"></h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+
+<script src="../backend/lib.js"></script>
+
+<script>
+    const urlParams = new URLSearchParams(window.location.search);
+
+    const termineCercato = urlParams.get('q');
+    document.getElementById('termine-cercato').textContent = termineCercato
+
+    async function fetchResult() {
+
+        const response = await fetch(`http://localhost:3005/search/${encodeURIComponent(termineCercato)}`);
+        if (!response.ok) {
+            throw new Error('Errore nella richiesta al server');
+        }
+        const data = await response.json();
+
+        document.getElementById('loader').style.display = 'none';
+        document.getElementById('nessun-risultato').style.display = 'none';
+
+        if (data.length === 0) {
+            document.getElementById('nessun-risultato').style.display = 'block';
+            return;
+        }
+
+        const containerResult = document.getElementById('container-result');
+        const modelloRisultati = document.getElementById('modello-risultati');
+
+        data.forEach(item => {
+            const clone = modelloRisultati.cloneNode(true);
+            clone.classList.remove('d-none');
+            clone.querySelector('.card-img-top').src = item.immagine;
+            clone.querySelector('.card-title').textContent = item.ristoranteNome;
+            clone.querySelector('.card').addEventListener('click', () => {
+                window.location.href = `ristorante.html?id=${item.id}`;
+            });
+            containerResult.appendChild(clone);
+        });
+    }
+
+    fetchResult();
+</script>
+</body>
+</html>

@@ -753,6 +753,49 @@ app.get('/ricette', async (req, res) => {
     res.json(ricette);
 })
 
+app.get('/search/:query', async (req, res) => {
+    // #swagger.description = "Cerca prodotti"
+    const query = req.params.query;
+
+    const results = await client.db('FastFood').collection('menu').aggregate([
+        {
+            $match: {
+                $or: [
+                    {nome: {$regex: query, $options: 'i'}},
+                    {categoria: {$regex: query, $options: 'i'}},
+                    {ingredienti: {$regex: query, $options: 'i'}}
+                ]
+            }
+        },
+        {
+            $lookup: {
+                from: 'ristoranti',
+                localField: 'idRistorante',
+                foreignField: '_id',
+                as: 'ristorante'
+            }
+        },
+        {
+            $unwind: '$ristorante'
+        },
+        {
+            $project: {
+                _id: 1,
+                nome: 1,
+                prezzo: 1,
+                categoria: 1,
+                ingredienti: 1,
+                foto: 1,
+                ristoranteNome: '$ristorante.nomeRistorante',
+                ristoranteTelefono: '$ristorante.telefonoRistorante',
+                ristoranteIndirizzo: '$ristorante.indirizzoRistorante',
+                ristoranteLogo: '$ristorante.logoUrl'
+            }
+        }
+    ]).toArray();
+    res.json(results);
+});
+
 client.connect()
     .then(() => {
         app.listen(port, () => console.log(`Server avviato sulla porta ${port}`));

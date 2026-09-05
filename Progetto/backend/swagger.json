@@ -63,6 +63,9 @@
                   },
                   "indirizzo": {
                     "example": "any"
+                  },
+                  "preferenze": {
+                    "example": "any"
                   }
                 }
               }
@@ -568,6 +571,46 @@
           }
         }
       },
+      "delete": {
+        "description": "Rimuove un prodotto dal menu del ristorante dell'utente",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ristorante/{id}/menu/catalogo": {
       "post": {
         "description": "Aggiunge un prodotto presente nel catalogo al menu del ristorante dell'utente",
         "parameters": [
@@ -604,44 +647,6 @@
                     "example": "any"
                   },
                   "prezzo": {
-                    "example": "any"
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "delete": {
-        "description": "Rimuove un prodotto dal menu del ristorante dell'utente",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "404": {
-            "description": "Not Found"
-          }
-        },
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "id": {
                     "example": "any"
                   }
                 }
@@ -716,10 +721,101 @@
                   },
                   "foto": {
                     "example": "any"
+                  },
+                  "ricetta": {
+                    "example": "any"
                   }
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/ristorante/{id_user}/menu/personalizzato": {
+      "post": {
+        "description": "Aggiunge un prodotto personalizzato al menu del ristorante dell'utente",
+        "parameters": [
+          {
+            "name": "id_user",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "nome": {
+                    "example": "any"
+                  },
+                  "prezzo": {
+                    "example": "any"
+                  },
+                  "ingredienti": {
+                    "example": "any"
+                  },
+                  "categoria": {
+                    "example": "any"
+                  },
+                  "foto": {
+                    "example": "any"
+                  },
+                  "ricetta": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ricette": {
+      "get": {
+        "description": "Recupera le ricette",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/search/{query}": {
+      "get": {
+        "description": "Cerca prodotti",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
           }
         }
       }

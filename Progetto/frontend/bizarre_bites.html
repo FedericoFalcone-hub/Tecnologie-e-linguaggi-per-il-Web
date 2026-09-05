@@ -26,7 +26,7 @@
         <form id="form-ricerca" class="search-bar mx-auto">
             <span class="search-icon">🔍</span>
             <label for="ricerca-input"></label><input type="text" id="ricerca-input" class="form-control border-0"
-                                                      placeholder="Cerca per nome ristorante o città...">
+                                                      placeholder="Cerca ristoranti o piatti...">
             <button type="submit" class="btn btn-brand rounded-pill px-4">Cerca</button>
         </form>
 
@@ -81,6 +81,15 @@
 
 <script src="../backend/lib.js"></script>
 
+<script>
+    document.getElementById("form-ricerca").addEventListener("submit", e => {
+        e.preventDefault();
+        const query = document.getElementById("ricerca-input").value.trim();
+        if (query) {
+            window.location.href = `search.html?q=${encodeURIComponent(query)}`;
+        }
+    });
+</script>
 
 </body>
 
