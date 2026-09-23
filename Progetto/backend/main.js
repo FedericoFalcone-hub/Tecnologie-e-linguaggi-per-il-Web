@@ -754,46 +754,69 @@ app.get('/ricette', async (req, res) => {
 })
 
 app.get('/search/:query', async (req, res) => {
-    // #swagger.description = "Cerca prodotti"
+    // #swagger.description = "Cerca prodotti e raggruppali per ristorante"
     const query = req.params.query;
 
-    const results = await client.db('FastFood').collection('menu').aggregate([
-        {
-            $match: {
-                $or: [
-                    {nome: {$regex: query, $options: 'i'}},
-                    {categoria: {$regex: query, $options: 'i'}},
-                    {ingredienti: {$regex: query, $options: 'i'}}
-                ]
+    try {
+        const results = await client.db('FastFood').collection('menu').aggregate([
+            {
+                $match: {
+                    $or: [
+                        {nome: {$regex: query, $options: 'i'}},
+                        {categoria: {$regex: query, $options: 'i'}},
+                        {ingredienti: {$regex: query, $options: 'i'}}
+                    ]
+                }
+            },
+            {
+                $lookup: {
+                    from: 'ristoranti',
+                    localField: 'idRistorante',
+                    foreignField: '_id',
+                    as: 'ristorante'
+                }
+            },
+            {
+                $unwind: '$ristorante'
+            },
+            {
+                $group: {
+                    _id: '$ristorante._id', // Chiave di raggruppamento (ID del ristorante)
+                    ristoranteNome: {$first: '$ristorante.nomeRistorante'},
+                    ristoranteTelefono: {$first: '$ristorante.telefonoRistorante'},
+                    ristoranteIndirizzo: {$first: '$ristorante.indirizzoRistorante'},
+                    ristoranteLogo: {$first: '$ristorante.logoUrl'},
+                    // Inserisci i piatti trovati in un array
+                    piatti: {
+                        $push: {
+                            _id: '$_id',
+                            nome: '$nome',
+                            prezzo: '$prezzo',
+                            categoria: '$categoria',
+                            ingredienti: '$ingredienti',
+                            foto: '$foto'
+                        }
+                    }
+                }
+            },
+            {
+                $project: {
+                    _id: 0, // Nasconde l'_id di raggruppamento
+                    idRistorante: '$_id', // Lo rinomina per chiarezza
+                    ristoranteNome: 1,
+                    ristoranteTelefono: 1,
+                    ristoranteIndirizzo: 1,
+                    ristoranteLogo: 1,
+                    piatti: 1
+                }
             }
-        },
-        {
-            $lookup: {
-                from: 'ristoranti',
-                localField: 'idRistorante',
-                foreignField: '_id',
-                as: 'ristorante'
-            }
-        },
-        {
-            $unwind: '$ristorante'
-        },
-        {
-            $project: {
-                _id: 1,
-                nome: 1,
-                prezzo: 1,
-                categoria: 1,
-                ingredienti: 1,
-                foto: 1,
-                ristoranteNome: '$ristorante.nomeRistorante',
-                ristoranteTelefono: '$ristorante.telefonoRistorante',
-                ristoranteIndirizzo: '$ristorante.indirizzoRistorante',
-                ristoranteLogo: '$ristorante.logoUrl'
-            }
-        }
-    ]).toArray();
-    res.json(results);
+        ]).toArray();
+
+        res.json(results);
+    } catch (error) {
+        console.error("Errore durante la ricerca:", error);
+        res.status(500).json({error: "Errore interno del server"});
+    }
 });
 
 client.connect()

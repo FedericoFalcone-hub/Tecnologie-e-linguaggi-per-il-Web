@@ -16,6 +16,16 @@
 <div class="container py-5">
     <div class="container py-5">
 
+        <div class="mb-3">
+            <form id="form-ricerca" class="search-bar mx-auto">
+                <span class="search-icon">🔍</span>
+                <label for="ricerca-input"></label><input type="text" id="ricerca-input" class="form-control border-0"
+                                                          placeholder="Cerca ristoranti o piatti...">
+                <button type="submit" class="btn btn-brand rounded-pill px-4">Cerca</button>
+            </form>
+        </div>
+
+
         <div class="mb-4">
             <h2 style="font-weight: 700;">Risultati per: <span id="termine-cercato" class="text-brand"></span></h2>
         </div>
@@ -39,6 +49,18 @@
                         <div class="d-flex justify-content-between align-items-start gap-2 mb-2">
                             <h5 class="card-title mb-0"></h5>
                         </div>
+                        <p class="card-text indirizzo-ristorante"></p>
+
+                        <!-- Piatti trovati -->
+                        <p class="text-muted mb-1" style="font-size: 12px;">Piatti trovati:</p>
+                        <div class="piatti-scroll d-flex flex-nowrap gap-2 pb-2 overflow-x-auto">
+                            <div class="modello-piatto-mini d-none text-center flex-shrink-0" style="width: 80px;">
+                                <img src="" alt="" class="foto-piatto-mini mb-1"
+                                     style="width: 70px; height: 70px; border-radius: 10px; object-fit: cover;">
+                                <p class="mb-0 nome-piatto-mini text-truncate" style="font-size: 11px;"></p>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -57,6 +79,7 @@
 
     const termineCercato = urlParams.get('q');
     document.getElementById('termine-cercato').textContent = termineCercato
+    document.getElementById('ricerca-input').value = termineCercato;
 
     async function fetchResult() {
 
@@ -77,14 +100,34 @@
         const containerResult = document.getElementById('container-result');
         const modelloRisultati = document.getElementById('modello-risultati');
 
+        const templatePiattoBase = modelloRisultati.querySelector('.modello-piatto-mini');
+
         data.forEach(item => {
             const clone = modelloRisultati.cloneNode(true);
+            clone.removeAttribute('id'); // Best practice: evitiamo id duplicati nel DOM
             clone.classList.remove('d-none');
-            clone.querySelector('.card-img-top').src = item.immagine;
+
+            clone.querySelector('.card-img-top').src = item.ristoranteLogo;
             clone.querySelector('.card-title').textContent = item.ristoranteNome;
-            clone.querySelector('.card').addEventListener('click', () => {
-                window.location.href = `ristorante.html?id=${item.id}`;
+            clone.querySelector('.indirizzo-ristorante').textContent = item.ristoranteIndirizzo;
+
+            const piattiScrollContainer = clone.querySelector('.piatti-scroll');
+            piattiScrollContainer.innerHTML = '';
+
+            item.piatti.forEach(piatto => {
+                const modelloPiattoMini = templatePiattoBase.cloneNode(true);
+                modelloPiattoMini.classList.remove('d-none');
+
+                modelloPiattoMini.querySelector('.foto-piatto-mini').src = piatto.foto;
+                modelloPiattoMini.querySelector('.nome-piatto-mini').textContent = piatto.nome;
+
+                piattiScrollContainer.appendChild(modelloPiattoMini);
             });
+
+            clone.querySelector('.card').addEventListener('click', () => {
+                window.location.href = `ristorante.html?id=${item.idRistorante}`;
+            });
+
             containerResult.appendChild(clone);
         });
     }
