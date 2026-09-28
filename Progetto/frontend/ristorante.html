@@ -40,14 +40,19 @@
     <div id="container-result" class="row g-4 ">
         <div id="modello-risultati" class="col-lg-4 col-md-6 d-none menu-item-card">
             <div class="card border-0 shadow-sm h-100">
-                <img src="" class="card-img-top" alt="" style="height: 200px; object-fit: cover;">
+                <div class="position-relative">
+                    <img src="" class="card-img-top" alt="" style="height: 200px; object-fit: cover;">
+                    <button class="btn btn-brand rounded-circle shadow btn-aggiungi-carrello position-absolute d-flex align-items-center justify-content-center"
+                            style="top: 10px; right: 10px; width: 38px; height: 38px; font-size: 22px; line-height: 1; padding: 0;"
+                            aria-label="Aggiungi al carrello">+
+                    </button>
+                </div>
                 <div class="card-body d-flex flex-column">
                     <div class="d-flex justify-content-between align-items-start gap-2 mb-2">
                         <h5 class="card-title mb-0"></h5>
                     </div>
-                    <div class="d-flex justify-content-between align-items-center mt-auto">
+                    <div class="mt-auto">
                         <span class="fw-bold text-brand prezzo-piatto"></span>
-                        <button class="btn btn-brand rounded-pill px-3 btn-aggiungi-carrello">+ Carrello</button>
                     </div>
                 </div>
             </div>
@@ -73,7 +78,10 @@
         <div id="modello-carrello"
              class="d-grid d-none align-items-center mb-2 pb-2 border-bottom"
              style="grid-template-columns: 1fr auto 65px; column-gap: 8px;">
-            <span class="carrello-nome fw-semibold text-truncate"></span>
+            <div class="text-truncate">
+                <span class="carrello-nome fw-semibold"></span>
+                <small class="carrello-nota text-muted d-block text-truncate"></small>
+            </div>
             <div class="d-flex align-items-center gap-1">
                 <button class="btn btn-sm btn-outline-secondary btn-diminuisci" style="width: 32px;"></button>
                 <span class="carrello-quantita text-center" style="min-width: 24px;"></span>
@@ -91,6 +99,39 @@
     </div>
 </div>
 
+<div class="modal fade" id="modalPiatto" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modal-nome"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <img id="modal-foto" src="" alt=""
+                     class="w-100 mb-3" style="height: 220px; object-fit: contain;">
+                <p class="mb-1 fw-semibold">Ingredienti</p>
+                <p id="modal-ingredienti" class="text-muted"></p>
+                <p class="fw-bold text-brand fs-5" id="modal-prezzo"></p>
+
+                <div class="d-flex align-items-center justify-content-between mb-3">
+                    <span class="fw-semibold">Quantità</span>
+                    <div class="d-flex align-items-center gap-2">
+                        <button id="modal-meno" class="btn btn-sm btn-outline-secondary" style="width: 34px;">-</button>
+                        <span id="modal-quantita" class="text-center fw-semibold" style="min-width: 28px;">1</span>
+                        <button id="modal-piu" class="btn btn-sm btn-outline-secondary" style="width: 34px;">+</button>
+                    </div>
+                </div>
+
+                <label for="modal-nota" class="form-label fw-semibold">Note per il ristorante</label>
+                <textarea id="modal-nota" class="form-control" rows="3" maxlength="200"
+                          placeholder="Es. senza cipolla, salsa a parte..."></textarea>
+            </div>
+            <div class="modal-footer">
+                <button id="btn-conferma-piatto" class="btn btn-brand rounded-pill w-100 fw-bold"></button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!-- Toast -->
 <div class="toast-container position-fixed top-0 start-50 translate-middle-x end-0 p-3" style="z-index: 1100;">
@@ -114,6 +155,9 @@
     const urlParams = new URLSearchParams(window.location.search);
 
     const idRistorante = urlParams.get('id');
+    let piattoSelezionato = null;
+    let quantitaModal = 1;
+    let modalPiatto = new bootstrap.Modal(document.getElementById('modalPiatto'));
 
     async function fetchRistorante() {
         try {
@@ -128,6 +172,8 @@
     }
 
     function displayRistorante(ristorante) {
+        const utente = JSON.parse(localStorage.getItem('utente'));
+
         let categoriaAttuale = '';
         document.getElementById('titolo').textContent = ristorante.ristoranteNome;
         const containerResult = document.getElementById('container-result');
@@ -148,13 +194,12 @@
             clone.querySelector('.card-img-top').src = item.foto;
             clone.querySelector('.card-title').textContent = item.nome;
             clone.querySelector('.prezzo-piatto').textContent = `€ ${item.prezzo.toFixed(2)}`;
+
+            if (utente && utente.ristoratore) {
+                clone.querySelector('.btn-aggiungi-carrello').style.display = 'none';
+            }
             clone.querySelector('.btn-aggiungi-carrello').addEventListener('click', () => {
-                const piatto = {
-                    id: item._id,
-                    nome: item.nome,
-                    prezzo: item.prezzo,
-                };
-                aggiungiAlCarrello(piatto, ristorante);
+                apriModalPiatto(item);
             });
 
             containerResult.appendChild(clone);
@@ -179,13 +224,13 @@
         }
     }
 
-    function aggiungiAlCarrello(item) {
+    function aggiungiAlCarrello(item, quantita = 1) {
         const carrello = getCarrello();
-        const esistente = carrello.find(p => p.id === item.id);
+        const esistente = carrello.find(p => p.id === item.id && (p.nota || '') === item.nota);
         if (esistente) {
-            esistente.quantita += 1;
+            esistente.quantita += quantita;
         } else {
-            carrello.push({...item, quantita: 1});
+            carrello.push({...item, quantita});
         }
 
         sessionStorage.setItem(idRistorante, JSON.stringify(carrello));
@@ -207,6 +252,7 @@
         lista.innerHTML = '';
         if (carrello.length === 0) {
             vuoto.style.display = 'block';
+            document.getElementById('badge-carrello').textContent = '0';
             document.getElementById('totale-carrello').textContent = '0.00';
             return;
         }
@@ -214,7 +260,7 @@
         vuoto.style.display = 'none';
         let totale = 0;
         let elementi = 0;
-        carrello.forEach(item => {
+        carrello.forEach((item, i) => {
             elementi += item.quantita;
 
             const subtotale = item.prezzo * item.quantita;
@@ -222,6 +268,9 @@
             const clone = document.getElementById('modello-carrello').cloneNode(true);
             clone.classList.remove('d-none');
             clone.querySelector('.carrello-nome').textContent = item.nome;
+            const nota = clone.querySelector('.carrello-nota');
+            nota.textContent = item.nota || '';
+            nota.classList.toggle('d-none', !item.nota);
             clone.querySelector('.carrello-quantita').textContent = `x${item.quantita}`;
             clone.querySelector('.carrello-prezzo').textContent = `€ ${subtotale.toFixed(2)}`;
 
@@ -229,8 +278,8 @@
             btnDiminuisci.innerHTML = item.quantita === 1
                 ? '<img src="../backend/images/bin.png" alt="Rimuovi" style="width: 16px; height: 16px; object-fit: contain;">'
                 : '-';
-            btnDiminuisci.addEventListener('click', () => modificaQuantita(item.id, -1));
-            clone.querySelector('.btn-aumenta').addEventListener('click', () => modificaQuantita(item.id, 1));
+            btnDiminuisci.addEventListener('click', () => modificaQuantita(i, -1));
+            clone.querySelector('.btn-aumenta').addEventListener('click', () => modificaQuantita(i, 1));
 
             lista.appendChild(clone);
         });
@@ -238,21 +287,35 @@
         document.getElementById('totale-carrello').textContent = totale.toFixed(2);
     }
 
-    function modificaQuantita(id, delta) {
+    function modificaQuantita(i, delta) {
         let carrello = getCarrello();
-        const item = carrello.find(p => p.id === id);
+        if (!carrello[i]) return;
 
-        if (!item) return;
-
-        item.quantita += delta;
-        if (item.quantita <= 0) {
-            carrello = carrello.filter(p => p.id !== id);
+        carrello[i].quantita += delta;
+        if (carrello[i].quantita <= 0) {
+            carrello.splice(i, 1);
         }
         sessionStorage.setItem(idRistorante, JSON.stringify(carrello));
-        const badge = document.getElementById('badge-carrello');
-        badge.textContent = parseInt(badge.textContent) + delta;
         aggiornaCarrello();
+    }
 
+    function apriModalPiatto(item) {
+        piattoSelezionato = {id: item._id, nome: item.nome, prezzo: item.prezzo};
+        const ingredienti = Array.isArray(item.ingredienti) ? item.ingredienti.join(', ') : item.ingredienti;
+        document.getElementById('modal-foto').src = item.foto;
+        document.getElementById('modal-nome').textContent = item.nome;
+        document.getElementById('modal-ingredienti').textContent = ingredienti || 'Nessun ingrediente indicato';
+        document.getElementById('modal-prezzo').textContent = `€ ${item.prezzo.toFixed(2)}`;
+        document.getElementById('modal-nota').value = '';
+        quantitaModal = 1;
+        aggiornaQuantitaModal();
+        modalPiatto.show();
+    }
+
+    function aggiornaQuantitaModal() {
+        document.getElementById('modal-quantita').textContent = quantitaModal.toFixed(0);
+        document.getElementById('modal-meno').disabled = quantitaModal <= 1;
+        document.getElementById('btn-conferma-piatto').textContent = `Aggiungi · € ${(piattoSelezionato.prezzo * quantitaModal).toFixed(2)}`;
     }
 
     aggiornaCarrello();
@@ -260,6 +323,26 @@
 
     document.getElementById('btn-paga').addEventListener('click', () => {
         window.location.href = `pagamento.html?id=${idRistorante}`;
+    });
+
+    document.getElementById('btn-conferma-piatto').addEventListener('click', () => {
+        piattoSelezionato.nota = document.getElementById('modal-nota').value.trim();
+        aggiungiAlCarrello(piattoSelezionato, quantitaModal);
+        modalPiatto.hide();
+    })
+
+    document.getElementById('modal-meno').addEventListener('click', () => {
+        if (quantitaModal > 1) {
+            quantitaModal--;
+            aggiornaQuantitaModal();
+        }
+    });
+
+    document.getElementById('modal-piu').addEventListener('click', () => {
+        if (quantitaModal < 99) {
+            quantitaModal++;
+            aggiornaQuantitaModal();
+        }
     });
 </script>
 </body>
