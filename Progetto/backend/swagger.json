@@ -177,6 +177,9 @@
           "401": {
             "description": "Unauthorized"
           },
+          "404": {
+            "description": "Not Found"
+          },
           "409": {
             "description": "Conflict"
           },
@@ -197,9 +200,6 @@
                     "example": "any"
                   },
                   "email": {
-                    "example": "any"
-                  },
-                  "indirizzo": {
                     "example": "any"
                   }
                 }
@@ -458,7 +458,7 @@
         }
       },
       "delete": {
-        "description": "elimina ristorante",
+        "description": "elimina ristorante di un utente",
         "parameters": [
           {
             "name": "id",
@@ -552,9 +552,9 @@
         }
       }
     },
-    "/ristorante/{id}/menu": {
+    "/ristorante/{id}": {
       "get": {
-        "description": "Recupera il menu",
+        "description": "Recupera un ristorante per ID",
         "parameters": [
           {
             "name": "id",
@@ -568,6 +568,32 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/ristorante/{id}/menu": {
+      "get": {
+        "description": "Recupera il menu raggruppato per ristorante",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       },
@@ -802,7 +828,7 @@
     },
     "/search/{query}": {
       "get": {
-        "description": "Cerca prodotti",
+        "description": "Cerca prodotti raggruppati per ristorante, o ristoranti stessi",
         "parameters": [
           {
             "name": "query",
@@ -816,6 +842,62 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/user/{id}/indirizzi": {
+      "post": {
+        "description": "Aggiunge un indirizzo all'utente",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "api_key",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "predefinito": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
           }
         }
       }

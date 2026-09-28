@@ -14,6 +14,7 @@ const client = new MongoClient(mongoURL);
 const app = express()
 
 const bycrypt = require('bcrypt');
+const {ObjectId} = require("mongodb");
 
 app.use(express.json());
 app.use(cors());
@@ -51,6 +52,39 @@ async function getCoordinates(address) {
         console.log(`Errore durante la verifica dell'indirizzo: ${error}`);
         return null;
     }
+}
+
+async function getIndirizzo(input, predefinito) {
+    if (!input || typeof input !== 'object') return {error: "Indirizzo mancante"};
+
+    const via = String(input.via || "").trim();
+    const citta = String(input.citta || "").trim();
+    const provincia = String(input.provincia || "").trim();
+    const cap = String(input.cap || "").trim();
+    const civico = String(input.civico || "").trim();
+
+    if (via.length < 2) return {error: "Via non valida"};
+    if (!civico || civico.length > 10) return {error: "Civico non valido"};
+    if (citta.length < 2) return {error: "Città non valida"};
+    if (provincia.length !== 2) return {error: "Provincia non valida"};
+    if (!/^\d{5}$/.test(cap)) return {error: "CAP non valido"};
+
+    const coordinates = await getCoordinates(`${via} ${civico}, ${cap} ${citta} (${provincia})`);
+    if (!coordinates) return {error: "Indirizzo non valido"};
+
+    return {
+        indirizzo: {
+            _id: new ObjectID(),
+            via,
+            civico,
+            citta,
+            cap,
+            provincia,
+            lat: coordinates.lat,
+            lon: coordinates.lon,
+            predefinito
+        }
+    };
 }
 
 function checkApiKeys(req, res, next) {
@@ -109,15 +143,10 @@ app.post('/user', async (req, res) => {
         res.status(401).json({error: "Email non valida"});
         return;
     }
-    if (!validateAddress(indirizzo)) {
-        res.status(401).json({error: "Indirizzo non valido"});
-        return;
-    }
 
-    const coordinates = await getCoordinates(indirizzo);
-    if (!coordinates) {
-        res.status(400).json({error: "Indirizzo non valido"});
-        return;
+    const address = await getIndirizzo(indirizzo, true);
+    if (address.error) {
+        return res.status(400).json({error: address.error});
     }
 
     const hashedPassword = await bycrypt.hash(password, 10);
@@ -129,10 +158,8 @@ app.post('/user', async (req, res) => {
             nome: nome,
             cognome: cognome,
             email: email,
-            indirizzo: indirizzo,
             password: hashedPassword,
-            lat: coordinates.lat,
-            lon: coordinates.lon,
+            indirizzi: [address.indirizzo],
             ristoratore: ristoratore,
             preferenze: preferenze
         };
@@ -187,48 +214,32 @@ app.get('/user/:id', async (req, res) => {
 
 app.put('/user/:id', async (req, res) => {
     // #swagger.description = "Aggiorna dati personali utente per ID"
-
     const id = req.params.id;
-    const newNome = req.body.nome;
-    const newCognome = req.body.cognome;
-    const newEmail = req.body.email;
-    const newIndirizzo = req.body.indirizzo;
-    if (newNome < 2) {
-        res.status(401).json({error: "Nome troppo corto"});
-    }
-    if (newCognome < 2) {
-        res.status(401).json({error: "Cognome troppo corto"});
-    }
-    if (!validateEmail(newEmail)) {
-        res.status(401).json({error: "Email non valida"});
-    }
-    if (!validateAddress(newIndirizzo)) {
-        res.status(401).json({error: "Indirizzo non valido"});
+    if (!ObjectId.isValid(id)) {
+        return res.status(400).json({error: "ID non valido"});
     }
 
-    const coordinates = await getCoordinates(newIndirizzo);
-    if (!coordinates) {
-        res.status(400).json({error: "Indirizzo non valido"});
-        return;
+    const {nome, cognome, email} = req.body;
+    if (typeof nome !== 'string' || nome.trim().length < 2) {
+        return res.status(400).json({error: "Nome troppo corto"});
+    }
+    if (typeof cognome !== 'string' || cognome.trim().length < 2) {
+        return res.status(400).json({error: "Cognome troppo corto"});
+    }
+    if (typeof email !== 'string' || !validateEmail(email)) {
+        return res.status(400).json({error: "Email non valida"});
     }
 
     try {
-
         const coll = client.db('FastFood').collection('users');
         const result = await coll.updateOne(
-            {_id: ObjectID.createFromHexString(id)},
-            {
-                $set: {
-                    nome: newNome,
-                    cognome: newCognome,
-                    email: newEmail,
-                    indirizzo: newIndirizzo,
-                    lat: coordinates.lat,
-                    lon: coordinates.lon
-                }
-            });
+            {_id: new ObjectId(id)},
+            {$set: {nome: nome.trim(), cognome: cognome.trim(), email}}
+        );
+        if (result.matchedCount === 0) {
+            return res.status(404).json({error: "Utente non trovato"});
+        }
         res.json(result);
-
     } catch (error) {
         if (error.code === 11000) {
             res.status(409).json({error: "Email già in uso"});
@@ -236,7 +247,6 @@ app.put('/user/:id', async (req, res) => {
             res.status(500).json({error: error.message});
         }
     }
-
 });
 
 app.put('/user/:id/password', async (req, res) => {
@@ -894,6 +904,67 @@ app.get('/search/:query', async (req, res) => {
     } catch (error) {
         console.error("Errore durante la ricerca:", error);
         res.status(500).json({error: "Errore interno del server"});
+    }
+});
+
+app.post('/user/:id/indirizzi', async (req, res) => {
+    // #swagger.description = "Aggiunge un indirizzo all'utente"
+    const id = req.params.id;
+    if (!ObjectId.isValid(id)) return res.status(400).json({error: "ID non valido"});
+
+    const coll = client.db('FastFood').collection('users');
+    const user = await coll.findOne({_id: new ObjectId(id)}, {projection: {indirizzi: 1}});
+    if (!user) return res.status(404).json({error: "Utente non trovato"});
+
+    const esistenti = user.indirizzi || [];
+    if (esistenti.length >= 10) return res.status(400).json({error: "Massimo 10 indirizzi"});
+
+    const predefinito = req.body.predefinito === true || esistenti.length === 0;
+    const risultato = await getIndirizzo(req.body, predefinito);
+    if (risultato.error) return res.status(400).json({error: risultato.error});
+
+    try {
+        if (predefinito && esistenti.length > 0) {
+            await coll.updateOne({_id: user._id}, {$set: {'indirizzi.$[].predefinito': false}});
+        }
+        await coll.updateOne({_id: user._id}, {$push: {indirizzi: risultato.indirizzo}});
+        res.json(risultato.indirizzo);
+    } catch (error) {
+        res.status(500).json({error: error.message});
+    }
+});
+
+app.delete('/user/:id/indirizzi/:idIndirizzo', async (req, res) => {
+    // #swagger.description = "Elimina un indirizzo dell'utente"
+    const {id, idIndirizzo} = req.params;
+    if (!ObjectId.isValid(id) || !ObjectId.isValid(idIndirizzo)) {
+        return res.status(400).json({error: "ID non valido"});
+    }
+
+    const coll = client.db('FastFood').collection('users');
+    const user = await coll.findOne({_id: new ObjectId(id)}, {projection: {indirizzi: 1}});
+    if (!user) return res.status(404).json({error: "Utente non trovato"});
+
+    const indirizzi = user.indirizzi || [];
+    const idInd = new ObjectId(idIndirizzo);
+    const target = indirizzi.find(a => a._id.equals(idInd));
+    if (!target) return res.status(404).json({error: "Indirizzo non trovato"});
+    if (indirizzi.length === 1) {
+        return res.status(400).json({error: "Deve rimanere almeno un indirizzo"});
+    }
+
+    try {
+        await coll.updateOne({_id: user._id}, {$pull: {indirizzi: {_id: idInd}}});
+        if (target.predefinito) {
+            const nuovo = indirizzi.find(a => !a._id.equals(idInd));
+            await coll.updateOne(
+                {_id: user._id, 'indirizzi._id': nuovo._id},
+                {$set: {'indirizzi.$.predefinito': true}}
+            );
+        }
+        res.json({ok: true});
+    } catch (error) {
+        res.status(500).json({error: error.message});
     }
 });
 

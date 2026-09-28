@@ -33,6 +33,7 @@
             <div class="list-group profile-sidebar">
                 <a href="#sezione-dati" class="list-group-item list-group-item-action active" data-tab="dati">Dati
                     personali</a>
+                <a href="#sezione-indirizzi" class="list-group-item list-group-item-action" data-tab="indirizzi">Indirizzi</a>
                 <a href="#sezione-sicurezza" class="list-group-item list-group-item-action"
                    data-tab="sicurezza">Modifica password</a>
                 <a href="#" class="list-group-item list-group-item-action">I miei ordini</a>
@@ -61,11 +62,6 @@
                                     <input type="text" class="form-control" id="cognome" name="cognome"
                                            minlength="2" required>
                                 </div>
-                                <div class="col-md-12 mb-3">
-                                    <label for="indirizzo" class="form-label">Indirizzo</label>
-                                    <input type="text" class="form-control" id="indirizzo" name="indirizzo"
-                                           minlength="2" required>
-                                </div>
                                 <div class="mb-4">
                                     <label for="email" class="form-label">Email</label>
                                     <input type="email" class="form-control" id="email" name="email" required>
@@ -76,6 +72,66 @@
                                 <p id="dati-messaggio" class="mt-3 mb-0" style="font-size: 14px;"></p>
                             </div>
                         </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Indirizzi -->
+            <div id="sezione-indirizzi" class="profile-section" style="display: none;">
+                <div class="card border-0 shadow-sm p-4 mb-4">
+                    <h5 class="mb-4">I miei indirizzi</h5>
+
+                    <!-- template fuori dalla lista che viene svuotata -->
+                    <div id="modello-indirizzo" class="d-none d-flex align-items-center gap-3 mb-3 pb-3 border-bottom">
+                        <img src="../backend/images/location.png" alt=""
+                             style="width: 28px; height: 28px; object-fit: contain;">
+                        <div class="flex-grow-1">
+                            <span class="indirizzo-titolo fw-semibold"></span>
+                            <span class="indirizzo-predefinito badge text-bg-light border ms-1 d-none">Predefinito</span>
+                            <small class="indirizzo-dettaglio text-muted d-block"></small>
+                        </div>
+                        <button class="btn btn-sm btn-outline-danger btn-elimina-indirizzo"
+                                aria-label="Elimina indirizzo">
+                            <img src="../backend/images/bin.png" alt=""
+                                 style="width: 16px; height: 16px; object-fit: contain;">
+                        </button>
+                    </div>
+
+                    <div id="lista-indirizzi"></div>
+                    <p id="lista-messaggio" class="mt-2 mb-0" style="font-size: 14px;"></p>
+                </div>
+
+                <div class="card border-0 shadow-sm p-4">
+                    <h5 class="mb-4">Aggiungi un indirizzo</h5>
+                    <form id="form-nuovo-indirizzo">
+                        <div class="row g-3 mb-3">
+                            <div class="col-8">
+                                <label for="ind-via" class="form-label">Via</label>
+                                <input type="text" class="form-control" id="ind-via" maxlength="100" required>
+                            </div>
+                            <div class="col-4">
+                                <label for="ind-civico" class="form-label">Civico</label>
+                                <input type="text" class="form-control" id="ind-civico" maxlength="10" required>
+                            </div>
+                        </div>
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label for="ind-citta" class="form-label">Città</label>
+                                <input type="text" class="form-control" id="ind-citta" maxlength="60" required>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <label for="ind-cap" class="form-label">CAP</label>
+                                <input type="text" class="form-control" id="ind-cap" inputmode="numeric"
+                                       maxlength="5" pattern="\d{5}" required>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <label for="ind-provincia" class="form-label">Provincia</label>
+                                <input type="text" class="form-control text-uppercase" id="ind-provincia"
+                                       maxlength="2" pattern="[A-Za-z]{2}" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-brand rounded-pill px-4 py-2">Aggiungi indirizzo</button>
+                        <p id="indirizzo-messaggio" class="mt-3 mb-0" style="font-size: 14px;"></p>
                     </form>
                 </div>
             </div>
@@ -121,13 +177,13 @@
 <script src="../backend/lib.js"></script>
 
 <script>
+    const utente = JSON.parse(localStorage.getItem('utente'));
 
     if (!isLogged()) {
         window.location.href = "bizarre_bites.html";
     }
 
     function aggiornaHeader() {
-        const utente = JSON.parse(localStorage.getItem('utente'));
         document.getElementById('profilo-nome-header').textContent = utente.nome + ' ' + utente.cognome;
         document.getElementById('profilo-email-header').textContent = utente.email;
         document.getElementById('avatar-iniziali').textContent = utente.nome.charAt(0).toUpperCase() + utente.cognome.charAt(0).toUpperCase();
@@ -142,7 +198,6 @@
                 ...JSON.parse(localStorage.getItem('utente')),
                 nome: document.getElementById('nome').value,
                 cognome: document.getElementById('cognome').value,
-                indirizzo: document.getElementById('indirizzo').value,
                 email: document.getElementById('email').value
             };
             localStorage.setItem('utente', JSON.stringify(utenteAggiornato));
@@ -202,26 +257,21 @@
         });
     });
 
-    const utente = JSON.parse(localStorage.getItem('utente'));
     document.getElementById('nome').value = utente.nome;
     document.getElementById('cognome').value = utente.cognome;
     document.getElementById('email').value = utente.email;
-    document.getElementById('indirizzo').value = utente.indirizzo || '';
 
     //Modifica dati personali
     document.getElementById('form-dati').addEventListener('submit', function (e) {
         e.preventDefault();
-        const utente = JSON.parse(localStorage.getItem('utente'));
         const cNome = capitalize(document.getElementById('nome').value);
         const cCognome = capitalize(document.getElementById('cognome').value);
         const cEmail = document.getElementById('email').value.toLowerCase();
-        const cIndirizzo = document.getElementById('indirizzo').value;
 
         const user = {
             nome: cNome,
             cognome: cCognome,
             email: cEmail,
-            indirizzo: cIndirizzo
         };
 
         const options = {
@@ -243,7 +293,6 @@
         e.preventDefault();
 
 
-        const utente = JSON.parse(localStorage.getItem('utente'));
         const password = document.getElementById('password').value;
         const passwordConferma = document.getElementById('password-conferma').value;
         const password_attuale = document.getElementById('password-attuale').value;
@@ -273,7 +322,104 @@
             .then(result => aggiornaPassword(result))
     });
 
+    function renderIndirizzi() {
+        const lista = document.getElementById('lista-indirizzi');
+        const modello = document.getElementById('modello-indirizzo');
+        const indirizzi = JSON.parse(localStorage.getItem('utente')).indirizzi;
+        lista.innerHTML = '';
 
+        indirizzi.forEach(ind => {
+            const clone = modello.cloneNode(true);
+            clone.removeAttribute('id');
+            clone.classList.remove('d-none');
+
+            const stradale = `${ind.via}, ${ind.civico}`;
+            const localita = [ind.cap, ind.citta].filter(Boolean).join(', ');
+            const provincia = ind.provincia ? ` (${ind.provincia})` : '';
+
+            clone.querySelector('.indirizzo-titolo').textContent = stradale;
+            clone.querySelector('.indirizzo-dettaglio').textContent = `${stradale}, ${localita}${provincia}`;
+            clone.querySelector('.indirizzo-predefinito').classList.toggle('d-none', !ind.predefinito);
+
+            const btn = clone.querySelector('.btn-elimina-indirizzo');
+            btn.disabled = indirizzi.length === 1;
+            btn.title = indirizzi.length === 1 ? 'Deve rimanere almeno un indirizzo' : '';
+            btn.addEventListener('click', () => eliminaIndirizzo(ind._id));
+
+            lista.appendChild(clone);
+        })
+    }
+
+    async function eliminaIndirizzo(idIndirizzo) {
+        if (!confirm('Vuoi eliminare questo indirizzo?')) return;
+
+        try {
+            await fetch(`http://localhost:3005/user/${utente._id}/indirizzi/${idIndirizzo}?api_key=1234567`, {method: 'DELETE'});
+
+            const eliminato = utente.indirizzi.find(a => a._id === idIndirizzo);
+            utente.indirizzi = utente.indirizzi.filter(a => a._id !== idIndirizzo);
+            if (eliminato.predefinito && utente.indirizzi.length > 0) {
+                utente.indirizzi[0].predefinito = true;
+            }
+            salvaUtente();
+            renderIndirizzi();
+            document.getElementById('lista-messaggio').textContent = '';
+        } catch (error) {
+            const el = document.getElementById('lista-messaggio');
+            el.textContent = error.message;
+            el.className = 'mt-2 mb-0 text-danger';
+        }
+    }
+
+    document.getElementById('form-nuovo-indirizzo').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const btn = e.submitter;
+        btn.disabled = true;
+
+        const body = {
+            via: document.getElementById('ind-via').value.trim(),
+            civico: document.getElementById('ind-civico').value.trim(),
+            citta: document.getElementById('ind-citta').value.trim(),
+            cap: document.getElementById('ind-cap').value.trim(),
+            provincia: document.getElementById('ind-provincia').value.trim()
+        };
+
+
+        try {
+            const response = await fetch(`http://localhost:3005/user/${utente._id}/indirizzi?api_key=1234567`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(body)
+            });
+            const risultato = await response.json();
+          
+            if (risultato.predefinito) {
+                (utente.indirizzi || []).forEach(a => a.predefinito = false);
+            }
+            utente.indirizzi = [...(utente.indirizzi || []), risultato];
+            salvaUtente();
+            renderIndirizzi();
+
+            e.target.reset();
+            mostraMessaggio('indirizzo-messaggio', 'Indirizzo aggiunto!');
+        } catch (error) {
+            mostraMessaggio('indirizzo-messaggio', error.message, true);
+        } finally {
+            btn.disabled = false;
+        }
+    });
+
+    function salvaUtente() {
+        localStorage.setItem('utente', JSON.stringify(utente));
+    }
+
+    function mostraMessaggio(idElemento, testo, errore = false) {
+        const el = document.getElementById(idElemento);
+        el.textContent = testo;
+        el.className = `mt-3 mb-0 ${errore ? 'text-danger' : 'text-success'}`;
+    }
+
+    renderIndirizzi();
 </script>
 
 </body>
