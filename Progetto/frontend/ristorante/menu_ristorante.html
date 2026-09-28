@@ -308,6 +308,7 @@
     }
 
     async function caricaMenu() {
+
         const ristorante = JSON.parse(localStorage.getItem('ristorante'));
         const modello = document.getElementById('modello-menu');
         const body = document.getElementById('body');
@@ -319,7 +320,8 @@
         try {
             fetch(`http://localhost:3005/ristorante/${ristorante._id}/menu?api_key=1234567`)
                 .then(res => res.json())
-                .then(piatti => {
+                .then(dati => {
+                    const piatti = dati.piatti;
                     if (!piatti || piatti.length === 0) {
                         pieno.style.display = 'none';
                         vuoto.style.display = 'block';
