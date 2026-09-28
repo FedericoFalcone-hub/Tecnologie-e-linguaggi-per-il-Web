@@ -30,7 +30,7 @@
 
 <!-- Sezione gestione ristorante -->
 <div id="occupato" class="container py-5" style="display: none;">
-    <div class="text-center mb-5">
+    <div class="text-center mb-5 ">
         <div id="logo" class="ristorante-logo mx-auto mb-3"></div>
         <h2 class="text-dark mb-2" id="nome" style="font-size: 32px; font-weight: 700;"></h2>
         <p class="text-muted" style="font-size: 15px;" id="indirizzo"></p>
@@ -141,7 +141,7 @@
 
             if (ristorante.logoUrl) {
                 try {
-                    logoContainer.style.backgroundColor = "#ffe4c4";
+                    logoContainer.style.backgroundColor = "transparent";
                     logoContainer.innerHTML = `<img src="${ristorante.logoUrl}" alt="Logo ristorante">`;
 
                 } catch (error) {
