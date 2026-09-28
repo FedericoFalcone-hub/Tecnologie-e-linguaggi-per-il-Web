@@ -17,8 +17,8 @@ function checkLoggedRistoratore() {
 }
 
 function logout() {
-    localStorage.removeItem("utente");
-    localStorage.removeItem("ristorante");
+    localStorage.clear();
+    sessionStorage.clear();
     const base = getBasePath()
     window.location.href = `${base}bizarre_bites.html`;
 
