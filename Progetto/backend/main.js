@@ -480,7 +480,7 @@ app.put('/user/:id/ristorante', async (req, res) => {
 });
 
 app.delete('/user/:id/ristorante', async (req, res) => {
-    // #swagger.description = "elimina ristorante"
+    // #swagger.description = "elimina ristorante di un utente"
     const id = req.params.id;
     const user = await getUser(id);
     if (!user) {
@@ -510,48 +510,107 @@ app.get('/piatti', async (req, res) => {
     res.json(piatti);
 });
 
+app.get('/ristorante/:id', async (req, res) => {
+    // #swagger.description = "Recupera un ristorante per ID"
+    const id = req.params.id;
+    const ristorante = await client.db('FastFood').collection('ristoranti').findOne({_id: ObjectID.createFromHexString(id)});
+    if (!ristorante) {
+        res.status(404).send("Ristorante non trovato");
+        return;
+    }
+    res.json(ristorante);
+});
+
 app.get('/ristorante/:id/menu', async (req, res) => {
-    // #swagger.description = "Recupera il menu"
+    // #swagger.description = "Recupera il menu raggruppato per ristorante"
     const id = ObjectID.createFromHexString(req.params.id);
 
+    try {
+        const menuDettagliato = await client.db('FastFood').collection('menu').aggregate([
+            {$match: {idRistorante: id}},
 
-    const menuDettagliato = await client.db('FastFood').collection('menu').aggregate([
+            {
+                $lookup: {
+                    from: 'ristoranti',
+                    localField: 'idRistorante',
+                    foreignField: '_id',
+                    as: 'ristoranteInfo'
+                }
+            },
+            {$unwind: '$ristoranteInfo'},
 
-        {$match: {idRistorante: id}},
-        {
-            $lookup: {
-                from: 'catalogo',
-                let: {idProdottoStr: '$idProdotto'},
-                pipeline: [
-                    {$match: {$expr: {$eq: ['$_id', {$toObjectId: '$$idProdottoStr'}]}}}
-                ],
-                as: 'dettagli'
+            {
+                $lookup: {
+                    from: 'catalogo',
+                    let: {idProdottoStr: '$idProdotto'},
+                    pipeline: [
+                        {$match: {$expr: {$eq: ['$_id', {$toObjectId: '$$idProdottoStr'}]}}}
+                    ],
+                    as: 'dettagli'
+                }
+            },
+
+            {
+                $addFields: {
+                    nome: {$ifNull: [{$arrayElemAt: ['$dettagli.strMeal', 0]}, '$nome']},
+                    foto: {$ifNull: [{$arrayElemAt: ['$dettagli.strMealThumb', 0]}, '$foto']},
+                    categoria: {$ifNull: [{$arrayElemAt: ['$dettagli.strCategory', 0]}, '$categoria']}
+                }
+            },
+
+            {
+                $sort: {
+                    categoria: 1,
+                    nome: 1
+                }
+            },
+            
+            {
+                $group: {
+                    _id: '$idRistorante',
+                    ristoranteNome: {$first: '$ristoranteInfo.nomeRistorante'},
+                    ristoranteLogo: {$first: '$ristoranteInfo.logoUrl'},
+                    ristoranteIndirizzo: {$first: '$ristoranteInfo.indirizzoRistorante'},
+                    ristoranteTelefono: {$first: '$ristoranteInfo.telefonoRistorante'},
+                    piatti: {
+                        $push: {
+                            _id: '$_id',
+                            prezzo: '$prezzo',
+                            nome: '$nome',
+                            foto: '$foto',
+                            categoria: '$categoria',
+                            ingredienti: '$ingredienti',
+                            personalizzato: '$personalizzato',
+                            idProdotto: '$idProdotto',
+                            ricetta: '$ricetta'
+                        }
+                    }
+                }
+            },
+
+            {
+                $project: {
+                    _id: 0,
+                    idRistorante: '$_id',
+                    ristoranteNome: 1,
+                    ristoranteLogo: 1,
+                    ristoranteIndirizzo: 1,
+                    ristoranteTelefono: 1,
+                    piatti: 1
+                }
             }
-        },
-        {
-            $addFields: {
-                nome: {$ifNull: [{$arrayElemAt: ['$dettagli.strMeal', 0]}, '$nome']},
-                foto: {$ifNull: [{$arrayElemAt: ['$dettagli.strMealThumb', 0]}, '$foto']},
-                categoria: {$ifNull: [{$arrayElemAt: ['$dettagli.strCategory', 0]}, '$categoria']},
-            }
-        },
-        {
-            $project: {
-                _id: 1,
-                prezzo: 1,
-                nome: 1,
-                foto: 1,
-                categoria: 1,
-                ingredienti: 1,
-                personalizzato: 1,
-                idProdotto: 1,
-                ricetta: 1
-            }
+        ]).toArray();
+
+        if (menuDettagliato.length > 0) {
+            res.json(menuDettagliato[0]);
+        } else {
+            res.json(null);
         }
-    ]).toArray();
 
-
-    res.json(menuDettagliato);
+    } catch (error) {
+        console.error("Errore nel recupero del menu:", error);
+        res.status(500).json({error: "Errore interno del server"});
+    }
 });
 
 app.post('/ristorante/:id/menu/catalogo', async (req, res) => {

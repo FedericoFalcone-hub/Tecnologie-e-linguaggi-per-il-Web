@@ -359,4 +359,12 @@ body {
     background-color: white;
 }
 
+.ristorante-header {
+    background: linear-gradient(135deg, #fdf3e7 0%, #ffe4c4 100%);
+    border-bottom: 1px solid #f0e4d4;
+}
+
+
+
+
 

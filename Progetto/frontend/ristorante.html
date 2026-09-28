@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Search</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap"
+          rel="stylesheet">
+</head>
+<body>
+
+
+<div id="navbar-container"></div>
+
+<!-- Header ristorante -->
+<div class="ristorante-header py-4">
+    <div class="container">
+        <div class="d-flex align-items-center gap-4 flex-wrap">
+            <img id="logo-ristorante" src="" alt=""
+                 style="width: 110px; height: 110px; border-radius: 20px; object-fit: cover; display: none; background:
+                 linear-gradient(135deg, #fdf3e7 0%, #ffe4c4 100%)">
+            <div id="iniziali-ristorante"
+                 style="width: 90px; height: 90px; border-radius: 20px; background: var(--brand); color: #fff; display: none; align-items: center; justify-content: center; font-size: 32px; font-weight: 700;"></div>
+            <div>
+                <h2 class="text-dark mb-1" id="titolo" style="font-size: 30px; font-weight: 700;"></h2>
+                <p class="text-muted mb-0" id="indirizzo-ristorante" style="font-size: 14px;">📍 <span></span></p>
+                <p class="text-muted mb-0" id="telefono-ristorante" style="font-size: 14px;">📞 <span></span></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Menu -->
+<div class="container py-5">
+
+    <h3 class="mb-4" style="font-weight: 700;">Menu</h3>
+    <hr>
+    <div id="container-result" class="row g-4 ">
+        <div id="modello-risultati" class="col-lg-4 col-md-6 d-none menu-item-card">
+            <div class="card border-0 shadow-sm h-100">
+                <img src="" class="card-img-top" alt="" style="height: 200px; object-fit: cover;">
+                <div class="card-body d-flex flex-column">
+                    <div class="d-flex justify-content-between align-items-start gap-2 mb-2">
+                        <h5 class="card-title mb-0"></h5>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mt-auto">
+                        <span class="fw-bold text-brand prezzo-piatto"></span>
+                        <button class="btn btn-brand rounded-pill px-3 btn-aggiungi-carrello">+ Carrello</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Carrello -->
+<div class="dropdown" style="position: fixed; bottom: 30px; right: 30px; z-index: 1050;">
+    <button id="btn-carrello" class="btn btn-brand rounded-circle shadow position-relative"
+            style="width: 60px; height: 60px;"
+            data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
+        <img src="../backend/images/shopping-cart.png" alt="Carrello"
+             style="width: 28px; height: 28px; object-fit: contain;">
+        <span id="badge-carrello"
+              class="badge rounded-pill bg-danger position-absolute"
+              style="top: -4px; right: -4px;">0</span>
+    </button>
+
+    <div class="dropdown-menu dropdown-menu-end shadow p-3" style="width: 320px; max-height: 70vh; overflow-y: auto;">
+        <h6 class="mb-3">Il tuo carrello</h6>
+
+        <div id="modello-carrello"
+             class="d-grid d-none align-items-center mb-2 pb-2 border-bottom"
+             style="grid-template-columns: 1fr auto 65px; column-gap: 8px;">
+            <span class="carrello-nome fw-semibold text-truncate"></span>
+            <div class="d-flex align-items-center gap-1">
+                <button class="btn btn-sm btn-outline-secondary btn-diminuisci" style="width: 32px;"></button>
+                <span class="carrello-quantita text-center" style="min-width: 24px;"></span>
+                <button class="btn btn-sm btn-outline-secondary btn-aumenta" style="width: 32px;">+</button>
+            </div>
+            <span class="carrello-prezzo fw-bold text-brand text-end"></span>
+        </div>
+
+        <div id="lista-carrello"></div>
+        <p id="carrello-vuoto" class="text-muted">Il carrello è vuoto.</p>
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="fw-bold">Totale: € <span id="totale-carrello">0.00</span></span>
+        </div>
+        <button id="btn-paga" class="btn btn-brand rounded-pill w-100 d-none">Procedi al pagamento</button>
+    </div>
+</div>
+
+
+<!-- Toast -->
+<div class="toast-container position-fixed top-0 start-50 translate-middle-x end-0 p-3" style="z-index: 1100;">
+    <div id="toastSuccesso" class="toast align-items-center border-0" role="alert" aria-live="assertive"
+         aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body">
+                <span id="toastMessaggio">Piatto aggiunto al carrello!</span>
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+        </div>
+    </div>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+
+<script src="../backend/lib.js"></script>
+
+<script>
+    const urlParams = new URLSearchParams(window.location.search);
+
+    const idRistorante = urlParams.get('id');
+
+    async function fetchRistorante() {
+        try {
+            const response = await fetch(`http://localhost:3005/ristorante/${idRistorante}/menu`);
+            const ristorante = await response.json();
+            document.title = ristorante.ristoranteNome;
+            displayHeader(ristorante);
+            displayRistorante(ristorante);
+        } catch (error) {
+            console.error('Errore:', error);
+        }
+    }
+
+    function displayRistorante(ristorante) {
+        let categoriaAttuale = '';
+        document.getElementById('titolo').textContent = ristorante.ristoranteNome;
+        const containerResult = document.getElementById('container-result');
+        const modelloRisultati = document.getElementById('modello-risultati');
+
+        ristorante.piatti.forEach(item => {
+            const clone = modelloRisultati.cloneNode(true);
+            clone.removeAttribute('id');
+            clone.classList.remove('d-none');
+
+            if (categoriaAttuale !== item.categoria) {
+                categoriaAttuale = item.categoria;
+                const titoloCategoria = document.createElement('h4');
+                titoloCategoria.style = "font-weight: 700";
+                titoloCategoria.textContent = categoriaAttuale;
+                containerResult.appendChild(titoloCategoria);
+            }
+            clone.querySelector('.card-img-top').src = item.foto;
+            clone.querySelector('.card-title').textContent = item.nome;
+            clone.querySelector('.prezzo-piatto').textContent = `€ ${item.prezzo.toFixed(2)}`;
+            clone.querySelector('.btn-aggiungi-carrello').addEventListener('click', () => {
+                const piatto = {
+                    id: item._id,
+                    nome: item.nome,
+                    prezzo: item.prezzo,
+                };
+                aggiungiAlCarrello(piatto, ristorante);
+            });
+
+            containerResult.appendChild(clone);
+
+        });
+    }
+
+    function displayHeader(ristorante) {
+        document.getElementById('titolo').textContent = ristorante.ristoranteNome;
+        document.querySelector('#indirizzo-ristorante span').textContent = ristorante.ristoranteIndirizzo || '';
+        document.querySelector('#telefono-ristorante span').textContent = ristorante.ristoranteTelefono || '';
+
+        const logo = document.getElementById('logo-ristorante');
+        const iniziali = document.getElementById('iniziali-ristorante');
+        console.log(ristorante);
+        if (ristorante.ristoranteLogo) {
+            logo.src = ristorante.ristoranteLogo;
+            logo.style.display = 'block';
+        } else {
+            iniziali.textContent = ristorante.ristoranteNome.substring(0, 2).toUpperCase();
+            iniziali.style.display = 'flex';
+        }
+    }
+
+    function aggiungiAlCarrello(item) {
+        const carrello = getCarrello();
+        const esistente = carrello.find(p => p.id === item.id);
+        if (esistente) {
+            esistente.quantita += 1;
+        } else {
+            carrello.push({...item, quantita: 1});
+        }
+
+        sessionStorage.setItem(idRistorante, JSON.stringify(carrello));
+        aggiornaCarrello();
+        mostraToast('Piatto aggiunto al carrello!');
+
+    }
+
+    function getCarrello() {
+        return JSON.parse(sessionStorage.getItem(idRistorante)) || [];
+    }
+
+
+    function aggiornaCarrello() {
+        const carrello = getCarrello();
+        document.getElementById('btn-paga').classList.toggle('d-none', carrello.length === 0);
+        const lista = document.getElementById('lista-carrello');
+        const vuoto = document.getElementById('carrello-vuoto');
+        lista.innerHTML = '';
+        if (carrello.length === 0) {
+            vuoto.style.display = 'block';
+            document.getElementById('totale-carrello').textContent = '0.00';
+            return;
+        }
+
+        vuoto.style.display = 'none';
+        let totale = 0;
+        let elementi = 0;
+        carrello.forEach(item => {
+            elementi += item.quantita;
+
+            const subtotale = item.prezzo * item.quantita;
+            totale += subtotale;
+            const clone = document.getElementById('modello-carrello').cloneNode(true);
+            clone.classList.remove('d-none');
+            clone.querySelector('.carrello-nome').textContent = item.nome;
+            clone.querySelector('.carrello-quantita').textContent = `x${item.quantita}`;
+            clone.querySelector('.carrello-prezzo').textContent = `€ ${subtotale.toFixed(2)}`;
+
+            const btnDiminuisci = clone.querySelector('.btn-diminuisci');
+            btnDiminuisci.innerHTML = item.quantita === 1
+                ? '<img src="../backend/images/bin.png" alt="Rimuovi" style="width: 16px; height: 16px; object-fit: contain;">'
+                : '-';
+            btnDiminuisci.addEventListener('click', () => modificaQuantita(item.id, -1));
+            clone.querySelector('.btn-aumenta').addEventListener('click', () => modificaQuantita(item.id, 1));
+
+            lista.appendChild(clone);
+        });
+        document.getElementById('badge-carrello').textContent = elementi;
+        document.getElementById('totale-carrello').textContent = totale.toFixed(2);
+    }
+
+    function modificaQuantita(id, delta) {
+        let carrello = getCarrello();
+        const item = carrello.find(p => p.id === id);
+
+        if (!item) return;
+
+        item.quantita += delta;
+        if (item.quantita <= 0) {
+            carrello = carrello.filter(p => p.id !== id);
+        }
+        sessionStorage.setItem(idRistorante, JSON.stringify(carrello));
+        const badge = document.getElementById('badge-carrello');
+        badge.textContent = parseInt(badge.textContent) + delta;
+        aggiornaCarrello();
+
+    }
+
+    aggiornaCarrello();
+    fetchRistorante();
+
+    document.getElementById('btn-paga').addEventListener('click', () => {
+        window.location.href = `pagamento.html?id=${idRistorante}`;
+    });
+</script>
+</body>
+</html>
