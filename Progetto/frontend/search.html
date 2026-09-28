@@ -133,6 +133,14 @@
     }
 
     fetchResult();
+
+    document.getElementById("form-ricerca").addEventListener("submit", e => {
+        e.preventDefault();
+        const query = document.getElementById("ricerca-input").value.trim();
+        if (query) {
+            window.location.href = `search.html?q=${encodeURIComponent(query)}`;
+        }
+    });
 </script>
 </body>
 </html>
