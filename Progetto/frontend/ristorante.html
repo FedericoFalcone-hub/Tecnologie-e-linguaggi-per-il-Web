@@ -158,6 +158,8 @@
     let piattoSelezionato = null;
     let quantitaModal = 1;
     let modalPiatto = new bootstrap.Modal(document.getElementById('modalPiatto'));
+    const utente = JSON.parse(localStorage.getItem('utente'));
+
 
     async function fetchRistorante() {
         try {
@@ -172,7 +174,6 @@
     }
 
     function displayRistorante(ristorante) {
-        const utente = JSON.parse(localStorage.getItem('utente'));
 
         let categoriaAttuale = '';
         document.getElementById('titolo').textContent = ristorante.ristoranteNome;
@@ -322,7 +323,16 @@
     fetchRistorante();
 
     document.getElementById('btn-paga').addEventListener('click', () => {
+        if (getCarrello().length === 0) {
+            alert('Il carrello è vuoto.');
+            return;
+        }
+        if (!utente) {
+            window.location.href = `accesso.html?redirect=${encodeURIComponent(`ristorante.html?id=${idRistorante}`)}`;
+            return;
+        }
         window.location.href = `pagamento.html?id=${idRistorante}`;
+
     });
 
     document.getElementById('btn-conferma-piatto').addEventListener('click', () => {

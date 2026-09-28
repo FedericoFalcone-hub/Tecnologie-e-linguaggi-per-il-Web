@@ -60,6 +60,19 @@
     </div>
 </div>
 
+<div class="modal fade" id="modalConferma" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content">
+            <div class="modal-body text-center">
+                <p id="conferma-testo" class="mb-3"></p>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-outline-secondary w-100" data-bs-dismiss="modal">Annulla</button>
+                    <button id="conferma-ok" class="btn btn-brand w-100">Conferma</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
@@ -77,12 +90,41 @@
             alert.classList.add('text-danger');
         } else {
             localStorage.setItem('utente', JSON.stringify(result));
+
+            const params = new URLSearchParams(window.location.search);
+            const redirect = params.get('redirect');
+
             if (result.ristoratore) {
-                window.location.href = "ristorante/gestione_ristorante.html";
+                if (redirect) {
+                    modalAlert("Impossibile eseguire un ordine da un account ristoratore. Verrai reindirizzato alla gestione del ristorante.", () => {
+                        sessionStorage.clear();
+                        window.location.href = "ristorante/gestione_ristorante.html";
+                    });
+                } else {
+                    window.location.href = "ristorante/gestione_ristorante.html";
+                }
+            } else if (redirect) {
+                window.location.href = redirect;
             } else {
                 window.location.href = "bizarre_bites.html";
             }
         }
+    }
+
+    const modalConferma = new bootstrap.Modal(document.getElementById('modalConferma'));
+
+    function modalAlert(testo, onConferma) {
+        document.getElementById('conferma-testo').textContent = testo;
+
+        const btn = document.getElementById('conferma-ok');
+        const nuovo = btn.cloneNode(true);
+        btn.replaceWith(nuovo);
+
+        nuovo.addEventListener('click', () => {
+            modalConferma.hide();
+            onConferma();
+        });
+        modalConferma.show();
     }
 
     document.getElementById('form-accesso').addEventListener('submit', function (e) {
