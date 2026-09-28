@@ -564,7 +564,7 @@ app.get('/ristorante/:id/menu', async (req, res) => {
                     nome: 1
                 }
             },
-            
+
             {
                 $group: {
                     _id: '$idRistorante',
@@ -813,20 +813,11 @@ app.get('/ricette', async (req, res) => {
 })
 
 app.get('/search/:query', async (req, res) => {
-    // #swagger.description = "Cerca prodotti e raggruppali per ristorante"
+    // #swagger.description = "Cerca prodotti raggruppati per ristorante, o ristoranti stessi"
     const query = req.params.query;
 
     try {
         const results = await client.db('FastFood').collection('menu').aggregate([
-            {
-                $match: {
-                    $or: [
-                        {nome: {$regex: query, $options: 'i'}},
-                        {categoria: {$regex: query, $options: 'i'}},
-                        {ingredienti: {$regex: query, $options: 'i'}}
-                    ]
-                }
-            },
             {
                 $lookup: {
                     from: 'ristoranti',
@@ -835,12 +826,20 @@ app.get('/search/:query', async (req, res) => {
                     as: 'ristorante'
                 }
             },
+            {$unwind: '$ristorante'},
             {
-                $unwind: '$ristorante'
+                $match: {
+                    $or: [
+                        {nome: {$regex: query, $options: 'i'}},
+                        {categoria: {$regex: query, $options: 'i'}},
+                        {ingredienti: {$regex: query, $options: 'i'}},
+                        {'ristorante.nomeRistorante': {$regex: query, $options: 'i'}}
+                    ]
+                }
             },
             {
                 $group: {
-                    _id: '$ristorante._id', // Chiave di raggruppamento (ID del ristorante)
+                    _id: '$ristorante._id',
                     ristoranteNome: {$first: '$ristorante.nomeRistorante'},
                     ristoranteTelefono: {$first: '$ristorante.telefonoRistorante'},
                     ristoranteIndirizzo: {$first: '$ristorante.indirizzoRistorante'},
@@ -848,12 +847,32 @@ app.get('/search/:query', async (req, res) => {
                     // Inserisci i piatti trovati in un array
                     piatti: {
                         $push: {
-                            _id: '$_id',
-                            nome: '$nome',
-                            prezzo: '$prezzo',
-                            categoria: '$categoria',
-                            ingredienti: '$ingredienti',
-                            foto: '$foto'
+                            $cond: [
+                                {
+                                    $or: [
+                                        {$regexMatch: {input: '$nome', regex: query, options: 'i'}},
+                                        {$regexMatch: {input: '$categoria', regex: query, options: 'i'}},
+                                        {
+                                            $anyElementTrue: {
+                                                $map: {
+                                                    input: {$ifNull: ['$ingredienti', []]},
+                                                    as: 'ing',
+                                                    in: {$regexMatch: {input: '$$ing', regex: query, options: 'i'}}
+                                                }
+                                            }
+                                        }
+                                    ]
+                                },
+                                {
+                                    _id: '$_id',
+                                    nome: '$nome',
+                                    prezzo: '$prezzo',
+                                    categoria: '$categoria',
+                                    ingredienti: '$ingredienti',
+                                    foto: '$foto'
+                                },
+                                '$$REMOVE'
+                            ]
                         }
                     }
                 }

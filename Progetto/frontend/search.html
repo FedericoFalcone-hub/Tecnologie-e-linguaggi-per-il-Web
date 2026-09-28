@@ -104,7 +104,7 @@
 
         data.forEach(item => {
             const clone = modelloRisultati.cloneNode(true);
-            clone.removeAttribute('id'); // Best practice: evitiamo id duplicati nel DOM
+            clone.removeAttribute('id');
             clone.classList.remove('d-none');
 
             clone.querySelector('.card-img-top').src = item.ristoranteLogo;
