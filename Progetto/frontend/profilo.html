@@ -335,6 +335,7 @@
 
             const stradale = `${ind.via}, ${ind.civico}`;
             const localita = [ind.cap, ind.citta].filter(Boolean).join(', ');
+            console.log(ind);
             const provincia = ind.provincia ? ` (${ind.provincia})` : '';
 
             clone.querySelector('.indirizzo-titolo').textContent = stradale;
@@ -377,11 +378,11 @@
         btn.disabled = true;
 
         const body = {
-            via: document.getElementById('ind-via').value.trim(),
+            via: capitalize(document.getElementById('ind-via').value.trim()),
             civico: document.getElementById('ind-civico').value.trim(),
-            citta: document.getElementById('ind-citta').value.trim(),
+            citta: capitalize(document.getElementById('ind-citta').value.trim()),
             cap: document.getElementById('ind-cap').value.trim(),
-            provincia: document.getElementById('ind-provincia').value.trim()
+            provincia: document.getElementById('ind-provincia').value.trim().toUpperCase()
         };
 
 
@@ -392,7 +393,7 @@
                 body: JSON.stringify(body)
             });
             const risultato = await response.json();
-          
+
             if (risultato.predefinito) {
                 (utente.indirizzi || []).forEach(a => a.predefinito = false);
             }

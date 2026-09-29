@@ -364,7 +364,7 @@ body {
     border-bottom: 1px solid #f0e4d4;
 }
 
-#blocco-nominativo:hover {
+#blocco-nominativo:hover, #blocco-indirizzo:hover {
     background-color: rgba(0, 0, 0, 0.08);
 }
 

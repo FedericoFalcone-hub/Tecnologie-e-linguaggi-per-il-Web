@@ -56,7 +56,6 @@ async function getCoordinates(address) {
 
 async function getIndirizzo(input, predefinito) {
     if (!input || typeof input !== 'object') return {error: "Indirizzo mancante"};
-
     const via = String(input.via || "").trim();
     const citta = String(input.citta || "").trim();
     const provincia = String(input.provincia || "").trim();
