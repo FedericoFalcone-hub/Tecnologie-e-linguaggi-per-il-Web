@@ -1,0 +1,468 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Search</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap"
+          rel="stylesheet">
+</head>
+<body>
+
+
+<div id="navbar-container"></div>
+
+<div class="container py-5">
+    <h3 class="mb-4" style="font-weight: 700;">Riepilogo e pagamento</h3>
+
+    <div class="row g-4">
+
+        <!-- Dati consegna e pagamento -->
+        <div class="col-lg-7">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <h5 class="mb-3 fw-bold">I tuoi dati</h5>
+
+                    <div id="blocco-nominativo" class="py-2 d-flex align-items-center gap-3 mb-3" data-bs-toggle="modal"
+                         data-bs-target="#modalDati"
+                         role="button" tabindex="0" style="cursor: pointer;">
+                        <img src="../backend/images/user.png" alt="Nome"
+                             style="width: 28px; height: 28px; object-fit: contain;">
+                        <span id="nominativo" class="fw-semibold"></span>
+                        <img src="../backend/images/next.png" alt="Apri" class="ms-auto"
+                             style="width: 20px; height: 20px; object-fit: contain;">
+                    </div>
+
+                    <!-- Tipologia di ritiro -->
+                    <div class="btn-group w-100 mb-3" role="group">
+                        <input type="radio" class="btn-check" name="metodo" id="metodo-domicilio"
+                               value="domicilio"
+                               checked>
+                        <label class="btn btn-outline-dark rounded-start-pill" for="metodo-domicilio">Consegna a
+                            domicilio</label>
+
+                        <input type="radio" class="btn-check" name="metodo" id="metodo-ritiro" value="ritiro">
+                        <label class="btn btn-outline-dark rounded-end-pill" for="metodo-ritiro">Ritiro al
+                            locale</label>
+                    </div>
+
+
+                    <div id="blocco-indirizzo" class="py-2 d-flex align-items-center gap-3 mb-3" data-bs-toggle="modal"
+                         data-bs-target="#modalDati"
+                         role="button" tabindex="0" style="cursor: pointer;">
+                        <img src="../backend/images/location.png" alt="location"
+                             style="width: 28px; height: 28px; object-fit: contain;">
+                        <span id="indirizzo" class="fw-semibold"></span>
+                        <img src="../backend/images/next.png" alt="Apri" class="ms-auto"
+                             style="width: 20px; height: 20px; object-fit: contain;">
+                    </div>
+                    <button id="btn-conferma-ordine" class="btn btn-brand rounded-pill w-100 py-2">
+                        Conferma ordine
+                    </button>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Riepilogo -->
+        <div class="col-lg-5">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <h5 class="mb-1">Il tuo ordine</h5>
+                    <p id="nome-ristorante" class="text-muted mb-3"></p>
+
+                    <div id="modello-riepilogo"
+                         class="d-grid d-none align-items-start mb-2 pb-2 border-bottom"
+                         style="grid-template-columns: 1fr 40px 75px; column-gap: 8px;">
+                        <div>
+                            <span class="riepilogo-nome fw-semibold"></span>
+                            <small class="riepilogo-nota text-muted d-block"></small>
+                        </div>
+                        <span class="riepilogo-quantita text-muted text-center"></span>
+                        <span class="riepilogo-prezzo fw-bold text-brand text-end"></span>
+                    </div>
+
+                    <div id="lista-riepilogo"></div>
+
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                        <span class="fw-bold fs-5">Totale</span>
+                        <span class="fw-bold fs-5 text-brand">€ <span id="totale-riepilogo">0.00</span></span>
+                    </div>
+
+                    <a id="link-modifica" class="btn btn-outline-secondary rounded-pill w-100 mt-3">
+                        Modifica carrello
+                    </a>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-lg-7">
+            <div class="card border-0 shadow-sm mt-4">
+                <div class="card-body p-4">
+                    <h5 class="mb-3 fw-bold">Metodo di pagamento</h5>
+
+                    <div class="list-group">
+
+                        <!-- Carta di credito/debito -->
+                        <div class="list-group-item p-0">
+                            <label class="d-flex align-items-center gap-3 p-3 mb-0" role="button">
+                                <input class="form-check-input mt-0" type="radio" name="pagamento" value="carta"
+                                       checked>
+                                <span class="fw-semibold">Carta di credito/debito</span>
+                            </label>
+
+                            <div id="sezione-carta" class="collapse show px-3 pb-3">
+
+                                <div id="modello-carta"
+                                     class="d-grid d-none align-items-center border rounded-3 p-3"
+                                     style="grid-template-columns: 1fr auto; column-gap: 8px; cursor: pointer;"
+                                     role="button">
+                                    <div>
+                                        <span class="carta-intestatario fw-semibold"></span>
+                                        <small class="carta-numero text-muted d-block"></small>
+                                    </div>
+                                    <small class="carta-scadenza text-muted"></small>
+                                </div>
+
+                                <!-- Carte salvate -->
+                                <div id="lista-carte" class="d-grid gap-2 mb-4"></div>
+
+                                <button type="button" class="btn btn-outline-secondary rounded-pill w-100"
+                                        data-bs-toggle="modal" data-bs-target="#modalCarta">
+                                    Aggiungi nuova carta
+                                </button>
+
+                            </div>
+                        </div>
+
+                        <!-- PayPal -->
+                        <label class="list-group-item d-flex align-items-center gap-3 p-3 mb-0" role="button">
+                            <input class="form-check-input mt-0" type="radio" name="pagamento" value="paypal">
+                            <span class="fw-semibold">PayPal</span>
+                        </label>
+
+                        <!-- Contanti -->
+                        <label class="list-group-item d-flex align-items-center gap-3 p-3 mb-0" role="button">
+                            <input class="form-check-input mt-0" type="radio" name="pagamento" value="contanti">
+                            <span class="fw-semibold" id="testo-contanti">Contanti alla consegna</span>
+                        </label>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Toast -->
+<div class="toast-container position-fixed top-0 start-50 translate-middle-x end-0 p-3" style="z-index: 1100;">
+    <div id="toastSuccesso" class="toast align-items-center border-0" role="alert" aria-live="assertive"
+         aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body">
+                <span id="toastMessaggio"></span>
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal nominativo -->
+<div class="modal fade" id="modalNominativo" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modal-nome">I tuoi dati</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="form-nominativo">
+                    <div class="mb-3">
+                        <label for="input-nome" class="form-label">Nome</label>
+                        <input type="text" class="form-control" id="input-nome" placeholder="Nome">
+                    </div>
+                    <div class="mb-3">
+                        <label for="input-cognome" class="form-label">Cognome</label>
+                        <input type="text" class="form-control" id="input-cognome" placeholder="Cognome">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" id="btn-conferma-nominativo"
+                                class="btn btn-brand rounded-pill w-100 fw-bold">Salva
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Modal indirizzo -->
+<div class="modal fade" id="modalIndirizzo" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modal-indirizzo">Scegli indirizzo</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+
+                <div id="vista-lista">
+                    <div id="lista-indirizzi" class="d-grid gap-2 mb-3"></div>
+                    <button type="button" id="btn-nuovo-indirizzo"
+                            class="btn btn-outline-secondary rounded-pill w-100">
+                        Inserisci nuovo indirizzo
+                    </button>
+                </div>
+
+                <!-- Form nuovo indirizzo -->
+                <form id="form-indirizzo" class="d-none">
+                    <div class="mb-3">
+                        <label for="input-via" class="form-label">Via<span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <input type="text" class="form-control " id="input-via"
+                                   placeholder="Via Roma" maxlength="100" required>
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-4">
+                            <label for="input-civico" class="form-label">Civico<span
+                                    class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="input-civico" placeholder="1" maxlength="10"
+                                   required>
+                        </div>
+                        <div class="col-8">
+                            <label for="input-citta" class="form-label">Città<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="input-citta" placeholder="Milano" maxlength="60"
+                                   required>
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-6">
+                            <label for="input-cap" class="form-label">CAP<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="input-cap" placeholder="20100"
+                                   inputmode="numeric" maxlength="5" pattern="\d{5}" required>
+                        </div>
+                        <div class="col-6">
+                            <label for="input-provincia" class="form-label">Provincia<span
+                                    class="text-danger">*</span></label>
+                            <input type="text" class="form-control text-uppercase" id="input-provincia" placeholder="MI"
+                                   maxlength="2" pattern="[A-Za-z]{2}" required>
+                        </div>
+                        <div class="col-12">
+                            <p id="indirizzo-messaggio" class="text-center mt-2 mb-0" style="font-size: 14px;"></p>
+                        </div>
+                    </div>
+                    <div class="modal-footer flex-column gap-2">
+                        <button type="submit" class="btn btn-brand rounded-pill w-100 fw-bold">Salva</button>
+                        <button type="button" id="btn-indietro"
+                                class="btn btn-link text-muted w-100">Torna agli indirizzi
+                        </button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal carta -->
+<div class="modal fade" id="modalCarta" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Nuova carta</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="form-carta" autocomplete="off">
+                    <div class="mb-3">
+                        <label for="input-intestatario" class="form-label">Intestatario<span
+                                class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="input-intestatario"
+                               maxlength="60" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="input-numero" class="form-label">Numero carta<span
+                                class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="input-numero"
+                               placeholder="1234 5678 9012 3456" inputmode="numeric"
+                               maxlength="19" required>
+                    </div>
+                    <div class="row g-3 mb-3">
+                        <div class="col-6">
+                            <label for="input-scadenza" class="form-label">Scadenza<span
+                                    class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="input-scadenza"
+                                   placeholder="MM/AA" inputmode="numeric" maxlength="5"
+                                   pattern="(0[1-9]|1[0-2])/\d{2}" required>
+                        </div>
+                        <div class="col-6">
+                            <label for="input-cvv" class="form-label">CVV<span
+                                    class="text-danger">*</span></label>
+                            <input type="password" class="form-control" id="input-cvv"
+                                   placeholder="123" inputmode="numeric" maxlength="4"
+                                   pattern="\d{3,4}" required>
+                        </div>
+                    </div>
+                    <p id="carta-messaggio" class="text-center mb-3" style="font-size: 14px;"></p>
+                    <div class="modal-footer p-0 border-0">
+                        <button type="submit" class="btn btn-brand rounded-pill w-100 fw-bold">
+                            Salva carta
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+
+<script src="../backend/lib.js"></script>
+
+<script>
+    const idRistorante = new URLSearchParams(window.location.search).get('id');
+    const utente = JSON.parse(localStorage.getItem('utente'));
+    const carrello = JSON.parse(sessionStorage.getItem(idRistorante)) || [];
+    const modalNominativo = new bootstrap.Modal(document.getElementById('modalNominativo'));
+    const modalIndirizzo = new bootstrap.Modal(document.getElementById('modalIndirizzo'));
+    const formIndirizzo = document.getElementById('form-indirizzo');
+    const vistaLista = document.getElementById('vista-lista');
+    let nome = utente.nome;
+    let cognome = utente.cognome;
+    let indirizzo = utente.indirizzi.find(indirizzo => indirizzo.predefinito);
+    const sezioneCarta = new bootstrap.Collapse(document.getElementById('sezione-carta'), {toggle: false});
+
+    function caricaDati() {
+        document.getElementById('nominativo').textContent = `${nome} ${cognome}`;
+        document.getElementById('indirizzo').textContent = indirizzo.via + ', ' + indirizzo.civico + ', ' + indirizzo.cap + ', ' + indirizzo.citta + ' (' + indirizzo.provincia + ')';
+    }
+
+    function cambiaNominativo() {
+        nome = document.getElementById('input-nome').value;
+        cognome = document.getElementById('input-cognome').value;
+        caricaDati();
+        modalNominativo.hide();
+    }
+
+    document.getElementById('blocco-nominativo').addEventListener('click', () => {
+        document.getElementById('input-nome').value = nome;
+        document.getElementById('input-cognome').value = cognome;
+        modalNominativo.show();
+    });
+
+    document.getElementById('form-nominativo').addEventListener('submit', (e) => {
+        e.preventDefault();
+        cambiaNominativo();
+    });
+
+    function formattaIndirizzo(indirizzo) {
+        return `${indirizzo.via}, ${indirizzo.civico}, ${indirizzo.cap}, ${indirizzo.citta} (${indirizzo.provincia})`;
+    }
+
+    function mostraVista(nuovo) {
+        vistaLista.classList.toggle('d-none', nuovo);
+        formIndirizzo.classList.toggle('d-none', !nuovo);
+        document.getElementById('modal-indirizzo').textContent =
+            nuovo ? 'Nuovo indirizzo' : 'Scegli indirizzo';
+    }
+
+    function renderListaIndirizzi() {
+        const lista = document.getElementById('lista-indirizzi');
+        lista.innerHTML = '';
+        utente.indirizzi.forEach(i => {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'btn text-start border rounded-3 p-3' + (i === indirizzo ? ' border-2 border-dark' : '');
+            btn.textContent = formattaIndirizzo(i);
+            btn.addEventListener('click', () => {
+                indirizzo = i;
+                caricaDati();
+                modalIndirizzo.hide();
+            });
+            lista.appendChild(btn);
+        });
+    }
+
+    document.getElementById('blocco-indirizzo').addEventListener('click', () => {
+        renderListaIndirizzi();
+        mostraVista(false);
+        modalIndirizzo.show();
+    });
+
+    document.getElementById('btn-nuovo-indirizzo').addEventListener('click', () => {
+        formIndirizzo.reset();
+        mostraVista(true);
+    });
+
+    document.getElementById('btn-indietro').addEventListener('click', () => {
+        renderListaIndirizzi();
+        mostraVista(false);
+    });
+
+
+    formIndirizzo.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const nuovo = {
+            via: capitalize(document.getElementById('input-via').value.trim()),
+            civico: document.getElementById('input-civico').value.trim(),
+            citta: capitalize(document.getElementById('input-citta').value.trim()),
+            cap: document.getElementById('input-cap').value.trim(),
+            provincia: document.getElementById('input-provincia').value.trim().toUpperCase(),
+            predefinito: false
+        };
+
+
+        const response = await fetch(`http://localhost:3005/user/${utente._id}/indirizzi?api_key=1234567`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(nuovo)
+        });
+
+        const risultato = await response.json();
+        if (risultato.error) {
+            document.getElementById('indirizzo-messaggio').textContent = risultato.error;
+            document.getElementById('indirizzo-messaggio').classList.add('text-danger');
+            return;
+        }
+
+        utente.indirizzi.push(risultato);
+        localStorage.setItem('utente', JSON.stringify(utente));
+        indirizzo = nuovo;
+        caricaDati();
+        modalIndirizzo.hide();
+        formIndirizzo.reset();
+    });
+
+    document.getElementById('metodo-ritiro').addEventListener('change', () => {
+        document.getElementById('blocco-indirizzo').classList.add('d-none');
+    });
+
+    document.getElementById('metodo-domicilio').addEventListener('change', () => {
+        document.getElementById('blocco-indirizzo').classList.remove('d-none');
+    });
+
+
+    document.querySelectorAll('input[name="pagamento"]').forEach(radio => {
+        radio.addEventListener('change', () => {
+            if (radio.value === 'carta') {
+                sezioneCarta.show();
+            } else {
+                sezioneCarta.hide();
+            }
+        });
+    });
+
+    
+    caricaDati();
+
+</script>
+</body>
+</html>
