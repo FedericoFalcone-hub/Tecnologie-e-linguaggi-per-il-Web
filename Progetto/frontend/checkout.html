@@ -328,21 +328,28 @@
 <script src="../backend/lib.js"></script>
 
 <script>
+    checkNotLogged();
     const idRistorante = new URLSearchParams(window.location.search).get('id');
     const utente = JSON.parse(localStorage.getItem('utente'));
+    let indirizzoLocale = getIndirizzoLocale();
     const carrello = JSON.parse(sessionStorage.getItem(idRistorante)) || [];
     const modalNominativo = new bootstrap.Modal(document.getElementById('modalNominativo'));
     const modalIndirizzo = new bootstrap.Modal(document.getElementById('modalIndirizzo'));
     const formIndirizzo = document.getElementById('form-indirizzo');
+    const formCarta = document.getElementById('form-carta');
     const vistaLista = document.getElementById('vista-lista');
     let nome = utente.nome;
     let cognome = utente.cognome;
     let indirizzo = utente.indirizzi.find(indirizzo => indirizzo.predefinito);
     const sezioneCarta = new bootstrap.Collapse(document.getElementById('sezione-carta'), {toggle: false});
+    let cartaSelezionata;
+
+    //Ripristina l'opzione di consegna a domicilio come predefinita
+    document.getElementById('metodo-domicilio').checked = true;
 
     function caricaDati() {
         document.getElementById('nominativo').textContent = `${nome} ${cognome}`;
-        document.getElementById('indirizzo').textContent = indirizzo.via + ', ' + indirizzo.civico + ', ' + indirizzo.cap + ', ' + indirizzo.citta + ' (' + indirizzo.provincia + ')';
+        document.getElementById('indirizzo').textContent = formattaIndirizzo(indirizzo);
     }
 
     function cambiaNominativo() {
@@ -363,8 +370,16 @@
         cambiaNominativo();
     });
 
+    //Gestione indirizzi
     function formattaIndirizzo(indirizzo) {
         return `${indirizzo.via}, ${indirizzo.civico}, ${indirizzo.cap}, ${indirizzo.citta} (${indirizzo.provincia})`;
+    }
+
+    async function getIndirizzoLocale() {
+        const response = await fetch(`http://localhost:3005/ristorante/${idRistorante}?api_key=1234567`);
+        const ristorante = await response.json();
+        document.title = "Checkout - " + ristorante.ristoranteNome;
+        return ristorante.indirizzoRistorante;
     }
 
     function mostraVista(nuovo) {
@@ -441,15 +456,15 @@
         formIndirizzo.reset();
     });
 
-    document.getElementById('metodo-ritiro').addEventListener('change', () => {
-        document.getElementById('blocco-indirizzo').classList.add('d-none');
+    document.getElementById('metodo-ritiro').addEventListener('change', async () => {
+        document.getElementById('indirizzo').textContent = await indirizzoLocale;
     });
 
     document.getElementById('metodo-domicilio').addEventListener('change', () => {
-        document.getElementById('blocco-indirizzo').classList.remove('d-none');
+        document.getElementById('indirizzo').textContent = formattaIndirizzo(indirizzo);
     });
 
-
+    // Gestione pagamento
     document.querySelectorAll('input[name="pagamento"]').forEach(radio => {
         radio.addEventListener('change', () => {
             if (radio.value === 'carta') {
@@ -460,7 +475,72 @@
         });
     });
 
-    
+    async function renderListaCarte() {
+
+        const response = await fetch(`http://localhost:3005/user/${utente._id}/carte-pagamento?api_key=1234567`);
+        const carte = await response.json();
+
+        if (cartaSelezionata == null) {
+            cartaSelezionata = carte[0];
+        }
+        const listaCarte = document.getElementById('lista-carte');
+        const modelloCarta = document.getElementById('modello-carta');
+        listaCarte.innerHTML = '';
+        carte.forEach(carta => {
+            const clone = modelloCarta.cloneNode(true);
+            clone.removeAttribute('id');
+            clone.classList.remove('d-none');
+            clone.classList.toggle('border-2', carta._id === cartaSelezionata._id);
+            clone.classList.toggle('border-dark', carta._id === cartaSelezionata._id);
+            clone.querySelector('.carta-intestatario').textContent = carta.intestatario;
+            clone.querySelector('.carta-numero').textContent = '••••' + `${carta.numero}`;
+            clone.querySelector('.carta-scadenza').textContent = carta.scadenza;
+            clone.addEventListener('click', () => {
+                cartaSelezionata = carta;
+
+                renderListaCarte();
+            });
+            listaCarte.appendChild(clone);
+        });
+    }
+
+    formCarta.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const nuovaCarta = {
+            intestatario: document.getElementById('input-intestatario').value.trim(),
+            numero: document.getElementById('input-numero').value.trim(),
+            scadenza: document.getElementById('input-scadenza').value.trim(),
+            cvv: document.getElementById('input-cvv').value.trim()
+        };
+
+        const response = await fetch(`http://localhost:3005/user/${utente._id}/carte?api_key=1234567`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(nuovaCarta)
+        });
+
+        const risultato = await response.json();
+        if (risultato.error) {
+            document.getElementById('carta-messaggio').textContent = risultato.error;
+            document.getElementById('carta-messaggio').classList.add('text-danger');
+            return;
+        }
+
+        utente.carte.push(risultato);
+        localStorage.setItem('utente', JSON.stringify(utente));
+        sezioneCarta.hide();
+        formCarta.reset();
+    });
+
+    function getMetodoPagamento() {
+        const metodo = document.querySelector('input[name="pagamento"]:checked').value;
+        if (metodo === 'carta') {
+            return cartaSelezionata;
+        }
+        return metodo;
+    }
+
+    renderListaCarte();
     caricaDati();
 
 </script>
