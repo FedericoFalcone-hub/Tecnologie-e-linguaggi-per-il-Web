@@ -321,6 +321,11 @@
             fetch(`http://localhost:3005/ristorante/${ristorante._id}/menu?api_key=1234567`)
                 .then(res => res.json())
                 .then(dati => {
+                    if (dati === null) {
+                        pieno.style.display = 'none';
+                        vuoto.style.display = 'block';
+                        return;
+                    }
                     const piatti = dati.piatti;
                     if (!piatti || piatti.length === 0) {
                         pieno.style.display = 'none';

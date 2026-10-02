@@ -379,7 +379,7 @@
         const response = await fetch(`http://localhost:3005/ristorante/${idRistorante}?api_key=1234567`);
         const ristorante = await response.json();
         document.title = "Checkout - " + ristorante.ristoranteNome;
-        return ristorante.indirizzoRistorante;
+        return ristorante.via + ', ' + ristorante.civico + ', ' + ristorante.cap + ', ' + ristorante.citta + ' (' + ristorante.provincia + ')';
     }
 
     function mostraVista(nuovo) {

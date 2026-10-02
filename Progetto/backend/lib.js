@@ -8,6 +8,12 @@ function checkLogged() {
     }
 }
 
+function checkNotLogged() {
+    if (!isLogged()) {
+        window.location.href = "bizarre_bites.html";
+    }
+}
+
 function checkLoggedRistoratore() {
     const base = getBasePath();
     const utente = localStorage.getItem("utente");

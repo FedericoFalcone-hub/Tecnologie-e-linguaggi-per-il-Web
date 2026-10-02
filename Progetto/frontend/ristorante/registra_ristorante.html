@@ -49,12 +49,38 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="indirizzo" class="form-label">Indirizzo<span
-                                    class="text-danger">*</span></label>
+                            <label for="via" class="form-label">Via<span class="text-danger">*</span></label>
                             <div class="input-group">
                                 <span class="input-group-text bg-white border-end-0">📍</span>
-                                <input type="text" class="form-control border-start-0" id="indirizzo"
-                                       placeholder="Via Roma, 1, Milano" required>
+                                <input type="text" class="form-control border-start-0" id="via"
+                                       placeholder="Via Roma" maxlength="100" required>
+                            </div>
+                        </div>
+
+                        <div class="row g-3 mb-3">
+                            <div class="col-4">
+                                <label for="civico" class="form-label">Civico<span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="civico" placeholder="1" maxlength="10"
+                                       required>
+                            </div>
+                            <div class="col-8">
+                                <label for="citta" class="form-label">Città<span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="citta" placeholder="Milano" maxlength="60"
+                                       required>
+                            </div>
+                        </div>
+
+                        <div class="row g-3 mb-3">
+                            <div class="col-6">
+                                <label for="cap" class="form-label">CAP<span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="cap" placeholder="20100"
+                                       inputmode="numeric" maxlength="5" pattern="\d{5}" required>
+                            </div>
+                            <div class="col-6">
+                                <label for="provincia" class="form-label">Provincia<span
+                                        class="text-danger">*</span></label>
+                                <input type="text" class="form-control text-uppercase" id="provincia" placeholder="MI"
+                                       maxlength="2" pattern="[A-Za-z]{2}" required>
                             </div>
                         </div>
 
@@ -76,7 +102,9 @@
 
 <script>
     checkLoggedRistoratore();
-    if (localStorage.getItem('ristorante')) {
+    const ristoratore = JSON.parse(localStorage.getItem('ristorante'));
+
+    if (ristoratore !== null) {
         window.location.href = 'gestione_ristorante.html';
     }
 
@@ -108,13 +136,17 @@
         const cNome = capitalize(document.getElementById('nomeRistorante').value.trim());
         const cPiva = document.getElementById('piva').value.trim().toUpperCase();
         const cTelefono = document.getElementById('telefono').value.trim();
-        const cIndirizzo = capitalize(document.getElementById('indirizzo').value.trim());
 
         const ristorante = {
             nomeRistorante: cNome,
             partitaIVA: cPiva,
             telefonoRistorante: cTelefono,
-            indirizzoRistorante: cIndirizzo
+            via: capitalize(document.getElementById('via').value.trim()),
+            civico: document.getElementById('civico').value.trim(),
+            citta: capitalize(document.getElementById('citta').value.trim()),
+            cap: document.getElementById('cap').value.trim(),
+            provincia: document.getElementById('provincia').value.trim().toUpperCase()
+
         };
 
         const options = {

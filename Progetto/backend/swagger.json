@@ -326,9 +326,6 @@
           "404": {
             "description": "Not Found"
           },
-          "409": {
-            "description": "Conflict"
-          },
           "500": {
             "description": "Internal Server Error"
           }
@@ -348,7 +345,19 @@
                   "telefonoRistorante": {
                     "example": "any"
                   },
-                  "indirizzoRistorante": {
+                  "via": {
+                    "example": "any"
+                  },
+                  "civico": {
+                    "example": "any"
+                  },
+                  "citta": {
+                    "example": "any"
+                  },
+                  "cap": {
+                    "example": "any"
+                  },
+                  "provincia": {
                     "example": "any"
                   }
                 }
@@ -448,7 +457,19 @@
                   "telefonoRistorante": {
                     "example": "any"
                   },
-                  "indirizzoRistorante": {
+                  "via": {
+                    "example": "any"
+                  },
+                  "civico": {
+                    "example": "any"
+                  },
+                  "citta": {
+                    "example": "any"
+                  },
+                  "cap": {
+                    "example": "any"
+                  },
+                  "provincia": {
                     "example": "any"
                   }
                 }
@@ -898,6 +919,148 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/user/{id}/indirizzi/{idIndirizzo}": {
+      "delete": {
+        "description": "Elimina un indirizzo dell'utente",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "idIndirizzo",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "api_key",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/user/{id}/carta-pagamento": {
+      "post": {
+        "description": "Aggiunge una carta di pagamento all'utente",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "api_key",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "intestatario": {
+                    "example": "any"
+                  },
+                  "numero": {
+                    "example": "any"
+                  },
+                  "scadenza": {
+                    "example": "any"
+                  },
+                  "cvv": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/{id}/carte-pagamento": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "api_key",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
           }
         }
       }

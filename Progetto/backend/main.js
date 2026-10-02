@@ -24,8 +24,10 @@ app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 async function getUser(id) {
 
-    const filter = {_id: ObjectID.createFromHexString(id)};
-    return await client.db('FastFood').collection('users').findOne(filter);
+    return await client.db('FastFood').collection('users').findOne(
+        {_id: ObjectId.createFromHexString(id)},
+        {projection: {carte: 0}}
+    );
 }
 
 async function getRistorante(id) {
@@ -105,10 +107,6 @@ function validateEmail(email) {
     return regex.test(email);
 }
 
-function validateAddress(address) {
-    const regex = /^[a-zA-ZÀ-ÿ0-9\s,'-]+$/;
-    return address.trim().length > 0 && regex.test(address);
-}
 
 app.post('/user', async (req, res) => {
     // #swagger.description = "Crea un nuovo utente"
@@ -301,24 +299,15 @@ app.delete('/user/:id', async (req, res) => {
     res.json(result);
 });
 
+function formattaIndirizzo({via, civico, cap, citta, provincia}) {
+    return `${via} ${civico}, ${cap} ${citta} (${provincia})`;
+}
+
 app.post('/user/:id/ristorante', async (req, res) => {
     // #swagger.description = "Registra un ristorante per un utente"
-
     const id = req.params.id;
-    const nomeRistorante = req.body.nomeRistorante;
-    const partitaIVA = req.body.partitaIVA;
-    const telefonoRistorante = req.body.telefonoRistorante;
-    const indirizzoRistorante = req.body.indirizzoRistorante;
-
-    if (!nomeRistorante || !partitaIVA || !telefonoRistorante || !indirizzoRistorante) {
-        return res.status(400).json({error: "Dati mancanti"});
-    }
-
-    if (!validateAddress(indirizzoRistorante)) {
-        return res.status(400).json({error: "Indirizzo ristorante non valido"});
-    }
-
     const user = await getUser(id);
+
     if (!user) {
         return res.status(404).json({error: "Utente non trovato"});
     }
@@ -327,39 +316,47 @@ app.post('/user/:id/ristorante', async (req, res) => {
         return res.status(403).json({error: "Utente non autorizzato"});
     }
 
-    const coordinates = await getCoordinates(indirizzoRistorante);
+    const {nomeRistorante, partitaIVA, telefonoRistorante, via, civico, citta, cap, provincia} = req.body;
+
+    if (!nomeRistorante || !partitaIVA || !telefonoRistorante || !via || !civico || !citta || !cap || !provincia) {
+        return res.status(400).json({error: "Dati mancanti"});
+    }
+
+    const indirizzo = {
+        via: via.trim(),
+        civico: civico.trim(),
+        citta: citta.trim(),
+        cap: cap.trim(),
+        provincia: provincia.trim().toUpperCase()
+    };
+    const indirizzoTesto = formattaIndirizzo(indirizzo);
+
+    const coordinates = await getCoordinates(indirizzoTesto);
     if (!coordinates) {
         return res.status(400).json({error: "Indirizzo ristorante non valido"});
     }
 
-
     try {
-        const risorante = {
-            nomeRistorante: nomeRistorante,
-            partitaIVA: partitaIVA,
+        const ristorante = {
+            nomeRistorante,
+            partitaIVA,
             idRistoratore: id,
-            telefonoRistorante: telefonoRistorante,
-            indirizzoRistorante: indirizzoRistorante,
+            telefonoRistorante,
+            via: via,
+            civico: civico,
+            citta: citta,
+            cap: cap,
+            provincia: provincia.toUpperCase(),
             lat: coordinates.lat,
             lon: coordinates.lon,
             logoUrl: null
         };
-        await client.db('FastFood').collection('ristoranti').insertOne(risorante);
+        await client.db('FastFood').collection('ristoranti').insertOne(ristorante);
 
-
-        res.json(risorante);
+        res.json(ristorante);
     } catch (error) {
-        if (error.code === 11000) {
-            if (error.keyPattern && error.keyPattern.partitaIVA) {
-                res.status(409).json({error: "Partita IVA già registrata"});
-            } else {
-                res.status(409).json({error: "Ristorante già registrato per questo utente"});
-            }
-        } else {
-            res.status(500).json({error: `Errore non gestito ${error.message}`});
-        }
+        res.status(500).json({error: `Errore non gestito ${error.message}`});
     }
-
 });
 
 app.get('/user/:id/ristorante', async (req, res) => {
@@ -420,63 +417,58 @@ app.put('/user/:id/ristorante', async (req, res) => {
     // #swagger.description = "Aggiorna i dati del ristorante di un utente"
 
     const id = req.params.id;
-    const newNomeRistorante = req.body.nomeRistorante;
-    const newPartitaIVA = req.body.partitaIVA;
-    const newTelefonoRistorante = req.body.telefonoRistorante;
-    const newIndirizzoRistorante = req.body.indirizzoRistorante;
-
-    if (!newNomeRistorante || !newPartitaIVA || !newTelefonoRistorante || !newIndirizzoRistorante) {
-        return res.status(400).json({error: "Dati mancanti"});
-    }
-
-    if (!validateAddress(newIndirizzoRistorante)) {
-        return res.status(400).json({error: "Indirizzo ristorante non valido"});
-    }
-
     const user = await getUser(id);
     if (!user) {
         return res.status(404).json({error: "Utente non trovato"});
     }
-
     if (!user.ristoratore) {
         return res.status(403).json({error: "Utente non autorizzato"});
     }
 
     const ristorante = await getRistorante(id);
-
     if (!ristorante) {
         return res.status(404).json({error: "Ristorante non trovato"});
     }
 
-    const coordinates = await getCoordinates(newIndirizzoRistorante);
+    const {nomeRistorante, partitaIVA, telefonoRistorante, via, civico, citta, cap, provincia} = req.body;
+
+    if (!nomeRistorante || !partitaIVA || !telefonoRistorante || !via || !civico || !citta || !cap || !provincia) {
+        return res.status(400).json({error: "Dati mancanti"});
+    }
+
+    const indirizzo = {
+        via: via.trim(),
+        civico: civico.trim(),
+        citta: citta.trim(),
+        cap: cap.trim(),
+        provincia: provincia.trim().toUpperCase()
+    };
+    const indirizzoTesto = formattaIndirizzo(indirizzo);
+
+
+    const coordinates = await getCoordinates(indirizzoTesto);
     if (!coordinates) {
         return res.status(400).json({error: "Indirizzo ristorante non valido"});
     }
 
-
     const datiModificati = {
-        nomeRistorante: newNomeRistorante,
-        partitaIVA: newPartitaIVA,
-        telefonoRistorante: newTelefonoRistorante,
-        indirizzoRistorante: newIndirizzoRistorante,
+        nomeRistorante,
+        partitaIVA,
+        telefonoRistorante,
+        via: via,
+        civico: civico,
+        citta: citta,
+        cap: cap,
+        provincia: provincia.toUpperCase(),
         lat: coordinates.lat,
         lon: coordinates.lon
-    }
+    };
+
     try {
         await client.db('FastFood').collection('ristoranti').updateOne(
             {idRistoratore: id},
-            {
-                $set: {
-                    nomeRistorante: newNomeRistorante,
-                    partitaIVA: newPartitaIVA,
-                    telefonoRistorante: newTelefonoRistorante,
-                    indirizzoRistorante: newIndirizzoRistorante,
-                    lat: coordinates.lat,
-                    lon: coordinates.lon
-                }
-            }
+            {$set: datiModificati}
         );
-
 
         res.json(datiModificati);
     } catch (error) {
@@ -563,7 +555,16 @@ app.get('/ristorante/:id/menu', async (req, res) => {
                 $addFields: {
                     nome: {$ifNull: [{$arrayElemAt: ['$dettagli.strMeal', 0]}, '$nome']},
                     foto: {$ifNull: [{$arrayElemAt: ['$dettagli.strMealThumb', 0]}, '$foto']},
-                    categoria: {$ifNull: [{$arrayElemAt: ['$dettagli.strCategory', 0]}, '$categoria']}
+                    categoria: {$ifNull: [{$arrayElemAt: ['$dettagli.strCategory', 0]}, '$categoria']},
+                    indirizzoFormattato: {
+                        $concat: [
+                            '$ristoranteInfo.via', ' ',
+                            '$ristoranteInfo.civico', ', ',
+                            '$ristoranteInfo.cap', ', ',
+                            '$ristoranteInfo.citta', ' (',
+                            '$ristoranteInfo.provincia', ')'
+                        ]
+                    }
                 }
             },
 
@@ -579,7 +580,7 @@ app.get('/ristorante/:id/menu', async (req, res) => {
                     _id: '$idRistorante',
                     ristoranteNome: {$first: '$ristoranteInfo.nomeRistorante'},
                     ristoranteLogo: {$first: '$ristoranteInfo.logoUrl'},
-                    ristoranteIndirizzo: {$first: '$ristoranteInfo.indirizzoRistorante'},
+                    ristoranteIndirizzo: {$first: '$indirizzoFormattato'},
                     ristoranteTelefono: {$first: '$ristoranteInfo.telefonoRistorante'},
                     piatti: {
                         $push: {
@@ -965,6 +966,57 @@ app.delete('/user/:id/indirizzi/:idIndirizzo', async (req, res) => {
     } catch (error) {
         res.status(500).json({error: error.message});
     }
+});
+
+app.post('/user/:id/carta-pagamento', async (req, res) => {
+    // #swagger.description = "Aggiunge una carta di pagamento all'utente"
+    const {id} = req.params;
+
+    if (!await getUser(id)) {
+        return res.status(404).json({error: "Utente non trovato"});
+    }
+
+    const coll = client.db('FastFood').collection('users');
+
+    const {intestatario, numero, scadenza} = req.body;
+
+    if (numero.length !== 16 || !/^\d+$/.test(numero)) {
+        return res.status(400).json({error: "Numero carta non valido"});
+    }
+    if (!/^\d{2}\/\d{2}$/.test(scadenza)) {
+        return res.status(400).json({error: "Scadenza non valida"});
+    }
+
+    const nuovaCarta = {
+        _id: new ObjectId(),
+        intestatario,
+        numero: numero.slice(-4),
+        scadenza,
+    };
+
+    try {
+        const user = await getUser(id);
+        if (!user) {
+            return res.status(404).json({error: "Utente non trovato"});
+        }
+        await coll.updateOne({_id: user._id}, {$push: {carte: nuovaCarta}});
+        res.json(nuovaCarta);
+    } catch (error) {
+        res.status(500).json({error: error.message});
+    }
+});
+
+app.get('/user/:id/carte-pagamento', async (req, res) => {
+    const {id} = req.params;
+
+    if (!await getUser(id)) {
+        return res.status(404).json({error: "Utente non trovato"});
+    }
+
+    const coll = client.db('FastFood').collection('users');
+    const user = await coll.findOne({_id: new ObjectId(id)}, {projection: {carte: 1}});
+    if (!user) return res.status(404).json({error: "Utente non trovato"});
+    res.json(user.carte || []);
 });
 
 client.connect()

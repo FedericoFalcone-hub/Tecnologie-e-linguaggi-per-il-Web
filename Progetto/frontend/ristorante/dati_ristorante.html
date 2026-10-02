@@ -36,7 +36,8 @@
                     </div>
 
                     <form id="form-dati">
-                        <div id="logo" class="ristorante-logo-form mx-auto mb-3" style="cursor: pointer;"
+                        <div id="logo" class="ristorante-logo-form mx-auto mb-3"
+                             style="cursor: pointer; background: #ff7a1a;"
                              data-bs-toggle="modal" data-bs-target="#modalLogo" onclick="apriModalLogo()">
                             <span id="logo-contenuto"></span>
                             <span class="logo-overlay">✏️ Modifica</span>
@@ -60,11 +61,37 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="indirizzo" class="form-label">Indirizzo</label>
+                            <label for="via" class="form-label">Via</label>
                             <div class="input-group">
                                 <span class="input-group-text bg-white border-end-0">📍</span>
-                                <input type="text" class="form-control border-start-0" id="indirizzo"
-                                       placeholder="Via Roma, 1, Milano" required>
+                                <input type="text" class="form-control border-start-0" id="via"
+                                       placeholder="Via Roma" maxlength="100" required>
+                            </div>
+                        </div>
+
+                        <div class="row g-3 mb-3">
+                            <div class="col-4">
+                                <label for="civico" class="form-label">Civico</label>
+                                <input type="text" class="form-control" id="civico" placeholder="1" maxlength="10"
+                                       required>
+                            </div>
+                            <div class="col-8">
+                                <label for="citta" class="form-label">Città</label>
+                                <input type="text" class="form-control" id="citta" placeholder="Milano" maxlength="60"
+                                       required>
+                            </div>
+                        </div>
+
+                        <div class="row g-3 mb-3">
+                            <div class="col-6">
+                                <label for="cap" class="form-label">CAP</label>
+                                <input type="text" class="form-control" id="cap" placeholder="20100"
+                                       inputmode="numeric" maxlength="5" pattern="\d{5}" required>
+                            </div>
+                            <div class="col-6">
+                                <label for="provincia" class="form-label">Provincia</label>
+                                <input type="text" class="form-control text-uppercase" id="provincia" placeholder="MI"
+                                       maxlength="2" pattern="[A-Za-z]{2}" required>
                             </div>
                         </div>
 
@@ -141,7 +168,11 @@
         document.getElementById("nomeRistorante").value = ristorante.nomeRistorante;
         document.getElementById("piva").value = ristorante.partitaIVA;
         document.getElementById("telefono").value = ristorante.telefonoRistorante;
-        document.getElementById("indirizzo").value = ristorante.indirizzoRistorante;
+        document.getElementById("via").value = ristorante.via;
+        document.getElementById("civico").value = ristorante.civico;
+        document.getElementById("citta").value = ristorante.citta;
+        document.getElementById("cap").value = ristorante.cap;
+        document.getElementById("provincia").value = ristorante.provincia;
     }
 
     inizializza();
@@ -171,7 +202,11 @@
                 nomeRistorante: document.getElementById('nomeRistorante').value,
                 partitaIVA: document.getElementById('piva').value,
                 telefonoRistorante: document.getElementById('telefono').value,
-                indirizzoRistorante: document.getElementById('indirizzo').value,
+                via: capitalize(document.getElementById('via').value),
+                civico: document.getElementById('civico').value,
+                citta: capitalize(document.getElementById('citta').value),
+                cap: document.getElementById('cap').value,
+                provincia: document.getElementById('provincia').value,
                 lat: result.lat,
                 lon: result.lon,
                 logoUrl: ristorante.logoUrl
@@ -264,13 +299,20 @@
         const cNome = capitalize(document.getElementById('nomeRistorante').value.trim());
         const cPiva = document.getElementById('piva').value.trim().toUpperCase();
         const cTelefono = document.getElementById('telefono').value.trim();
-        const cIndirizzo = document.getElementById('indirizzo').value.trim();
-
+        const cVia = capitalize(document.getElementById('via').value.trim());
+        const cCivico = document.getElementById('civico').value.trim();
+        const cCitta = capitalize(document.getElementById('citta').value.trim());
+        const cCap = document.getElementById('cap').value.trim();
+        const cProvincia = document.getElementById('provincia').value.trim().toUpperCase();
         const restaurant = {
             nomeRistorante: cNome,
             partitaIVA: cPiva,
             telefonoRistorante: cTelefono,
-            indirizzoRistorante: cIndirizzo,
+            via: cVia,
+            civico: cCivico,
+            citta: cCitta,
+            cap: cCap,
+            provincia: cProvincia
         };
 
         const options = {
