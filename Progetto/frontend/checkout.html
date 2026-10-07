@@ -590,7 +590,9 @@
             metodoRitiro: metodoRitiro,
             indirizzoConsegna: metodoRitiro === 'domicilio' ? indirizzo : null,
             metodoPagamento: metodoPagamento,
-            prodotti: carrello
+            prodotti: carrello,
+            nomeCliente: nome,
+            cognomeCliente: cognome,
         };
 
         const response = await fetch(`http://localhost:3005/user/${utente._id}/ordine?api_key=1234567`, {

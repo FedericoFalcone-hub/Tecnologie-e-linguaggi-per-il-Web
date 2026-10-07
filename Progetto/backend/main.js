@@ -1036,13 +1036,20 @@ app.get('/user/:id/carte-pagamento', async (req, res) => {
 app.post('/user/:id/ordine', async (req, res) => {
     // #swagger.description = "Crea un nuovo ordine per l'utente"
     const {id} = req.params;
-    const {ristoranteId, metodoRitiro, indirizzoConsegna, metodoPagamento, prodotti} = req.body;
-    console.log(req.body);
+    const {
+        ristoranteId,
+        metodoRitiro,
+        indirizzoConsegna,
+        metodoPagamento,
+        prodotti,
+        nomeCliente,
+        cognomeCliente
+    } = req.body;
 
     if (!await getUser(id)) {
         return res.status(404).json({error: "Utente non trovato"});
     }
-    if (!ristoranteId || !metodoRitiro || !metodoPagamento || !prodotti || !Array.isArray(prodotti) || prodotti.length === 0) {
+    if (!nomeCliente || !cognomeCliente || !ristoranteId || !metodoRitiro || !metodoPagamento || !prodotti || !Array.isArray(prodotti) || prodotti.length === 0) {
         return res.status(400).json({error: "Dati mancanti"});
     }
     if (!await getRistorante(ristoranteId)) {
@@ -1054,6 +1061,8 @@ app.post('/user/:id/ordine', async (req, res) => {
         ristoranteId,
         idUtente: id,
         metodoRitiro,
+        nomeCliente: nomeCliente,
+        cognomeCliente: cognomeCliente,
         indirizzoConsegna: metodoRitiro === 'domicilio' ? indirizzoConsegna : null,
         metodoPagamento,
         prodotti,
@@ -1073,11 +1082,25 @@ app.post('/user/:id/ordine', async (req, res) => {
 app.get('/ordine/:id', async (req, res) => {
     // #swagger.description = "Recupera un ordine per ID"
     const {id} = req.params;
+    if (!ObjectId.isValid(id)) {
+        return res.status(400).json({error: "ID ordine non valido"});
+    }
 
-    const coll = client.db('FastFood').collection('ordini');
-    const ordine = await coll.findOne({_id: new ObjectId(id)});
-    if (!ordine) return res.status(404).json({error: "Ordine non trovato"});
-    res.json(ordine);
+    try {
+        const db = client.db('FastFood');
+        const ordine = await db.collection('ordini').findOne({_id: new ObjectId(id)});
+        if (!ordine) return res.status(404).json({error: "Ordine non trovato"});
+
+        const ristorante = await db.collection('ristoranti').findOne(
+            {_id: new ObjectId(ordine.ristoranteId)},
+            {projection: {nomeRistorante: 1}}
+        );
+
+        res.json({...ordine, nomeRistorante: ristorante?.nomeRistorante || null});
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({error: "Errore interno del server"});
+    }
 });
 
 client.connect()

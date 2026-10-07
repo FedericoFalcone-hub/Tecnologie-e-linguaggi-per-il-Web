@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Ordine confermato</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap"
+          rel="stylesheet">
+</head>
+<body>
+
+<div id="navbar-container"></div>
+
+<div class="container py-5" style="max-width: 720px;">
+
+    <div id="errore" class="alert alert-danger d-none"></div>
+
+    <div id="contenuto" class="d-none">
+
+        <div class="text-center mb-4">
+            <div class="rounded-circle bg-success text-white d-inline-flex align-items-center justify-content-center mb-3"
+                 style="width: 64px; height: 64px; font-size: 32px;">✓
+            </div>
+            <h3 class="mb-1" style="font-weight: 700;">Ordine confermato!</h3>
+            <p class="text-muted mb-0">Numero ordine <span id="numero-ordine" class="fw-bold text-dark"></span></p>
+            <small id="data-ordine" class="text-muted"></small>
+        </div>
+
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-body p-4">
+                <h5 class="fw-bold mb-3">Dettagli</h5>
+
+                <div class="d-flex justify-content-between mb-2">
+                    <span class="text-muted">Ristorante</span>
+                    <span id="nome-ristorante" class="fw-semibold text-end"></span>
+                </div>
+                <div class="d-flex justify-content-between mb-2">
+                    <span class="text-muted">Cliente</span>
+                    <span id="nome-cliente" class="fw-semibold text-end"></span>
+                </div>
+                <div class="d-flex justify-content-between mb-2">
+                    <span class="text-muted" id="etichetta-metodo"></span>
+                    <span id="indirizzo-ordine" class="fw-semibold text-end ms-3"></span>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <span class="text-muted">Pagamento</span>
+                    <span id="pagamento-ordine" class="fw-semibold text-end"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-body p-4">
+                <h5 class="fw-bold mb-3">Riepilogo</h5>
+
+                <div id="modello-prodotto"
+                     class="d-grid d-none align-items-start mb-2 pb-2 border-bottom"
+                     style="grid-template-columns: 1fr 40px 75px; column-gap: 8px;">
+                    <div>
+                        <span class="prodotto-nome fw-semibold"></span>
+                        <small class="prodotto-nota text-muted d-block"></small>
+                    </div>
+                    <span class="prodotto-quantita text-muted text-center"></span>
+                    <span class="prodotto-prezzo fw-bold text-brand text-end"></span>
+                </div>
+
+                <div id="lista-prodotti"></div>
+
+                <div id="riga-consegna" class="d-flex justify-content-between mt-2">
+                    <span class="text-muted">Consegna</span>
+                    <span>€ <span id="costo-consegna">0.00</span></span>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center mt-3">
+                    <span class="fw-bold fs-5">Totale</span>
+                    <span class="fw-bold fs-5 text-brand">€ <span id="totale-ordine">0.00</span></span>
+                </div>
+            </div>
+        </div>
+
+        <a href="bizarre_bites.html" class="btn btn-brand rounded-pill w-100 py-2">Torna alla home</a>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../backend/lib.js"></script>
+
+<script>
+    checkNotLogged();
+    const idOrdine = new URLSearchParams(window.location.search).get('id');
+
+    function formattaIndirizzo(i) {
+        if (!i) return '';
+        if (typeof i === 'string') return i;
+        return `${i.via}, ${i.civico}, ${i.cap}, ${i.citta} (${i.provincia})`;
+    }
+
+    function descriviPagamento(ordine) {
+        const p = ordine.metodoPagamento;
+        if (p && typeof p === 'object') return `Carta •••• ${p.numero}`;
+        if (p === 'paypal') return 'PayPal';
+        if (p === 'contanti') {
+            return ordine.metodoRitiro === 'ritiro' ? 'Contanti al ritiro' : 'Contanti alla consegna';
+        }
+        return p;
+    }
+
+    function mostraErrore(messaggio) {
+        const errore = document.getElementById('errore');
+        errore.textContent = messaggio;
+        errore.classList.remove('d-none');
+    }
+
+    function renderOrdine(ordine) {
+        const domicilio = ordine.metodoRitiro === 'domicilio';
+        console.log(ordine);
+        document.title = `Ordine #${String(ordine.numeroOrdine).padStart(6, '0')}`;
+        document.getElementById('numero-ordine').textContent = `#${String(ordine.numeroOrdine).padStart(6, '0')}`;
+        document.getElementById('data-ordine').textContent =
+            new Date(ordine.data).toLocaleString('it-IT', {dateStyle: 'long', timeStyle: 'short'});
+        document.getElementById('nome-ristorante').textContent = ordine.nomeRistorante || '';
+        document.getElementById('nome-cliente').textContent = `${ordine.nomeCliente} ${ordine.cognomeCliente}`;
+        document.getElementById('etichetta-metodo').textContent = domicilio ? 'Consegna a' : 'Ritiro presso';
+        document.getElementById('indirizzo-ordine').textContent = formattaIndirizzo(ordine.indirizzoConsegna);
+        document.getElementById('pagamento-ordine').textContent = descriviPagamento(ordine);
+
+        const lista = document.getElementById('lista-prodotti');
+        const modello = document.getElementById('modello-prodotto');
+        lista.innerHTML = '';
+        let subtotale = 0;
+
+        ordine.prodotti.forEach(item => {
+            const parziale = item.prezzo * item.quantita;
+            subtotale += parziale;
+
+            const clone = modello.cloneNode(true);
+            clone.removeAttribute('id');
+            clone.classList.remove('d-none');
+            clone.querySelector('.prodotto-nome').textContent = item.nome;
+            const nota = clone.querySelector('.prodotto-nota');
+            nota.textContent = item.nota || '';
+            nota.classList.toggle('d-none', !item.nota);
+            clone.querySelector('.prodotto-quantita').textContent = `x${item.quantita}`;
+            clone.querySelector('.prodotto-prezzo').textContent = `€ ${parziale.toFixed(2)}`;
+            lista.appendChild(clone);
+        });
+
+        const costoConsegna = ordine.costoConsegna ?? (domicilio ? 2.99 : 0);
+        const totale = ordine.totale ?? subtotale + costoConsegna;
+
+        document.getElementById('riga-consegna').classList.toggle('d-none', !domicilio);
+        document.getElementById('costo-consegna').textContent = costoConsegna.toFixed(2);
+        document.getElementById('totale-ordine').textContent = totale.toFixed(2);
+
+        document.getElementById('contenuto').classList.remove('d-none');
+    }
+
+    async function caricaOrdine() {
+        try {
+            const response = await fetch(`http://localhost:3005/ordine/${idOrdine}?api_key=1234567`);
+            const ordine = await response.json();
+            if (ordine.error) {
+                mostraErrore(ordine.error);
+                return;
+            }
+            renderOrdine(ordine);
+        } catch (error) {
+            mostraErrore("Impossibile caricare l'ordine");
+        }
+    }
+
+    caricaOrdine();
+</script>
+</body>
+</html>
