@@ -59,9 +59,6 @@
                         <img src="../backend/images/next.png" alt="Apri" class="ms-auto"
                              style="width: 20px; height: 20px; object-fit: contain;">
                     </div>
-                    <button id="btn-conferma-ordine" class="btn btn-brand rounded-pill w-100 py-2">
-                        Conferma ordine
-                    </button>
                 </div>
             </div>
         </div>
@@ -86,21 +83,24 @@
                     </div>
 
                     <div id="lista-riepilogo"></div>
-
+                    <div id="riga-consegna" class="d-flex justify-content-between align-items-center mt-2">
+                        <span class="text-muted">Consegna</span>
+                        <span class="fw-semibold text-brand fw-bold">€ <span id="costo-consegna">0.00</span></span>
+                    </div>
                     <div class="d-flex justify-content-between align-items-center mt-3">
                         <span class="fw-bold fs-5">Totale</span>
                         <span class="fw-bold fs-5 text-brand">€ <span id="totale-riepilogo">0.00</span></span>
                     </div>
 
-                    <a id="link-modifica" class="btn btn-outline-secondary rounded-pill w-100 mt-3">
-                        Modifica carrello
+                    <a id="ordina" class="btn btn-brand rounded-pill w-100 mt-3">
+                        Ordina e paga
                     </a>
                 </div>
             </div>
         </div>
 
 
-        <div class="col-lg-7">
+        <div class="col-lg-7 mt-1 ">
             <div class="card border-0 shadow-sm mt-4">
                 <div class="card-body p-4">
                     <h5 class="mb-3 fw-bold">Metodo di pagamento</h5>
@@ -330,9 +330,11 @@
 <script>
     checkNotLogged();
     const idRistorante = new URLSearchParams(window.location.search).get('id');
+    let ristorante;
     const utente = JSON.parse(localStorage.getItem('utente'));
-    let indirizzoLocale = getIndirizzoLocale();
+    let indirizzoLocale;
     const carrello = JSON.parse(sessionStorage.getItem(idRistorante)) || [];
+
     const modalNominativo = new bootstrap.Modal(document.getElementById('modalNominativo'));
     const modalIndirizzo = new bootstrap.Modal(document.getElementById('modalIndirizzo'));
     const formIndirizzo = document.getElementById('form-indirizzo');
@@ -343,7 +345,9 @@
     let indirizzo = utente.indirizzi.find(indirizzo => indirizzo.predefinito);
     const sezioneCarta = new bootstrap.Collapse(document.getElementById('sezione-carta'), {toggle: false});
     let cartaSelezionata;
+    const consegna = 2.99;
 
+    getRistorante();
     //Ripristina l'opzione di consegna a domicilio come predefinita
     document.getElementById('metodo-domicilio').checked = true;
 
@@ -375,10 +379,15 @@
         return `${indirizzo.via}, ${indirizzo.civico}, ${indirizzo.cap}, ${indirizzo.citta} (${indirizzo.provincia})`;
     }
 
-    async function getIndirizzoLocale() {
+    async function getRistorante() {
         const response = await fetch(`http://localhost:3005/ristorante/${idRistorante}?api_key=1234567`);
-        const ristorante = await response.json();
-        document.title = "Checkout - " + ristorante.ristoranteNome;
+        ristorante = await response.json();
+        document.getElementById('nome-ristorante').textContent = ristorante.nomeRistorante;
+        document.title = "Checkout - " + ristorante.nomeRistorante;
+        indirizzoLocale = getIndirizzoLocale();
+    }
+
+    function getIndirizzoLocale() {
         return ristorante.via + ', ' + ristorante.civico + ', ' + ristorante.cap + ', ' + ristorante.citta + ' (' + ristorante.provincia + ')';
     }
 
@@ -457,11 +466,13 @@
     });
 
     document.getElementById('metodo-ritiro').addEventListener('change', async () => {
-        document.getElementById('indirizzo').textContent = await indirizzoLocale;
+        document.getElementById('indirizzo').textContent = indirizzoLocale;
+        renderRiepilogo();
     });
 
     document.getElementById('metodo-domicilio').addEventListener('change', () => {
         document.getElementById('indirizzo').textContent = formattaIndirizzo(indirizzo);
+        renderRiepilogo();
     });
 
     // Gestione pagamento
@@ -540,8 +551,66 @@
         return metodo;
     }
 
+    function renderRiepilogo() {
+        const lista = document.getElementById('lista-riepilogo');
+        const modello = document.getElementById('modello-riepilogo');
+        lista.innerHTML = '';
+        let totale = 0;
+
+        carrello.forEach(item => {
+            const subtotale = item.prezzo * item.quantita;
+            totale += subtotale;
+
+            const clone = modello.cloneNode(true);
+            clone.removeAttribute('id');
+            clone.classList.remove('d-none');
+            clone.querySelector('.riepilogo-nome').textContent = item.nome;
+            const nota = clone.querySelector('.riepilogo-nota');
+            nota.textContent = item.nota || '';
+            nota.classList.toggle('d-none', !item.nota);
+            clone.querySelector('.riepilogo-quantita').textContent = `x${item.quantita}`;
+            clone.querySelector('.riepilogo-prezzo').textContent = `€ ${subtotale.toFixed(2)}`;
+            lista.appendChild(clone);
+        });
+        const domicilio = document.getElementById('metodo-domicilio').checked;
+        const costoConsegna = domicilio ? consegna : 0;
+
+        document.getElementById('riga-consegna').classList.toggle('d-none', !domicilio);
+        document.getElementById('costo-consegna').textContent = costoConsegna.toFixed(2);
+        document.getElementById('totale-riepilogo').textContent = (totale + costoConsegna).toFixed(2);
+
+    }
+
+    document.getElementById('ordina').addEventListener('click', async () => {
+        const metodoPagamento = getMetodoPagamento();
+        const metodoRitiro = document.querySelector('input[name="metodo"]:checked').value;
+
+        const ordine = {
+            ristoranteId: idRistorante,
+            metodoRitiro: metodoRitiro,
+            indirizzoConsegna: metodoRitiro === 'domicilio' ? indirizzo : null,
+            metodoPagamento: metodoPagamento,
+            prodotti: carrello
+        };
+
+        const response = await fetch(`http://localhost:3005/user/${utente._id}/ordine?api_key=1234567`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(ordine)
+        });
+
+        const risultato = await response.json();
+        if (risultato.error) {
+            alert(risultato.error);
+            return;
+        }
+
+        sessionStorage.removeItem(idRistorante);
+        window.location.href = `conferma_ordine.html?id=${risultato._id}`;
+    });
     renderListaCarte();
     caricaDati();
+    renderRiepilogo();
 
 </script>
 </body>

@@ -30,9 +30,14 @@ async function getUser(id) {
     );
 }
 
-async function getRistorante(id) {
+async function getRistoranteRistoratore(idRistoratore) {
 
-    const filter = {idRistoratore: id};
+    const filter = {idRistoratore: idRistoratore};
+    return await client.db('FastFood').collection('ristoranti').findOne(filter);
+}
+
+async function getRistorante(id) {
+    const filter = {_id: ObjectId.createFromHexString(id)};
     return await client.db('FastFood').collection('ristoranti').findOne(filter);
 }
 
@@ -400,7 +405,7 @@ app.put('/user/:id/ristorante/logo', async (req, res) => {
         return res.status(403).json({error: "Utente non autorizzato"});
     }
 
-    if (!await getRistorante(id)) {
+    if (!await getRistoranteRistoratore(id)) {
         return res.status(404).json({error: "Ristorante non trovato"});
     }
 
@@ -425,7 +430,7 @@ app.put('/user/:id/ristorante', async (req, res) => {
         return res.status(403).json({error: "Utente non autorizzato"});
     }
 
-    const ristorante = await getRistorante(id);
+    const ristorante = await getRistoranteRistoratore(id);
     if (!ristorante) {
         return res.status(404).json({error: "Ristorante non trovato"});
     }
@@ -492,7 +497,7 @@ app.delete('/user/:id/ristorante', async (req, res) => {
         return res.status(403).json({error: "Utente non autorizzato"});
     }
 
-    const ristorante = await getRistorante(id);
+    const ristorante = await getRistoranteRistoratore(id);
     if (!ristorante) {
         return res.status(404).json({error: "Ristorante non trovato"});
     }
@@ -638,7 +643,7 @@ app.post('/ristorante/:id/menu/catalogo', async (req, res) => {
         return res.status(403).json({error: "Utente non autorizzato"});
     }
 
-    const ristorante = await getRistorante(idUtente);
+    const ristorante = await getRistoranteRistoratore(idUtente);
     if (!ristorante) {
         return res.status(404).json({error: "Ristorante non trovato"});
     }
@@ -677,7 +682,7 @@ app.delete('/ristorante/:id/menu', async (req, res) => {
         return res.status(403).json({error: "Utente non autorizzato"});
     }
 
-    const ristorante = await getRistorante(idUtente);
+    const ristorante = await getRistoranteRistoratore(idUtente);
     if (!ristorante) {
         return res.status(404).json({error: "Ristorante non trovato"});
     }
@@ -715,7 +720,7 @@ app.put('/ristorante/:id_user/menu/:id_prodotto', async (req, res) => {
         return res.status(403).json({error: "Utente non autorizzato"});
     }
 
-    const ristorante = await getRistorante(idUtente);
+    const ristorante = await getRistoranteRistoratore(idUtente);
     if (!ristorante) {
         return res.status(404).json({error: "Ristorante non trovato"});
     }
@@ -761,7 +766,7 @@ app.post('/ristorante/:id_user/menu/personalizzato', async (req, res) => {
         return res.status(403).json({error: "Utente non autorizzato"});
     }
 
-    const ristorante = await getRistorante(idUtente);
+    const ristorante = await getRistoranteRistoratore(idUtente);
     if (!ristorante) {
         return res.status(404).json({error: "Ristorante non trovato"});
     }
@@ -1017,6 +1022,42 @@ app.get('/user/:id/carte-pagamento', async (req, res) => {
     const user = await coll.findOne({_id: new ObjectId(id)}, {projection: {carte: 1}});
     if (!user) return res.status(404).json({error: "Utente non trovato"});
     res.json(user.carte || []);
+});
+
+app.post('/user/:id/ordine', async (req, res) => {
+    // #swagger.description = "Crea un nuovo ordine per l'utente"
+    const {id} = req.params;
+    const {ristoranteId, metodoRitiro, indirizzoConsegna, metodoPagamento, prodotti} = req.body;
+    console.log(req.body);
+
+    if (!await getUser(id)) {
+        return res.status(404).json({error: "Utente non trovato"});
+    }
+    if (!ristoranteId || !metodoRitiro || !metodoPagamento || !prodotti || !Array.isArray(prodotti) || prodotti.length === 0) {
+        return res.status(400).json({error: "Dati mancanti"});
+    }
+    if (!await getRistorante(ristoranteId)) {
+        return res.status(404).json({error: "Ristorante non trovato"});
+    }
+
+    const coll = client.db('FastFood').collection('ordini');
+    const nuovoOrdine = {
+        ristoranteId,
+        idUtente: id,
+        metodoRitiro,
+        indirizzoConsegna: metodoRitiro === 'domicilio' ? indirizzoConsegna : null,
+        metodoPagamento,
+        prodotti,
+        stato: 'in preparazione',
+        data: new Date()
+    };
+
+    try {
+        const result = await coll.insertOne(nuovoOrdine);
+        res.json({...nuovoOrdine, _id: result.insertedId});
+    } catch (error) {
+        res.status(500).json({error: error.message});
+    }
 });
 
 client.connect()
