@@ -93,6 +93,15 @@ async function getIndirizzo(input, predefinito) {
     };
 }
 
+async function prossimoNumeroOrdine() {
+    const risultato = await client.db('FastFood').collection('contatori').findOneAndUpdate(
+        {_id: 'ordini'},
+        {$inc: {seq: 1}},
+        {upsert: true, returnDocument: 'after'}
+    );
+    return (risultato.value ?? risultato).seq;
+}
+
 function checkApiKeys(req, res, next) {
     console.log("Siamo nel middlware");
 
@@ -1039,7 +1048,7 @@ app.post('/user/:id/ordine', async (req, res) => {
     if (!await getRistorante(ristoranteId)) {
         return res.status(404).json({error: "Ristorante non trovato"});
     }
-
+    const numeroOrdine = await prossimoNumeroOrdine();
     const coll = client.db('FastFood').collection('ordini');
     const nuovoOrdine = {
         ristoranteId,
@@ -1049,6 +1058,7 @@ app.post('/user/:id/ordine', async (req, res) => {
         metodoPagamento,
         prodotti,
         stato: 'in preparazione',
+        numeroOrdine,
         data: new Date()
     };
 
@@ -1060,7 +1070,18 @@ app.post('/user/:id/ordine', async (req, res) => {
     }
 });
 
+app.get('/ordine/:id', async (req, res) => {
+    // #swagger.description = "Recupera un ordine per ID"
+    const {id} = req.params;
+
+    const coll = client.db('FastFood').collection('ordini');
+    const ordine = await coll.findOne({_id: new ObjectId(id)});
+    if (!ordine) return res.status(404).json({error: "Ordine non trovato"});
+    res.json(ordine);
+});
+
 client.connect()
+
     .then(() => {
         app.listen(port, () => console.log(`Server avviato sulla porta ${port}`));
     })

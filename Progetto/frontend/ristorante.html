@@ -153,12 +153,22 @@
 
 <script>
     const urlParams = new URLSearchParams(window.location.search);
-
+    let carrello = [];
     const idRistorante = urlParams.get('id');
     let piattoSelezionato = null;
     let quantitaModal = 1;
     let modalPiatto = new bootstrap.Modal(document.getElementById('modalPiatto'));
     const utente = JSON.parse(localStorage.getItem('utente'));
+
+    window.addEventListener('pageshow', (e) => {
+        if (e.persisted) {
+            document.getElementById('badge-carrello').textContent = '0';
+            document.getElementById('carrello-vuoto').style.display = 'block';
+            carrello = [];
+            sessionStorage.removeItem(idRistorante);
+            window.location.reload();
+        }
+    });
 
 
     async function fetchRistorante() {
@@ -172,6 +182,7 @@
             console.error('Errore:', error);
         }
     }
+
 
     function displayRistorante(ristorante) {
 
@@ -215,7 +226,6 @@
 
         const logo = document.getElementById('logo-ristorante');
         const iniziali = document.getElementById('iniziali-ristorante');
-        console.log(ristorante);
         if (ristorante.ristoranteLogo) {
             logo.src = ristorante.ristoranteLogo;
             logo.style.display = 'block';
@@ -226,7 +236,7 @@
     }
 
     function aggiungiAlCarrello(item, quantita = 1) {
-        const carrello = getCarrello();
+        carrello = getCarrello();
         const esistente = carrello.find(p => p.id === item.id && (p.nota || '') === item.nota);
         if (esistente) {
             esistente.quantita += quantita;
@@ -241,6 +251,7 @@
     }
 
     function getCarrello() {
+        console.log('Carrello:', sessionStorage.getItem(idRistorante));
         return JSON.parse(sessionStorage.getItem(idRistorante)) || [];
     }
 
@@ -354,6 +365,7 @@
             aggiornaQuantitaModal();
         }
     });
+
 </script>
 </body>
 </html>

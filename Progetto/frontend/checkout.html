@@ -606,7 +606,7 @@
         }
 
         sessionStorage.removeItem(idRistorante);
-        window.location.href = `conferma_ordine.html?id=${risultato._id}`;
+        window.location.replace(`conferma_ordine.html?id=${risultato._id}`);
     });
     renderListaCarte();
     caricaDati();
