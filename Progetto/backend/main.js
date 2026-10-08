@@ -1066,7 +1066,7 @@ app.post('/user/:id/ordine', async (req, res) => {
         indirizzoConsegna: metodoRitiro === 'domicilio' ? indirizzoConsegna : null,
         metodoPagamento,
         prodotti,
-        stato: 'in preparazione',
+        stato: 'ordinato',
         numeroOrdine,
         data: new Date()
     };

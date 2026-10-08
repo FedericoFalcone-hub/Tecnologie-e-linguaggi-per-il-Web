@@ -122,7 +122,9 @@
         document.getElementById('nome-ristorante').textContent = ordine.nomeRistorante || '';
         document.getElementById('nome-cliente').textContent = `${ordine.nomeCliente} ${ordine.cognomeCliente}`;
         document.getElementById('etichetta-metodo').textContent = domicilio ? 'Consegna a' : 'Ritiro presso';
-        document.getElementById('indirizzo-ordine').textContent = formattaIndirizzo(ordine.indirizzoConsegna);
+        document.getElementById('indirizzo-ordine').textContent = domicilio
+            ? formattaIndirizzo(ordine.indirizzoConsegna)
+            : ordine.nomeRistorante;
         document.getElementById('pagamento-ordine').textContent = descriviPagamento(ordine);
 
         const lista = document.getElementById('lista-prodotti');
