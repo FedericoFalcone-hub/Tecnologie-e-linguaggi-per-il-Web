@@ -115,7 +115,6 @@
 
     function renderOrdine(ordine) {
         const domicilio = ordine.metodoRitiro === 'domicilio';
-        console.log(ordine);
         document.title = `Ordine #${String(ordine.numeroOrdine).padStart(6, '0')}`;
         document.getElementById('numero-ordine').textContent = `#${String(ordine.numeroOrdine).padStart(6, '0')}`;
         document.getElementById('data-ordine').textContent =
