@@ -124,7 +124,7 @@
         document.getElementById('etichetta-metodo').textContent = domicilio ? 'Consegna a' : 'Ritiro presso';
         document.getElementById('indirizzo-ordine').textContent = domicilio
             ? formattaIndirizzo(ordine.indirizzoConsegna)
-            : ordine.nomeRistorante;
+            : ordine.nomeRistorante + " - " + formattaIndirizzo(ordine.indirizzoConsegna);
         document.getElementById('pagamento-ordine').textContent = descriviPagamento(ordine);
 
         const lista = document.getElementById('lista-prodotti');

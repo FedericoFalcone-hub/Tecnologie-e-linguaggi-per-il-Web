@@ -1052,7 +1052,8 @@ app.post('/user/:id/ordine', async (req, res) => {
     if (!nomeCliente || !cognomeCliente || !ristoranteId || !metodoRitiro || !metodoPagamento || !prodotti || !Array.isArray(prodotti) || prodotti.length === 0) {
         return res.status(400).json({error: "Dati mancanti"});
     }
-    if (!await getRistorante(ristoranteId)) {
+    const ristorante = await getRistorante(ristoranteId);
+    if (!ristorante) {
         return res.status(404).json({error: "Ristorante non trovato"});
     }
     const numeroOrdine = await prossimoNumeroOrdine();
@@ -1063,7 +1064,15 @@ app.post('/user/:id/ordine', async (req, res) => {
         metodoRitiro,
         nomeCliente: nomeCliente,
         cognomeCliente: cognomeCliente,
-        indirizzoConsegna: metodoRitiro === 'domicilio' ? indirizzoConsegna : null,
+        indirizzoConsegna: metodoRitiro === 'domicilio'
+            ? indirizzoConsegna
+            : {
+                via: ristorante.via,
+                civico: ristorante.civico,
+                cap: ristorante.cap,
+                citta: ristorante.citta,
+                provincia: ristorante.provincia
+            },
         metodoPagamento,
         prodotti,
         stato: 'ordinato',
