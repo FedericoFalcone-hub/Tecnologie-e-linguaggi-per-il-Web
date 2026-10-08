@@ -1103,6 +1103,31 @@ app.get('/ordine/:id', async (req, res) => {
     }
 });
 
+app.get('/user/:id/ristorante/ordini', async (req, res) => {
+    // #swagger.description = "Recupera gli ordini del ristorante del ristoratore
+    const {id} = req.params;
+    if (!await getUser(id)) {
+        return res.status(404).json({error: "Utente non trovato"});
+    }
+
+    const ristorante = await getRistoranteRistoratore(id);
+    if (!ristorante) {
+        return res.status(404).json({error: "Ristorante non trovato"});
+    }
+
+    try {
+        const ordini = await client.db('FastFood').collection('ordini')
+            .find({ristoranteId: {$in: [ristorante._id.toString(), ristorante._id]}})
+            .sort({dataOrdine: -1})
+            .toArray();
+
+        res.json(ordini);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({error: "Errore interno"});
+    }
+});
+
 client.connect()
 
     .then(() => {

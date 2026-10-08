@@ -118,3 +118,7 @@ async function caricaCategorieSuggerite() {
         console.error('Errore nel caricamento delle categorie:', error);
     }
 }
+
+function formattaIndirizzo(indirizzo) {
+    return `${indirizzo.via}, ${indirizzo.civico}, ${indirizzo.cap}, ${indirizzo.citta} (${indirizzo.provincia})`;
+}

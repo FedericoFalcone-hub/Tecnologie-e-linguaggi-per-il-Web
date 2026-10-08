@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestione ordini</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../style.css" rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap"
+          rel="stylesheet">
+</head>
+
+<body>
+
+<div id="navbar-container"></div>
+
+<div class="container py-5" style="max-width: 800px">
+    <a href="gestione_ristorante.html"
+       class="text-decoration-none text-muted d-inline-flex align-items-center gap-1 mb-3" style="font-size: 14px;">←
+        Torna alla gestione</a>
+
+    <h3 class="mb-4" style="font-weight: 700;">Gestione ordini</h3>
+
+    <div id="filtri" class="d-flex flex-wrap gap-2 mb-4">
+        <button type="button" class="btn btn-outline-dark rounded-pill active" data-stato="ordinato">
+            Da accettare <span class="badge bg-danger ms-1" data-conteggio="ordinato">0</span>
+        </button>
+        <button type="button" class="btn btn-outline-dark rounded-pill" data-stato="preparazione">
+            In preparazione <span class="badge bg-warning ms-1" data-conteggio="preparazione">0</span>
+        </button>
+        <button type="button" class="btn btn-outline-dark rounded-pill" data-stato="in_consegna">
+            In consegna <span class="badge bg-info ms-1" data-conteggio="in_consegna">0</span>
+        </button>
+        <button type="button" class="btn btn-outline-dark rounded-pill" data-stato="consegnato">
+            Consegnati <span class="badge bg-success ms-1" data-conteggio="consegnato">0</span>
+        </button>
+        <button type="button" class="btn btn-outline-dark rounded-pill" data-stato="annullato">
+            Annullati <span class="badge bg-secondary ms-1" data-conteggio="annullato">0</span>
+        </button>
+    </div>
+
+    <!-- Template ordine -->
+    <div id="modello-ordine" class="card border-0 shadow-sm mb-3 d-none">
+        <div class="card-body p-4">
+            <div class="d-flex justify-content-between align-items-start mb-3">
+                <div>
+                    <h5 class="ordine-numero fw-bold mb-0"></h5>
+                    <small class="ordine-data text-muted"></small>
+                </div>
+                <span class="ordine-stato badge"></span>
+            </div>
+
+            <div class="mb-3">
+                <div class="fw-semibold ordine-cliente"></div>
+                <small class="text-muted d-block"><span class="ordine-tipo fw-semibold"></span>· <span
+                        class="ordine-indirizzo"></span></small>
+                <small class="ordine-pagamento text-muted d-block"></small>
+            </div>
+
+            <div class="ordine-prodotti mb-3"></div>
+
+            <div class="ordine-riga-consegna d-flex justify-content-between mb-2">
+                <span class="text-muted">Consegna</span>
+                <span class="fw-semibold">€ <span class="ordine-costo-consegna"></span></span>
+            </div>
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <span class="fw-bold">Totale</span>
+                <span class="fw-bold text-brand">€ <span class="ordine-totale"></span></span>
+            </div>
+
+            <div class="d-flex gap-2">
+                <button type="button" class="btn-accetta btn btn-brand rounded-pill flex-fill">Accetta</button>
+                <button type="button" class="btn-rifiuta btn btn-outline-danger rounded-pill flex-fill">Rifiuta</button>
+                <button type="button" class="btn-pronto btn btn-brand rounded-pill w-100">Segna come pronto</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Template prodotto -->
+    <div id="modello-prodotto-ordine" class="d-grid d-none align-items-start mb-2 pb-2 border-bottom"
+         style="grid-template-columns: 1fr 40px 75px; column-gap: 8px">
+        <div>
+            <span class="prodotto-nome fw-semibold"></span>
+            <small class="prodotto-nota text-muted d-block"></small>
+        </div>
+        <span class="prodotto-quantita text-muted text-center"></span>
+        <span class="prodotto-prezzo fw-bold text-end"></span>
+    </div>
+
+    <div id="lista-ordini"></div>
+    <p id="nessun-ordine" class="text-muted text-center d-none">Nessun ordine in questo stato.</p>
+</div>
+
+<!-- Toast -->
+<div class="toast-container position-fixed top-0 start-50 translate-middle-x end-0 p-3" style="z-index:1100;">
+    <div id="toastSuccesso" class="toast align-items-center border-0" role="alert" aria-live="assertive"
+         aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body">
+                <span id="toastMessaggio"></span>
+            </div>
+            <button type="button" class="btn-clone btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+        </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+
+<script src="/backend/lib.js"></script>
+
+<script>
+    checkLoggedRistoratore();
+
+    const utente = JSON.parse(localStorage.getItem('utente'));
+    const STATI = {
+        ordinato: {etichetta: 'Da accettare', classe: 'bg-warning text-dark'},
+        preparazione: {etichetta: 'In preparazione', classe: 'bg-primary'},
+        in_consegna: {etichetta: 'In consegna', classe: 'bg-info text-dark'},
+        consegnato: {etichetta: 'Consegnato', classe: 'bg-success'},
+        annullato: {etichetta: 'Annullato', classe: 'bg-secondary'}
+    };
+
+    let ordini = [];
+    let filtro = 'ordinato';
+
+    function creaCardOrdine(ordine) {
+        const clone = document.getElementById('modello-ordine').cloneNode(true);
+        clone.removeAttribute('id');
+        clone.classList.remove('d-none');
+
+        clone.querySelector('.ordine-numero').textContent = `#${String(ordine.numeroOrdine).padStart(6, '0')}`;
+        clone.querySelector('.ordine-data').textContent = new Date(ordine.data).toLocaleString('it-IT', {
+            dateStyle: 'short',
+            timeStyle: 'short'
+        });
+
+        const badge = clone.querySelector('.ordine-stato');
+        badge.textContent = STATI[ordine.stato].etichetta;
+        badge.classList.add(...STATI[ordine.stato].classe.split(' '));
+
+        const domicilio = ordine.metodoRitiro === 'domicilio';
+        clone.querySelector('.ordine-cliente').textContent = `${ordine.nome} ${ordine.cognome}`;
+        clone.querySelector('.ordine-tipo').textContent = domicilio ? 'Consegna a domicilio' : 'Ritiro al locale';
+        clone.querySelector('.ordine-indirizzo').textContent = domicilio && ordine.indirizzoConsegna ? formattaIndirizzo(ordine.indirizzoConsegna) : 'Il cliente ritira in sede';
+
+        const p = ordine.metodoPagamento;
+        if (p && typeof p === 'object') clone.querySelector('.ordine-pagamento').textContent = 'Pagamento con carta';
+        if (p === 'paypal') clone.querySelector('.ordine-pagamento').textContent = 'Pagamento con PayPal';
+        if (p === 'contanti') clone.querySelector('.ordine-pagamento').textContent = 'Pagamento in contanti';
+
+        const contenitore = clone.querySelector('.ordine-prodotti');
+        const modelloProdotto = document.getElementById('modello-prodotto-ordine');
+        ordine.prodotti.forEach(p => {
+            const riga = modelloProdotto.cloneNode(true);
+            riga.removeAttribute('id');
+            riga.classList.remove('d-none');
+            riga.querySelector('.prodotto-nome').textContent = p.nome;
+            const nota = riga.querySelector('.prodotto-nota');
+            nota.textContent = p.nota;
+            nota.classList.toggle('d-none', !p.nota);
+            riga.querySelector('.prodotto-quantita').textContent = `x${p.quantita}`;
+            riga.querySelector('.prodotto-prezzo').textContent = `€ ${(p.prezzo * p.quantita).toFixed(2)}`;
+            contenitore.appendChild(riga);
+        })
+
+        clone.querySelector('.ordine-riga-consegna').classList.toggle('d-none', ordine.metodoRitiro !== 'domicilio');
+        clone.querySelector('.ordine-costo-consegna').textContent = 2.99;
+        let subtotale = 0;
+        ordine.prodotti.forEach(p => {
+            subtotale = subtotale + p.quantita * p.prezzo;
+        });
+        if (ordine.metodoRitiro === 'domicilio') subtotale += 2.99;
+
+        clone.querySelector('.ordine-totale').textContent = subtotale.toFixed(2);
+
+        const btnAccetta = clone.querySelector('.btn-accetta');
+        const btnRifiuta = clone.querySelector('.btn-rifiuta');
+        const btnPronto = clone.querySelector('.btn-pronto');
+
+        btnAccetta.classList.toggle('d-none', ordine.stato !== 'ordinato');
+        btnRifiuta.classList.toggle('d-none', ordine.stato !== 'ordinato');
+        btnPronto.classList.toggle('d-none', ordine.stato !== 'preparazione');
+        clone.querySelector('.d-flex.gap-2').classList.toggle('d-none', !['ordinato', 'preparazione'].includes(ordine.stato));
+
+        //implementare funzioni bottoni
+        return clone;
+    }
+
+    function renderOrdini() {
+        //aggiorna contatore filtro
+        Object.keys(STATI).forEach(s => {
+            document.querySelector(`[data-conteggio="${s}"]`).textContent =
+                String(ordini.filter(o => o.stato === s).length);
+        });
+
+        const visibili = ordini.filter(o => o.stato === filtro);
+        visibili.sort((a, b) => filtro === 'ordinato'
+            ? new Date(a.dataOrdine) - new Date(b.dataOrdine)
+            : new Date(b.dataOrdine) - new Date(a.dataOrdine));
+
+        const lista = document.getElementById('lista-ordini');
+        lista.innerHTML = '';
+        document.getElementById('nessun-ordine').classList.toggle('d-none', visibili.length > 0);
+        visibili.forEach(o => lista.appendChild(creaCardOrdine(o)));
+    }
+
+    async function caricaOrdini() {
+        try {
+            const response = await fetch(`http://localhost:3005/user/${utente._id}/ristorante/ordini?api_key=1234567`);
+            const risultato = await response.json();
+            if (risultato.error) {
+                mostraToast(risultato.error);
+                return;
+            }
+            ordini = risultato;
+            renderOrdini();
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    caricaOrdini();
+</script>
+</body>
+
+</html>
