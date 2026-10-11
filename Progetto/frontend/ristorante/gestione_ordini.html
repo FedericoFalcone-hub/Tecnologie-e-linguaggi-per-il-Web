@@ -49,7 +49,14 @@
                     <h5 class="ordine-numero fw-bold mb-0"></h5>
                     <small class="ordine-data text-muted"></small>
                 </div>
-                <span class="ordine-stato badge"></span>
+                <div class="d-flex flex-column align-items-end gap-1">
+                    <span class="ordine-stato badge"></span>
+                    <div class="ordine-cronometro-box d-none d-flex align-items-center gap-1 text-muted"
+                         style="font-size: 14px;">
+                        <img src="../../backend/images/timer.png" alt="Clock" width="16" height="16">
+                        <span class="ordine-cronometro fw-bold text-dark">00:00</span>
+                    </div>
+                </div>
             </div>
 
             <div class="mb-3">
@@ -59,9 +66,9 @@
                 <small class="ordine-pagamento text-muted d-block"></small>
             </div>
 
-            <div class="ordine-prodotti mb-3"></div>
+            <div class="ordine-prodotti"></div>
 
-            <div class="ordine-riga-consegna d-flex justify-content-between mb-2">
+            <div class="ordine-riga-consegna d-flex justify-content-between mb-2 pb-2 border-bottom">
                 <span class="text-muted">Consegna</span>
                 <span class="fw-semibold">€ <span class="ordine-costo-consegna"></span></span>
             </div>
@@ -101,7 +108,7 @@
             <div class="toast-body">
                 <span id="toastMessaggio"></span>
             </div>
-            <button type="button" class="btn-clone btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
         </div>
     </div>
 </div>
@@ -111,11 +118,13 @@
 
 <script>
     checkLoggedRistoratore();
+    setInterval(aggiornaCronometro, 1000);
 
+    const dataAccettazione = (o) => o.dataPreparazione;
     const utente = JSON.parse(localStorage.getItem('utente'));
     const STATI = {
         ordinato: {etichetta: 'Da accettare', classe: 'bg-warning text-dark'},
-        preparazione: {etichetta: 'In preparazione', classe: 'bg-primary'},
+        preparazione: {etichetta: 'In preparazione', classe: 'bg-warning text-dark'},
         in_consegna: {etichetta: 'In consegna', classe: 'bg-info text-dark'},
         consegnato: {etichetta: 'Consegnato', classe: 'bg-success'},
         annullato: {etichetta: 'Annullato', classe: 'bg-secondary'}
@@ -140,7 +149,8 @@
         badge.classList.add(...STATI[ordine.stato].classe.split(' '));
 
         const domicilio = ordine.metodoRitiro === 'domicilio';
-        clone.querySelector('.ordine-cliente').textContent = `${ordine.nome} ${ordine.cognome}`;
+        console.log(ordine);
+        clone.querySelector('.ordine-cliente').textContent = `${ordine.nomeCliente} ${ordine.cognomeCliente}`;
         clone.querySelector('.ordine-tipo').textContent = domicilio ? 'Consegna a domicilio' : 'Ritiro al locale';
         clone.querySelector('.ordine-indirizzo').textContent = domicilio && ordine.indirizzoConsegna ? formattaIndirizzo(ordine.indirizzoConsegna) : 'Il cliente ritira in sede';
 
@@ -170,20 +180,40 @@
         ordine.prodotti.forEach(p => {
             subtotale = subtotale + p.quantita * p.prezzo;
         });
+
         if (ordine.metodoRitiro === 'domicilio') subtotale += 2.99;
 
         clone.querySelector('.ordine-totale').textContent = subtotale.toFixed(2);
+
+        const boxCronometro = clone.querySelector('.ordine-cronometro-box');
+        const inPreparazione = ordine.stato === 'preparazione';
+        boxCronometro.classList.toggle('d-none', !inPreparazione);
+
+        if (inPreparazione) {
+            clone.querySelector('.ordine-cronometro').dataset.inizio = String(new Date(dataAccettazione(ordine)).getTime());
+        }
 
         const btnAccetta = clone.querySelector('.btn-accetta');
         const btnRifiuta = clone.querySelector('.btn-rifiuta');
         const btnPronto = clone.querySelector('.btn-pronto');
 
+
+        const annullabile = ['ordinato', 'preparazione'].includes(ordine.stato);
         btnAccetta.classList.toggle('d-none', ordine.stato !== 'ordinato');
-        btnRifiuta.classList.toggle('d-none', ordine.stato !== 'ordinato');
-        btnPronto.classList.toggle('d-none', ordine.stato !== 'preparazione');
+        btnRifiuta.classList.toggle('d-none', !annullabile);
+        btnPronto.classList.toggle('d-none', ordine.stato !== 'reparazione');
         clone.querySelector('.d-flex.gap-2').classList.toggle('d-none', !['ordinato', 'preparazione'].includes(ordine.stato));
 
-        //implementare funzioni bottoni
+        const bottoni = [btnAccetta, btnRifiuta, btnPronto];
+        const esegui = (annulla) => {
+            bottoni.forEach(b => b.disabled = true);
+            cambiaStato(ordine, annulla);
+        }
+        btnAccetta.addEventListener('click', () => esegui(false));
+        btnRifiuta.addEventListener('click', () => {
+            if (confirm(`Rifiutare l'ordine #${String(ordine.numeroOrdine).padStart(6, '0')}?`)) esegui(true);
+        })
+        btnPronto.addEventListener('click', () => esegui('pronto'));
         return clone;
     }
 
@@ -195,14 +225,19 @@
         });
 
         const visibili = ordini.filter(o => o.stato === filtro);
-        visibili.sort((a, b) => filtro === 'ordinato'
-            ? new Date(a.dataOrdine) - new Date(b.dataOrdine)
-            : new Date(b.dataOrdine) - new Date(a.dataOrdine));
+        const data = (o, campo) => new Date(o[campo] || o.data);
+
+        visibili.sort((a, b) => {
+            if (filtro === 'ordinato') return data(a, 'data') - data(b, 'data');
+            if (filtro === 'preparazione') return data(a, 'dataPreparazione') - data(b, 'dataPreparazione');
+            return data(b, 'data') - data(a, 'data');
+        });
 
         const lista = document.getElementById('lista-ordini');
         lista.innerHTML = '';
         document.getElementById('nessun-ordine').classList.toggle('d-none', visibili.length > 0);
         visibili.forEach(o => lista.appendChild(creaCardOrdine(o)));
+        aggiornaCronometro();
     }
 
     async function caricaOrdini() {
@@ -220,6 +255,78 @@
         }
     }
 
+    async function cambiaStato(ordine, annulla = false) {
+        if (!annulla) {
+            try {
+                const response = await fetch(`http://localhost:3005/user/${utente._id}/ristorante/ordini/${ordine.numeroOrdine}/stato/aggiorna?api_key=1234567`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                });
+                const risultato = await response.json();
+                if (risultato.error) {
+                    mostraToast(risultato.error);
+                    await caricaOrdini();
+                    return;
+                }
+                Object.assign(ordine, risultato);
+                renderOrdini();
+                mostraToast(`Ordine #${String(ordine.numeroOrdine).padStart(6, '0')} aggiornato a "${STATI[ordine.stato].etichetta}"`);
+
+            } catch (error) {
+                mostraToast("Errore di connessione");
+                await caricaOrdini();
+            }
+        } else {
+            try {
+                const response = await fetch(`http://localhost:3005/user/${utente._id}/ristorante/ordini/${ordine.numeroOrdine}/stato/annulla?api_key=1234567`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                });
+                const risultato = await response.json();
+                if (risultato.error) {
+                    mostraToast(risultato.error);
+                    await caricaOrdini();
+                    return;
+                }
+                ordine.stato = risultato.stato;
+                renderOrdini();
+                mostraToast(`Ordine #${String(ordine.numeroOrdine).padStart(6, '0')} aggiornato a "${STATI[ordine.stato].etichetta}"`);
+
+            } catch (error) {
+                mostraToast("Errore di connessione");
+                await caricaOrdini();
+            }
+        }
+    }
+
+
+    function formattaDurata(ms) {
+        const totale = Math.max(0, Math.floor(ms / 1000));
+        const ore = Math.floor(totale / 3600);
+        const minuti = String(Math.floor((totale % 3600) / 60)).padStart(2, '0');
+        const secondi = String(totale % 60).padStart(2, '0');
+        return ore > 0 ? `${ore}:${minuti}:${secondi}` : `${minuti}:${secondi}`;
+    }
+
+    function aggiornaCronometro() {
+        document.querySelectorAll('.ordine-cronometro[data-inizio]').forEach(el => {
+            el.textContent = formattaDurata(Date.now() - Number(el.dataset.inizio));
+        });
+    }
+
+
+    document.querySelectorAll('#filtri button').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('#filtri button').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            filtro = btn.dataset.stato;
+            renderOrdini();
+        });
+    });
     caricaOrdini();
 </script>
 </body>

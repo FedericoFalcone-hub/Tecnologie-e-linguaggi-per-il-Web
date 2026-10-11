@@ -1137,6 +1137,97 @@ app.get('/user/:id/ristorante/ordini', async (req, res) => {
     }
 });
 
+app.put('/user/:id/ristorante/ordini/:numeroOrdine/stato/aggiorna', async (req, res) => {
+    try {
+        const numeroOrdine = req.params.numeroOrdine;
+        const id = req.params.id;
+
+        const utente = await getUser(id);
+        if (!utente) return res.status(404).json({error: "Utente non trovato"});
+
+        const ristorante = await getRistoranteRistoratore(id);
+        if (!ristorante) return res.status(404).json({error: "Ristorante non trovato"});
+
+        const ordini = client.db('FastFood').collection('ordini');
+        const filtro = {
+            ristoranteId: {$in: [ristorante._id.toString(), ristorante._id]},
+            numeroOrdine: parseInt(numeroOrdine)
+        };
+
+        const ordine = await ordini.findOne(filtro);
+
+        if (!ordine) return res.status(404).json({error: "Ordine non trovato"});
+
+        if (ordine.stato === 'consegnato') {
+            return res.status(400).json({error: "Ordine già consegnato"});
+        }
+
+        if (ordine.stato === 'annullato') {
+            return res.status(400).json({error: "Ordine annullato"});
+        }
+
+        let stato;
+
+        if (ordine.stato === 'ordinato') {
+            stato = 'preparazione';
+        } else if (ordine.stato === 'preparazione' && ordine.metodoRitiro === 'domicilio') {
+            stato = 'consegna';
+        } else if (ordine.stato === 'consegna' || (ordine.stato === 'preparazione' && ordine.metodoRitiro === 'ritiro')) {
+            stato = 'consegnato';
+        }
+
+        const set = {stato};
+        if (stato === 'preparazione') set.dataPreparazione = new Date();
+
+        const aggiornamento = await ordini.updateOne({...filtro, stato: ordine.stato}, {$set: set});
+        res.json({...ordine, ...set});
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({error: "Errore interno del server"});
+    }
+});
+
+app.put('/user/:id/ristorante/ordini/:numeroOrdine/stato/annulla', async (req, res) => {
+    try {
+        const numeroOrdine = req.params.numeroOrdine;
+        const id = req.params.id;
+
+        const utente = await getUser(id);
+        if (!utente) return res.status(404).json({error: "Utente non trovato"});
+
+        const ristorante = await getRistoranteRistoratore(id);
+        if (!ristorante) return res.status(404).json({error: "Ristorante non trovato"});
+
+        const ordini = client.db('FastFood').collection('ordini');
+        const filtro = {
+            ristoranteId: {$in: [ristorante._id.toString(), ristorante._id]},
+            numeroOrdine: parseInt(numeroOrdine)
+        };
+
+        const ordine = await ordini.findOne(filtro);
+
+        if (!ordine) return res.status(404).json({error: "Ordine non trovato"});
+
+        if (ordine.stato === 'consegnato') {
+            return res.status(400).json({error: "Ordine già consegnato"});
+        }
+
+        if (ordine.stato === 'annullato') {
+            return res.status(400).json({error: "Ordine già annullato"});
+        }
+
+        if (ordine.stato === 'consegna') {
+            return res.status(400).json({error: "Ordine in consegna, non può essere annullato"});
+        }
+
+        const set = {stato: 'annullato'};
+        const aggiornamento = await ordini.updateOne({...filtro, stato: ordine.stato}, {$set: set});
+        res.json({...ordine, ...set});
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({error: "Errore interno del server"});
+    }
+});
 client.connect()
 
     .then(() => {
