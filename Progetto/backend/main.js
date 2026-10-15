@@ -102,6 +102,28 @@ async function prossimoNumeroOrdine() {
     return (risultato.value ?? risultato).seq;
 }
 
+async function codaOrdine(ordine) {
+    const TEMPO_PREPARAZIONE = 10;
+    if (ordine.metodoRitiro !== 'ritiro') return null;
+    if (!['ordinato', 'preparazione'].includes(ordine.stato)) return null;
+
+    const filtro = {
+        ristoranteId: ordine.ristoranteId,
+        stato: 'preparazione'
+    }
+    if (ordine.stato === 'preparazione') {
+        filtro.dataPreparazione = {$lt: ordine.dataPreparazione};
+    }
+
+    const ordiniAvanti = await client.db('FastFood').collection('ordini').countDocuments(filtro);
+
+    return {
+        ordiniAvanti,
+        tempoStimato: (ordiniAvanti + 1) * TEMPO_PREPARAZIONE
+    };
+
+}
+
 function checkApiKeys(req, res, next) {
     console.log("Siamo nel middlware");
 
@@ -1105,7 +1127,11 @@ app.get('/ordine/:id', async (req, res) => {
             {projection: {nomeRistorante: 1}}
         );
 
-        res.json({...ordine, nomeRistorante: ristorante?.nomeRistorante || null});
+        res.json({
+            ...ordine,
+            nomeRistorante: ristorante?.nomeRistorante || null,
+            coda: await codaOrdine(ordine)
+        });
     } catch (error) {
         console.error(error);
         res.status(500).json({error: "Errore interno del server"});
@@ -1179,7 +1205,7 @@ app.put('/user/:id/ristorante/ordini/:numeroOrdine/stato/aggiorna', async (req, 
         const set = {stato};
         if (stato === 'preparazione') set.dataPreparazione = new Date();
 
-        const aggiornamento = await ordini.updateOne({...filtro, stato: ordine.stato}, {$set: set});
+        await ordini.updateOne({...filtro, stato: ordine.stato}, {$set: set});
         res.json({...ordine, ...set});
     } catch (error) {
         console.error(error);
@@ -1221,7 +1247,7 @@ app.put('/user/:id/ristorante/ordini/:numeroOrdine/stato/annulla', async (req, r
         }
 
         const set = {stato: 'annullato'};
-        const aggiornamento = await ordini.updateOne({...filtro, stato: ordine.stato}, {$set: set});
+        await ordini.updateOne({...filtro, stato: ordine.stato}, {$set: set});
         res.json({...ordine, ...set});
     } catch (error) {
         console.error(error);

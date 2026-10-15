@@ -28,6 +28,10 @@
             <small id="data-ordine" class="text-muted"></small>
         </div>
 
+        <div id="box-attesa" class="alert alert-info d-none mb-4">
+            <div id="attesa-titolo" class="fw-semibold"></div>
+        </div>
+
         <div class="card border-0 shadow-sm mb-4">
             <div class="card-body p-4">
                 <h5 class="fw-bold mb-3">Dettagli</h5>
@@ -155,7 +159,20 @@
         document.getElementById('costo-consegna').textContent = costoConsegna.toFixed(2);
         document.getElementById('totale-ordine').textContent = totale.toFixed(2);
 
+        renderAttesa(ordine);
         document.getElementById('contenuto').classList.remove('d-none');
+    }
+
+    function renderAttesa(ordine) {
+        const box = document.getElementById('box-attesa');
+        if (!ordine.coda) {
+            box.classList.add('d-none');
+            return;
+        }
+
+        const tempoStimato = ordine.coda.tempoStimato;
+        document.getElementById('attesa-titolo').textContent = `Tempo di attesa stimato: circa ${tempoStimato} minuti`;
+        box.classList.remove('d-none');
     }
 
     async function caricaOrdine() {

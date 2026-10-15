@@ -1133,12 +1133,12 @@
         }
       }
     },
-    "/ordine/{id}": {
+    "/ordine/{numeroOrdine}": {
       "get": {
-        "description": "Recupera un ordine per ID",
+        "description": "Recupera un ordine per numeroOrdine",
         "parameters": [
           {
-            "name": "id",
+            "name": "numeroOrdine",
             "in": "path",
             "required": true,
             "schema": {
@@ -1149,9 +1149,6 @@
         "responses": {
           "200": {
             "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request"
           },
           "404": {
             "description": "Not Found"

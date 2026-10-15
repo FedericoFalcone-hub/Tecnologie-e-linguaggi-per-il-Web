@@ -30,8 +30,8 @@
         <button type="button" class="btn btn-outline-dark rounded-pill" data-stato="preparazione">
             In preparazione <span class="badge bg-warning ms-1" data-conteggio="preparazione">0</span>
         </button>
-        <button type="button" class="btn btn-outline-dark rounded-pill" data-stato="in_consegna">
-            In consegna <span class="badge bg-info ms-1" data-conteggio="in_consegna">0</span>
+        <button type="button" class="btn btn-outline-dark rounded-pill" data-stato="consegna">
+            In consegna <span class="badge bg-info ms-1" data-conteggio="consegna">0</span>
         </button>
         <button type="button" class="btn btn-outline-dark rounded-pill" data-stato="consegnato">
             Consegnati <span class="badge bg-success ms-1" data-conteggio="consegnato">0</span>
@@ -53,7 +53,7 @@
                     <span class="ordine-stato badge"></span>
                     <div class="ordine-cronometro-box d-none d-flex align-items-center gap-1 text-muted"
                          style="font-size: 14px;">
-                        <img src="../../backend/images/timer.png" alt="Clock" width="16" height="16">
+                        <img src="../../backend/images/timer.png" alt="Clock" style="width: 16px; height: 16px;">
                         <span class="ordine-cronometro fw-bold text-dark">00:00</span>
                     </div>
                 </div>
@@ -77,10 +77,10 @@
                 <span class="fw-bold text-brand">€ <span class="ordine-totale"></span></span>
             </div>
 
-            <div class="d-flex gap-2">
-                <button type="button" class="btn-accetta btn btn-brand rounded-pill flex-fill">Accetta</button>
-                <button type="button" class="btn-rifiuta btn btn-outline-danger rounded-pill flex-fill">Rifiuta</button>
-                <button type="button" class="btn-pronto btn btn-brand rounded-pill w-100">Segna come pronto</button>
+            <div class="ordine-azioni" style="display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 8px;">
+                <button type="button" class="btn-accetta btn btn-brand rounded-pill">Accetta</button>
+                <button type="button" class="btn-pronto btn btn-brand rounded-pill">Segna come pronto</button>
+                <button type="button" class="btn-rifiuta btn btn-outline-danger rounded-pill">Rifiuta</button>
             </div>
         </div>
     </div>
@@ -125,7 +125,7 @@
     const STATI = {
         ordinato: {etichetta: 'Da accettare', classe: 'bg-warning text-dark'},
         preparazione: {etichetta: 'In preparazione', classe: 'bg-warning text-dark'},
-        in_consegna: {etichetta: 'In consegna', classe: 'bg-info text-dark'},
+        consegna: {etichetta: 'In consegna', classe: 'bg-info text-dark'},
         consegnato: {etichetta: 'Consegnato', classe: 'bg-success'},
         annullato: {etichetta: 'Annullato', classe: 'bg-secondary'}
     };
@@ -149,7 +149,6 @@
         badge.classList.add(...STATI[ordine.stato].classe.split(' '));
 
         const domicilio = ordine.metodoRitiro === 'domicilio';
-        console.log(ordine);
         clone.querySelector('.ordine-cliente').textContent = `${ordine.nomeCliente} ${ordine.cognomeCliente}`;
         clone.querySelector('.ordine-tipo').textContent = domicilio ? 'Consegna a domicilio' : 'Ritiro al locale';
         clone.querySelector('.ordine-indirizzo').textContent = domicilio && ordine.indirizzoConsegna ? formattaIndirizzo(ordine.indirizzoConsegna) : 'Il cliente ritira in sede';
@@ -195,15 +194,15 @@
 
         const btnAccetta = clone.querySelector('.btn-accetta');
         const btnRifiuta = clone.querySelector('.btn-rifiuta');
+        btnRifiuta.textContent = ordine.stato === 'preparazione' ? 'Annulla' : 'Rifiuta';
         const btnPronto = clone.querySelector('.btn-pronto');
 
 
         const annullabile = ['ordinato', 'preparazione'].includes(ordine.stato);
         btnAccetta.classList.toggle('d-none', ordine.stato !== 'ordinato');
         btnRifiuta.classList.toggle('d-none', !annullabile);
-        btnPronto.classList.toggle('d-none', ordine.stato !== 'reparazione');
-        clone.querySelector('.d-flex.gap-2').classList.toggle('d-none', !['ordinato', 'preparazione'].includes(ordine.stato));
-
+        btnPronto.classList.toggle('d-none', ordine.stato !== 'preparazione');
+        clone.querySelector('.ordine-azioni').classList.toggle('d-none', !['ordinato', 'preparazione'].includes(ordine.stato));
         const bottoni = [btnAccetta, btnRifiuta, btnPronto];
         const esegui = (annulla) => {
             bottoni.forEach(b => b.disabled = true);
@@ -211,9 +210,13 @@
         }
         btnAccetta.addEventListener('click', () => esegui(false));
         btnRifiuta.addEventListener('click', () => {
+            if (ordine.stato === 'preparazione') {
+                if (confirm(`Annullare l'ordine #${String(ordine.numeroOrdine).padStart(6, '0')}?`)) esegui(true);
+                return;
+            }
             if (confirm(`Rifiutare l'ordine #${String(ordine.numeroOrdine).padStart(6, '0')}?`)) esegui(true);
         })
-        btnPronto.addEventListener('click', () => esegui('pronto'));
+        btnPronto.addEventListener('click', () => esegui(false));
         return clone;
     }
 
