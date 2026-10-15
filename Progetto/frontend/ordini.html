@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ordini</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap"
+          rel="stylesheet">
+</head>
+<body>
+
+<div id="navbar-container"></div>
+
+<div class="container py-5" style="max-width: 800px;">
+    <h3 class="mb-4" style="font-weight: 700;">I miei ordini</h3>
+
+    <div id="filtri" class="d-flex flex-wrap gap-2 mb-4">
+        <button type="button" class="btn btn-outline-dark rounded-pill active" data-gruppo="corso">
+            In corso <span class="badge bg-danger ms-1" id="conteggio-corso">0</span>
+        </button>
+        <button type="button" class="btn btn-outline-dark rounded-pill" data-gruppo="storico">
+            Storico <span class="badge bg-secondary ms-1" id="conteggio-storico">0</span>
+        </button>
+    </div>
+
+    <!-- Template ordine -->
+    <a id="modello-ordine" href="#"
+       class="card border-0 shadow-sm mb-3 d-none text-decoration-none text-dark">
+        <div class="card-body p-4">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+                <div>
+                    <h5 class="ordine-numero fw-bold mb-0"></h5>
+                    <small class="ordine-data text-muted"></small>
+                </div>
+                <span class="ordine-stato badge"></span>
+            </div>
+
+            <div class="fw-semibold ordine-ristorante"></div>
+            <small class="ordine-tipo text-muted d-block mb-2"></small>
+            <small class="ordine-prodotti text-muted d-block mb-3"></small>
+
+            <div class="d-flex justify-content-between align-items-center pt-3 border-top">
+                <span class="text-muted">Totale</span>
+                <span class="fw-bold text-brand">€ <span class="ordine-totale"></span></span>
+            </div>
+            <button type="button" class="btn-ritira btn btn-brand rounded-pill w-100 mt-3 d-none"></button>
+        </div>
+    </a>
+
+    <div id="lista-ordini"></div>
+    <p id="nessun-ordine" class="text-muted text-center d-none">Nessun ordine da mostrare.</p>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+
+<script src="../backend/lib.js"></script>
+
+<script>
+    const utente = JSON.parse(localStorage.getItem('utente'));
+
+    const STATI = {
+        ordinato: {etichetta: 'In attesa di conferma', classe: 'bg-warning text-dark'},
+        preparazione: {etichetta: 'In preparazione', classe: 'bg-primary'},
+        consegna: {etichetta: 'In consegna', classe: 'bg-info text-dark'},
+        consegnato: {etichetta: 'Consegnato', classe: 'bg-success'},
+        annullato: {etichetta: 'Annullato', classe: 'bg-secondary'}
+    };
+    const IN_CORSO = ['ordinato', 'preparazione', 'consegna'];
+
+    let ordini = [];
+    let gruppo = 'corso';
+
+    async function ritiraOrdine(ordine) {
+        try {
+            const response = await fetch(`http://localhost:3005/user/${utente._id}/ordini/${ordine.numeroOrdine}/ritira?api_key=1234567`, {
+                method: 'PUT'
+            });
+            const risultato = await response.json();
+            if (risultato.error) {
+                alert(risultato.error);
+                await caricaOrdini();
+                return;
+            }
+            ordine.stato = risultato.stato;
+            renderOrdini();
+        } catch (error) {
+            console.error(error);
+            await caricaOrdini();
+        }
+    }
+
+    function etichettaStato(ordine) {
+        if (ordine.stato === 'consegna' && ordine.metodoRitiro === 'ritiro') return 'Pronto per il ritiro';
+        if (ordine.stato === 'consegnato' && ordine.metodoRitiro === 'ritiro') return 'Ritirato';
+        return STATI[ordine.stato]?.etichetta ?? ordine.stato;
+    }
+
+    function calcolaTotale(ordine) {
+        if (ordine.totale != null) return ordine.totale;
+        const subtotale = ordine.prodotti.reduce((somma, p) => somma + p.prezzo * p.quantita, 0);
+        return subtotale + (ordine.metodoRitiro === 'domicilio' ? 2.99 : 0);
+    }
+
+    function dataOrdine(ordine) {
+        return new Date(ordine.data ?? ordine.dataOrdine);
+    }
+
+    function creaCardOrdine(ordine) {
+        const clone = document.getElementById('modello-ordine').cloneNode(true);
+        clone.removeAttribute('id');
+        clone.classList.remove('d-none');
+        clone.href = `conferma_ordine.html?id=${ordine._id}`;
+
+        clone.querySelector('.ordine-numero').textContent = `#${String(ordine.numeroOrdine).padStart(6, '0')}`;
+        clone.querySelector('.ordine-data').textContent =
+            dataOrdine(ordine).toLocaleString('it-IT', {dateStyle: 'long', timeStyle: 'short'});
+
+        const badge = clone.querySelector('.ordine-stato');
+        badge.textContent = etichettaStato(ordine);
+        badge.classList.add(...(STATI[ordine.stato]?.classe ?? 'bg-secondary').split(' '));
+
+        clone.querySelector('.ordine-ristorante').textContent = ordine.nomeRistorante || 'Ristorante';
+        clone.querySelector('.ordine-tipo').textContent =
+            ordine.metodoRitiro === 'domicilio' ? 'Consegna a domicilio' : 'Ritiro al locale';
+
+        const pezzi = ordine.prodotti.reduce((somma, p) => somma + p.quantita, 0);
+        const nomi = ordine.prodotti.map(p => `${p.quantita}× ${p.nome}`).join(', ');
+        clone.querySelector('.ordine-prodotti').textContent = `${pezzi} ${pezzi === 1 ? 'prodotto' : 'prodotti'}: ${nomi}`;
+
+        clone.querySelector('.ordine-totale').textContent = calcolaTotale(ordine).toFixed(2);
+
+        const btnRitira = clone.querySelector('.btn-ritira');
+        const inConsegna = ordine.stato === 'consegna';
+        btnRitira.classList.toggle('d-none', !inConsegna);
+        btnRitira.textContent = ordine.metodoRitiro === 'ritiro' ? 'Conferma ritiro' : 'Conferma ricezione';
+
+        btnRitira.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            btnRitira.disabled = true;
+            ritiraOrdine(ordine);
+        });
+
+        return clone;
+    }
+
+    function renderOrdini() {
+        const inCorso = ordini.filter(o => IN_CORSO.includes(o.stato));
+        const storico = ordini.filter(o => !IN_CORSO.includes(o.stato));
+        document.getElementById('conteggio-corso').textContent = String(inCorso.length);
+        document.getElementById('conteggio-storico').textContent = String(storico.length);
+
+        const visibili = gruppo === 'corso' ? inCorso : storico;
+        visibili.sort((a, b) => dataOrdine(b) - dataOrdine(a));
+
+        const lista = document.getElementById('lista-ordini');
+        lista.innerHTML = '';
+        document.getElementById('nessun-ordine').classList.toggle('d-none', visibili.length > 0);
+        visibili.forEach(o => lista.appendChild(creaCardOrdine(o)));
+    }
+
+    async function caricaOrdini() {
+        try {
+            const response = await fetch(`http://localhost:3005/user/${utente._id}/ordini?api_key=1234567`);
+            const risultato = await response.json();
+            if (risultato.error) {
+                console.error(risultato.error);
+                return;
+            }
+            ordini = risultato;
+            renderOrdini();
+        } catch (error) {
+            console.error('Errore:', error);
+        }
+    }
+
+    document.querySelectorAll('#filtri button').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('#filtri button').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            gruppo = btn.dataset.gruppo;
+            renderOrdini();
+        });
+    });
+
+    caricaOrdini();
+</script>
+</body>
+</html>

@@ -1133,12 +1133,12 @@
         }
       }
     },
-    "/ordine/{numeroOrdine}": {
+    "/ordine/{id}": {
       "get": {
-        "description": "Recupera un ordine per numeroOrdine",
+        "description": "Recupera un ordine per ID",
         "parameters": [
           {
-            "name": "numeroOrdine",
+            "name": "id",
             "in": "path",
             "required": true,
             "schema": {
@@ -1149,6 +1149,9 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
           },
           "404": {
             "description": "Not Found"
@@ -1188,7 +1191,7 @@
     },
     "/user/{id}/ristorante/ordini/{numeroOrdine}/stato/aggiorna": {
       "put": {
-        "description": "",
+        "description": "Aggiorna lo stato di un ordine del ristorante del ristoratore",
         "parameters": [
           {
             "name": "id",
@@ -1235,7 +1238,90 @@
     },
     "/user/{id}/ristorante/ordini/{numeroOrdine}/stato/annulla": {
       "put": {
-        "description": "",
+        "description": "Annulla un ordine del ristorante del ristoratore",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "numeroOrdine",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "api_key",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/user/{id}/ordini": {
+      "get": {
+        "description": "Recupera gli ordini di un utente",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "api_key",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/user/{id}/ordini/{numeroOrdine}/ritira": {
+      "put": {
+        "description": "Ritira un ordine di un utente",
         "parameters": [
           {
             "name": "id",

@@ -1164,6 +1164,7 @@ app.get('/user/:id/ristorante/ordini', async (req, res) => {
 });
 
 app.put('/user/:id/ristorante/ordini/:numeroOrdine/stato/aggiorna', async (req, res) => {
+    // #swagger.description = "Aggiorna lo stato di un ordine del ristorante del ristoratore"
     try {
         const numeroOrdine = req.params.numeroOrdine;
         const id = req.params.id;
@@ -1214,6 +1215,7 @@ app.put('/user/:id/ristorante/ordini/:numeroOrdine/stato/aggiorna', async (req, 
 });
 
 app.put('/user/:id/ristorante/ordini/:numeroOrdine/stato/annulla', async (req, res) => {
+    // #swagger.description = "Annulla un ordine del ristorante del ristoratore"
     try {
         const numeroOrdine = req.params.numeroOrdine;
         const id = req.params.id;
@@ -1254,6 +1256,75 @@ app.put('/user/:id/ristorante/ordini/:numeroOrdine/stato/annulla', async (req, r
         res.status(500).json({error: "Errore interno del server"});
     }
 });
+
+app.get('/user/:id/ordini', async (req, res) => {
+    // #swagger.description = "Recupera gli ordini di un utente"
+    try {
+        const id = req.params.id;
+
+        const utente = await getUser(id);
+        if (!utente) return res.status(404).json({error: "Utente non trovato"});
+
+        const ordini = client.db('FastFood').collection('ordini');
+        const filtro = {
+            idUtente: {$in: [utente._id.toString(), utente._id]}
+        };
+
+        const ordiniUtente = await ordini.find(filtro).toArray();
+        res.json(ordiniUtente);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({error: "Errore interno del server"});
+    }
+});
+
+app.put('/user/:id/ordini/:numeroOrdine/ritira', async (req, res) => {
+    // #swagger.description = "Ritira un ordine di un utente"
+    try {
+        const numeroOrdine = req.params.numeroOrdine;
+        const id = req.params.id;
+
+        const utente = await getUser(id);
+        if (!utente) return res.status(404).json({error: "Utente non trovato"});
+
+        const ordini = client.db('FastFood').collection('ordini');
+        const filtro = {
+            numeroOrdine: parseInt(numeroOrdine)
+        };
+
+        const ordine = await ordini.findOne(filtro);
+
+        if (!ordine) return res.status(404).json({error: "Ordine non trovato"});
+
+        if (ordine.stato === 'consegnato') {
+            return res.status(400).json({error: "Ordine già consegnato"});
+        }
+
+        if (ordine.stato === 'annullato') {
+            return res.status(400).json({error: "Ordine annullato"});
+        }
+
+        if (ordine.stato === 'preparazione') {
+            return res.status(400).json({error: "Ordine in preparazione, non può essere ritirato"});
+        }
+
+        if (ordine.stato === 'ordinato') {
+            return res.status(400).json({error: "Ordine non pronto per il ritiro"});
+        }
+
+        if (ordine.metodoRitiro !== 'domicilio') {
+            return res.status(400).json({error: "Ordine non è per consegna a domicilio, non può essere ritirato"});
+        }
+
+        const set = {stato: 'consegnato'};
+        await ordini.updateOne({...filtro, stato: ordine.stato}, {$set: set});
+        res.json({...ordine, ...set});
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({error: "Errore interno del server"});
+    }
+});
+
 client.connect()
 
     .then(() => {
