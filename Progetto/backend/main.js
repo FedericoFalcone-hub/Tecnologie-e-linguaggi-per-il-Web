@@ -7,6 +7,7 @@ const swaggerUi = require('swagger-ui-express');
 const MongoClient = require('mongodb').MongoClient;
 const ObjectID = require('mongodb').ObjectId;
 const swaggerDocument = require('./swagger.json');
+const crypto = require('crypto');
 
 const mongoURL = "mongodb+srv://federicofalcone3105_db_user:IhhFMvTzoFkaoaaZ@fastfood.oohbubt.mongodb.net";
 const port = 3005;
@@ -124,6 +125,50 @@ async function codaOrdine(ordine) {
 
 }
 
+const SCONTO_CATEGORIA = 10;
+const PEZZI_PER_CODICE = 10;
+
+async function categorieOrdinate(utente) {
+    if (!utente || utente.ristoratore || utente.preferenze !== true) return [];
+
+    const risultato = await client.db('FastFood').collection('ordini').aggregate([
+        {$match: {idUtente: {$in: [utente._id.toString(), utente._id]}, stato: {$ne: 'annullato'}}},
+        {$unwind: '$prodotti'},
+        {
+            $lookup: {
+                from: 'menu',
+                let: {idPiatto: {$convert: {input: '$prodotti.id', to: 'objectId', onError: null, onNull: null}}},
+                pipeline: [{$match: {$expr: {$eq: ['$_id', '$$idPiatto']}}}],
+                as: 'piatto'
+            }
+        },
+        {$unwind: '$piatto'},
+        {
+            $lookup: {
+                from: 'catalogo',
+                let: {
+                    idProdotto: {
+                        $convert: {
+                            input: '$piatto.idProdotto',
+                            to: 'objectId',
+                            onError: null,
+                            onNull: null
+                        }
+                    }
+                },
+                pipeline: [{$match: {$expr: {$eq: ['$_id', '$$idProdotto']}}}],
+                as: 'dettagli'
+            }
+        },
+        {$addFields: {categoria: {$ifNull: [{$arrayElemAt: ['$dettagli.strCategory', 0]}, '$piatto.categoria']}}},
+        {$match: {categoria: {$ne: null}}},
+        {$group: {_id: '$categoria', ordinati: {$sum: '$prodotti.quantita'}}},
+        {$sort: {ordinati: -1, _id: 1}},
+    ]).toArray();
+
+    return risultato.map(r => ({categoria: r._id, ordinati: r.ordinati}));
+}
+
 function checkApiKeys(req, res, next) {
     console.log("Siamo nel middlware");
 
@@ -142,6 +187,8 @@ function validateEmail(email) {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return regex.test(email);
 }
+
+const generaCodice = () => `BB-${crypto.randomBytes(4).toString('hex').toUpperCase()}`;
 
 
 app.post('/user', async (req, res) => {
@@ -1325,6 +1372,77 @@ app.put('/user/:id/ordini/:numeroOrdine/ritira', async (req, res) => {
     }
 });
 
+app.get('/user/:id/offerte', async (req, res) => {
+    // #swagger.description = "Codici sconto sbloccati dall'utente (solo con preferenze accettate)"
+    try {
+        const {id} = req.params;
+        if (!ObjectId.isValid(id)) {
+            return res.status(400).json({error: "ID utente non valido"});
+        }
+
+        const utente = await getUser(id);
+        if (!utente) return res.status(404).json({error: "Utente non trovato"});
+        if (utente.ristoratore) return res.status(403).json({error: "Offerte riservate ai clienti"});
+
+        const codici = client.db('FastFood').collection('codici_sconto');
+        const categorie = await categorieOrdinate(utente);
+        for (const {categoria, ordinati} of categorie) {
+            if (ordinati < PEZZI_PER_CODICE) continue;
+            try {
+
+                const codicePrecedente = await codici.findOne({utenteId: id, categoria});
+                if (codicePrecedente) {
+                    if (codicePrecedente.usato === false) {
+                        continue
+                    }
+                    if (ordinati - codicePrecedente.ordinati < PEZZI_PER_CODICE) {
+                        continue
+                    } else {
+                        await codici.updateOne(
+                            {utenteId: id, categoria},
+                            {
+                                $set: {
+                                    codice: generaCodice(),
+                                    ordinati: ordinati,
+                                    sconto: SCONTO_CATEGORIA,
+                                    usato: false
+                                }
+                            }
+                        );
+                        continue
+                    }
+                }
+
+                await codici.updateOne(
+                    {utenteId: id, categoria},
+                    {
+                        $setOnInsert: {
+                            codice: generaCodice(),
+                            ordinati: ordinati,
+                            sconto: SCONTO_CATEGORIA,
+                            usato: false
+                        }
+                    },
+                    {upsert: true}
+                );
+            } catch (error) {
+                if (error.code !== 11000) console.log(`Errore durante la gestione dei codici sconto per utente ${id} e categoria ${categoria}:`, error);
+            }
+        }
+
+        const disponibili = utente.preferenze === true
+            ? await codici.find({utenteId: id, usato: false}).sort({categoria: 1}).toArray()
+            : [];
+
+        res.json({
+            preferenze: utente.preferenze === true,
+            offerte: disponibili.map(c => ({categoria: c.categoria, sconto: c.sconto, codice: c.codice}))
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({error: "Errore interno del server"});
+    }
+});
 client.connect()
 
     .then(() => {
