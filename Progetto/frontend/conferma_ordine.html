@@ -72,6 +72,11 @@
 
                 <div id="lista-prodotti"></div>
 
+                <div id="riga-sconto" class="d-flex justify-content-between mt-2 d-none">
+                    <span class="text-muted">Sconto <span id="etichetta-sconto"></span></span>
+                    <span class="text-success">- € <span id="importo-sconto">0.00</span></span>
+                </div>
+
                 <div id="riga-consegna" class="d-flex justify-content-between mt-2">
                     <span class="text-muted">Consegna</span>
                     <span>€ <span id="costo-consegna">0.00</span></span>
@@ -119,6 +124,9 @@
 
     function renderOrdine(ordine) {
         const domicilio = ordine.metodoRitiro === 'domicilio';
+        const infoSconto = ordine.sconto;
+        let subtotale = 0;
+        let sconto = 0;
         document.title = `Ordine #${String(ordine.numeroOrdine).padStart(6, '0')}`;
         document.getElementById('numero-ordine').textContent = `#${String(ordine.numeroOrdine).padStart(6, '0')}`;
         document.getElementById('data-ordine').textContent =
@@ -134,11 +142,15 @@
         const lista = document.getElementById('lista-prodotti');
         const modello = document.getElementById('modello-prodotto');
         lista.innerHTML = '';
-        let subtotale = 0;
+
 
         ordine.prodotti.forEach(item => {
-            const parziale = item.prezzo * item.quantita;
-            subtotale += parziale;
+            subtotale += item.prezzo * item.quantita;
+
+            if (infoSconto && item.categoria === infoSconto.categoria) {
+                const scontato = Math.round(item.prezzo * (1 - infoSconto.sconto / 100) * 100) / 100;
+                sconto += (item.prezzo - scontato) * item.quantita;
+            }
 
             const clone = modello.cloneNode(true);
             clone.removeAttribute('id');
@@ -148,12 +160,20 @@
             nota.textContent = item.nota || '';
             nota.classList.toggle('d-none', !item.nota);
             clone.querySelector('.prodotto-quantita').textContent = `x${item.quantita}`;
-            clone.querySelector('.prodotto-prezzo').textContent = `€ ${parziale.toFixed(2)}`;
+            clone.querySelector('.prodotto-prezzo').textContent = `€ ${(item.prezzo * item.quantita).toFixed(2)}`;
             lista.appendChild(clone);
         });
 
+
         const costoConsegna = ordine.costoConsegna ?? (domicilio ? 2.99 : 0);
-        const totale = ordine.totale ?? subtotale + costoConsegna;
+        const totale = infoSconto
+            ? subtotale - sconto + costoConsegna
+            : (ordine.totale ?? subtotale + costoConsegna);
+
+        document.getElementById('riga-sconto').classList.toggle('d-none', sconto <= 0);
+        document.getElementById('etichetta-sconto').textContent =
+            infoSconto ? `(${infoSconto.sconto}% su ${infoSconto.categoria})` : '';
+        document.getElementById('importo-sconto').textContent = sconto.toFixed(2);
 
         document.getElementById('riga-consegna').classList.toggle('d-none', !domicilio);
         document.getElementById('costo-consegna').textContent = costoConsegna.toFixed(2);

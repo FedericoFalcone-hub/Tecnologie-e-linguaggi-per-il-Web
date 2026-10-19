@@ -97,10 +97,23 @@
         return STATI[ordine.stato]?.etichetta ?? ordine.stato;
     }
 
+    function calcolaSconto(ordine) {
+        const info = ordine.sconto;
+        if (!info || typeof info !== 'object') return 0;
+        return ordine.prodotti.reduce((somma, p) => {
+            if (p.categoria !== info.categoria) return somma;
+            const scontato = Math.round(p.prezzo * (1 - info.sconto / 100) * 100) / 100;
+            return somma + (p.prezzo - scontato) * p.quantita;
+        }, 0);
+    }
+
     function calcolaTotale(ordine) {
-        if (ordine.totale != null) return ordine.totale;
+        const sconto = calcolaSconto(ordine);
+        if (sconto === 0 && ordine.totale != null) return ordine.totale;
+
         const subtotale = ordine.prodotti.reduce((somma, p) => somma + p.prezzo * p.quantita, 0);
-        return subtotale + (ordine.metodoRitiro === 'domicilio' ? 2.99 : 0);
+        const consegna = ordine.costoConsegna ?? (ordine.metodoRitiro === 'domicilio' ? 2.99 : 0);
+        return subtotale - sconto + consegna;
     }
 
     function dataOrdine(ordine) {

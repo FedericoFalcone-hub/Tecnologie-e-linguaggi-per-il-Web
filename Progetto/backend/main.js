@@ -1107,6 +1107,7 @@ app.post('/user/:id/ordine', async (req, res) => {
     const {id} = req.params;
     const {
         ristoranteId,
+        sconto,
         metodoRitiro,
         indirizzoConsegna,
         metodoPagamento,
@@ -1143,6 +1144,7 @@ app.post('/user/:id/ordine', async (req, res) => {
                 provincia: ristorante.provincia
             },
         metodoPagamento,
+        sconto,
         prodotti,
         stato: 'ordinato',
         numeroOrdine,
@@ -1435,7 +1437,6 @@ app.get('/user/:id/offerte', async (req, res) => {
             : [];
 
         res.json({
-            preferenze: utente.preferenze === true,
             offerte: disponibili.map(c => ({categoria: c.categoria, sconto: c.sconto, codice: c.codice}))
         });
     } catch (error) {
@@ -1443,6 +1444,50 @@ app.get('/user/:id/offerte', async (req, res) => {
         res.status(500).json({error: "Errore interno del server"});
     }
 });
+
+app.post('/user/consumaCodice', async (req, res) => {
+    // #swagger.description = "Utilizza un codice sconto"
+    const categorieCarrello = req.body.categorieCarrello;
+    const codice = req.body.codice;
+    const idUtente = req.body.idUtente;
+
+    if (!categorieCarrello || !codice || !idUtente) {
+        return res.status(400).json({error: "Dati mancanti"});
+    }
+
+    try {
+        const risultato = await client.db('FastFood').collection('codici_sconto').findOneAndUpdate(
+            {
+                utenteId: idUtente,
+                codice: codice,
+                usato: false,
+                categoria: {$in: categorieCarrello}
+            },
+            {$set: {usato: true, usatoIl: new Date()}},
+            {returnDocument: 'after'}
+        );
+
+        const codiceSconto = risultato?.value ?? risultato;
+        if (!codiceSconto) {
+            const esistente = await client.db('FastFood').collection('codici_sconto').findOne({
+                utenteId: idUtente,
+                codice: codice,
+                usato: false
+            });
+            return res.status(400).json({
+                error: esistente
+                    ? `Il codice vale solo per la categoria ${esistente.categoria}`
+                    : "Codice non valido o già utilizzato"
+            });
+        }
+        res.json(risultato);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({error: "Errore interno del server"});
+    }
+
+
+})
 client.connect()
 
     .then(() => {

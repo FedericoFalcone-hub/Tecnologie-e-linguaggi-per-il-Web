@@ -312,7 +312,7 @@
     }
 
     function apriModalPiatto(item) {
-        piattoSelezionato = {id: item._id, nome: item.nome, prezzo: item.prezzo};
+        piattoSelezionato = {id: item._id, nome: item.nome, prezzo: item.prezzo, categoria: item.categoria};
         const ingredienti = Array.isArray(item.ingredienti) ? item.ingredienti.join(', ') : item.ingredienti;
         document.getElementById('modal-foto').src = item.foto;
         document.getElementById('modal-nome').textContent = item.nome;

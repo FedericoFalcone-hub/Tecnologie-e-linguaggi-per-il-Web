@@ -87,6 +87,23 @@
                         <span class="text-muted">Consegna</span>
                         <span class="fw-semibold text-brand fw-bold">€ <span id="costo-consegna">0.00</span></span>
                     </div>
+
+                    <div class="mt-3">
+                        <div class="input-group">
+
+                            <label for="input-codice"></label>
+                            <input type="text" id="input-codice" class="form-control text-uppercase"
+                                   placeholder="Codice Sconto" maxlength="20" autocomplete="off">
+                            <button type="button" id="btn-applica-codice" class="btn btn-brand">Applica</button>
+                        </div>
+                        <small id="codice-messaggio" class="d-block mt-1"></small>
+                    </div>
+
+                    <div id="riga-sconto" class="d-flex justify-content-between align-items-center mt-2 d-none">
+                        <span class="text-muted"> Sconto <span id="etichetta-sconto"></span></span>
+                        <span class="fw-semibold text-success">-€<span id="importo-sconto">0.00</span></span>
+                    </div>
+
                     <div class="d-flex justify-content-between align-items-center mt-3">
                         <span class="fw-bold fs-5">Totale</span>
                         <span class="fw-bold fs-5 text-brand">€ <span id="totale-riepilogo">0.00</span></span>
@@ -346,6 +363,7 @@
     const sezioneCarta = new bootstrap.Collapse(document.getElementById('sezione-carta'), {toggle: false});
     let cartaSelezionata;
     const consegna = 2.99;
+    let codiceApplicato = null;
 
     getRistorante();
     //Ripristina l'opzione di consegna a domicilio come predefinita
@@ -414,6 +432,53 @@
             lista.appendChild(btn);
         });
     }
+
+    function calcolaSconto() {
+        if (!codiceApplicato) return 0;
+        return carrello.reduce((somma, p) => {
+            if (p.categoria !== codiceApplicato.categoria) return somma;
+            const scontato = Math.round(p.prezzo * (1 - codiceApplicato.sconto / 100) * 100) / 100;
+            return somma + (p.prezzo - scontato) * p.quantita;
+        }, 0);
+    }
+
+    document.getElementById('btn-applica-codice').addEventListener('click', async () => {
+        if (codiceApplicato) {
+            messaggio.className = 'd-block mt-1 text-danger';
+            messaggio.textContent = 'Puoi applicare un codice sconto alla volta';
+        }
+        const codice = document.getElementById('input-codice').value.trim().toUpperCase();
+        const messaggio = document.getElementById('codice-messaggio');
+        if (!codice) return;
+
+        messaggio.className = 'd-block mt-1 text-muted';
+        messaggio.textContent = 'Verifica in corso...';
+
+        try {
+            const response = await fetch(`http://localhost:3005/user/consumaCodice?api_key=1234567`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    codice: codice,
+                    idUtente: utente._id,
+                    categorieCarrello: carrello.map(p => p.categoria)
+                })
+            });
+            const risultato = await response.json();
+            if (risultato.error) {
+                codiceApplicato = null;
+                messaggio.className = 'd-block mt-1 text-danger';
+                messaggio.textContent = risultato.error;
+            } else {
+                codiceApplicato = risultato;
+                messaggio.className = 'd-block mt-1 text-success';
+                messaggio.textContent = `Codice applicato`;
+            }
+        } catch (error) {
+            console.error(error);
+        }
+        renderRiepilogo();
+    });
 
     document.getElementById('blocco-indirizzo').addEventListener('click', () => {
         renderListaIndirizzi();
@@ -577,7 +642,11 @@
 
         document.getElementById('riga-consegna').classList.toggle('d-none', !domicilio);
         document.getElementById('costo-consegna').textContent = costoConsegna.toFixed(2);
-        document.getElementById('totale-riepilogo').textContent = (totale + costoConsegna).toFixed(2);
+        const sconto = calcolaSconto();
+        document.getElementById('riga-sconto').classList.toggle('d-none', sconto === 0);
+        document.getElementById('etichetta-sconto').textContent = codiceApplicato ? `(${codiceApplicato.categoria})` : '';
+        document.getElementById('importo-sconto').textContent = sconto.toFixed(2);
+        document.getElementById('totale-riepilogo').textContent = (totale - sconto + costoConsegna).toFixed(2);
 
     }
 
@@ -587,6 +656,7 @@
 
         const ordine = {
             ristoranteId: idRistorante,
+            sconto: codiceApplicato,
             metodoRitiro: metodoRitiro,
             indirizzoConsegna: metodoRitiro === 'domicilio' ? indirizzo : null,
             metodoPagamento: metodoPagamento,

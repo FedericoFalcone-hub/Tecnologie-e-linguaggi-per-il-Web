@@ -40,17 +40,30 @@
     </div>
 </section>
 
-<section class="container py-5">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h4 class="mb-0" style="font-weight: 700;">Ristoranti in evidenza</h4>
-        <a href="#" class="text-brand fw-semibold text-decoration-none">Vedi tutti →</a>
+<section id="sezione-offerte" class="container py-5 d-none">
+    <div class="mb-4">
+        <h4 class="mb-1" style="font-weight: 700;">Offerte per te</h4>
+        <p class="text-muted mb-0" style="font-size: 14px;">Ogni 10 prodotti di una certa categoria otterrai un codice
+            sconto del 10%</p>
     </div>
 
-    <div id="ristoranti-evidenza" class="row g-4">
-        <div class="col-12 text-center text-muted py-5">
-            Nessun ristorante disponibile al momento.
+    <div id="modello-offerta" class="col-lg-4 col-md-6 d-none">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body p-4">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <h5 class="offerta-categoria fw-bold mb-0"></h5>
+                    <span class="offerta-sconto badge bg-danger"></span>
+                </div>
+                <p class="offerta-descrizione text-muted mb-3" style="font-size: 14px;"></p>
+                <div class="d-flex align-items-center gap-2">
+                    <code class="offerta-codice flex-grow-1 border rounded-3 px-3 py-2 fw-bold text-dark text-center"></code>
+                    <button type="button" class="btn-copia btn btn-outline-dark rounded-pill btn-sm">Copia</button>
+                </div>
+            </div>
         </div>
     </div>
+
+    <div id="lista-offerte" class="row g-4"></div>
 </section>
 
 <section class="how-it-works py-5">
@@ -82,6 +95,8 @@
 <script src="../backend/lib.js"></script>
 
 <script>
+    const utente = JSON.parse(localStorage.getItem('utente'));
+
     document.getElementById("form-ricerca").addEventListener("submit", e => {
         e.preventDefault();
         const query = document.getElementById("ricerca-input").value.trim();
@@ -89,6 +104,53 @@
             window.location.href = `search.html?q=${encodeURIComponent(query)}`;
         }
     });
+
+    async function caricaOfferte() {
+        if (!utente || utente.ristoratore) return;
+
+        try {
+            const response = await fetch(`http://localhost:3005/user/${utente._id}/offerte?api_key=1234567`);
+            const risultato = await response.json();
+
+            if (risultato.error || risultato.offerte.length === 0) return;
+            renderOfferte(risultato.offerte);
+        } catch (error) {
+            console.error('Errore durante il caricamento delle offerte:', error);
+        }
+    }
+
+    function renderOfferte(offerte) {
+        const lista = document.getElementById("lista-offerte");
+        const modello = document.getElementById("modello-offerta");
+        lista.innerHTML = '';
+
+        offerte.forEach(o => {
+            const clone = modello.cloneNode(true);
+            clone.removeAttribute('id');
+            clone.classList.remove('d-none');
+            clone.querySelector('.offerta-categoria').textContent = o.categoria;
+            clone.querySelector('.offerta-sconto').textContent = `-${o.sconto}%`;
+            clone.querySelector('.offerta-descrizione').textContent = `Sconto del ${o.sconto}% su tutti i piatti di ${o.categoria}.`;
+            clone.querySelector('.offerta-codice').textContent = o.codice;
+
+            const btnCopia = clone.querySelector('.btn-copia');
+            btnCopia.addEventListener('click', async () => {
+                try {
+                    await navigator.clipboard.writeText(o.codice);
+                    btnCopia.textContent = 'Copiato!';
+                } catch (err) {
+                    console.error('Errore durante la copia del codice:', err);
+                }
+                setTimeout(() => {
+                    btnCopia.textContent = 'Copia';
+                }, 1500);
+            });
+            lista.appendChild(clone);
+        });
+        document.getElementById('sezione-offerte').classList.remove('d-none');
+    }
+
+    caricaOfferte();
 </script>
 
 </body>
