@@ -1400,15 +1400,13 @@ app.get('/user/:id/offerte', async (req, res) => {
                     if (ordinati - codicePrecedente.ordinati < PEZZI_PER_CODICE) {
                         continue
                     } else {
-                        await codici.updateOne(
-                            {utenteId: id, categoria},
-                            {
-                                $set: {
-                                    codice: generaCodice(),
-                                    ordinati: ordinati,
-                                    sconto: SCONTO_CATEGORIA,
-                                    usato: false
-                                }
+                        await codici.insertOne({
+                                utenteId: id,
+                                categoria,
+                                codice: generaCodice(),
+                                ordinati: ordinati,
+                                sconto: SCONTO_CATEGORIA,
+                                usato: false
                             }
                         );
                         continue
