@@ -650,13 +650,36 @@ app.get('/ristorante/:id/menu', async (req, res) => {
                             '$ristoranteInfo.citta', ' (',
                             '$ristoranteInfo.provincia', ')'
                         ]
+                    },
+                    ordineCategoria: {
+                        $switch: {
+                            branches: [
+                                {
+                                    case: {$eq: ["$categoria", "Antipasti"]},
+                                    then: 1
+                                },
+                                {
+                                    case: {$eq: ["$categoria", "Primi"]},
+                                    then: 2
+                                },
+                                {
+                                    case: {$eq: ["$categoria", "Secondi"]},
+                                    then: 3
+                                },
+                                {
+                                    case: {$eq: ["$categoria", "Dessert"]},
+                                    then: 5
+                                }
+                            ],
+                            default: 4
+                        }
                     }
                 }
             },
 
             {
                 $sort: {
-                    categoria: 1,
+                    ordineCategoria: 1,
                     nome: 1
                 }
             },
