@@ -1108,6 +1108,9 @@
                   "ristoranteId": {
                     "example": "any"
                   },
+                  "sconto": {
+                    "example": "any"
+                  },
                   "metodoRitiro": {
                     "example": "any"
                   },
@@ -1368,7 +1371,7 @@
     },
     "/user/{id}/offerte": {
       "get": {
-        "description": "Codici sconto sbloccati dall'utente (solo con personalizzazione accettata)",
+        "description": "Codici sconto sbloccati dall'utente (solo con preferenze accettate)",
         "parameters": [
           {
             "name": "id",
@@ -1392,6 +1395,100 @@
           },
           "400": {
             "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/user/consumaCodice": {
+      "post": {
+        "description": "Utilizza un codice sconto",
+        "parameters": [
+          {
+            "name": "api_key",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "categorieCarrello": {
+                    "example": "any"
+                  },
+                  "codice": {
+                    "example": "any"
+                  },
+                  "idUtente": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/{id}/ristorante/statistiche/mensili": {
+      "get": {
+        "description": "Recupera le statistiche mensili di un anno specifico (passare ?anno=2026)",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "api_key",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "anno",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
           },
           "401": {
             "description": "Unauthorized"

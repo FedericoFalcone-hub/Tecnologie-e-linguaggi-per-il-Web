@@ -1252,11 +1252,25 @@ app.put('/user/:id/ristorante/ordini/:numeroOrdine/stato/aggiorna', async (req, 
             stato = 'consegnato';
         }
 
-        const set = {stato};
-        if (stato === 'preparazione') set.dataPreparazione = new Date();
+        const updateDoc = {
+            $set: {stato}
+        };
 
-        await ordini.updateOne({...filtro, stato: ordine.stato}, {$set: set});
-        res.json({...ordine, ...set});
+        if (stato === 'preparazione') {
+            updateDoc.$set.dataPreparazione = new Date();
+        } else if (stato === 'consegnato') {
+            updateDoc.$set.dataConsegna = new Date();
+            updateDoc.$unset = {dataPreparazione: ""};
+        }
+
+        await ordini.updateOne({...filtro, stato: ordine.stato}, updateDoc);
+
+        const responseOrdine = {...ordine, ...updateDoc.$set};
+        if (updateDoc.$unset && updateDoc.$unset.dataPreparazione !== undefined) {
+            delete responseOrdine.dataPreparazione;
+        }
+
+        res.json(responseOrdine);
     } catch (error) {
         console.error(error);
         res.status(500).json({error: "Errore interno del server"});
@@ -1365,9 +1379,18 @@ app.put('/user/:id/ordini/:numeroOrdine/ritira', async (req, res) => {
             return res.status(400).json({error: "Ordine non è per consegna a domicilio, non può essere ritirato"});
         }
 
-        const set = {stato: 'consegnato'};
-        await ordini.updateOne({...filtro, stato: ordine.stato}, {$set: set});
-        res.json({...ordine, ...set});
+        const updateDoc = {
+            $set: {
+                stato: 'consegnato',
+                dataConsegna: new Date()
+            },
+            $unset: {
+                dataPreparazione: ""
+            }
+        };
+
+        await ordini.updateOne({...filtro, stato: ordine.stato}, updateDoc);
+        res.json({...ordine, ...updateDoc.$set});
     } catch (error) {
         console.error(error);
         res.status(500).json({error: "Errore interno del server"});
@@ -1485,7 +1508,160 @@ app.post('/user/consumaCodice', async (req, res) => {
     }
 
 
-})
+});
+
+app.get('/user/:id/ristorante/statistiche/mensili', async (req, res) => {
+    // #swagger.description = "Recupera le statistiche mensili e il resoconto totale di un anno specifico (?anno=2026)"
+    try {
+        const id = req.params.id;
+
+        const annoRichiesto = parseInt(req.query.anno) || new Date().getFullYear();
+
+        const dataInizio = new Date(annoRichiesto, 0, 1);
+        const dataFine = new Date(annoRichiesto + 1, 0, 1);
+
+        const utente = await getUser(id);
+        if (!utente) return res.status(404).json({error: "Utente non trovato"});
+        if (!utente.ristoratore) return res.status(403).json({error: "Utente non autorizzato"});
+
+        const ristorante = await getRistoranteRistoratore(id);
+        if (!ristorante) return res.status(403).json({error: "Ristorante non trovato"});
+
+        const ordini = client.db('FastFood').collection('ordini');
+
+        const filtro = {
+            ristoranteId: {$in: [ristorante._id.toString(), ristorante._id]},
+            stato: 'consegnato',
+            data: {$gte: dataInizio, $lt: dataFine}
+        };
+
+        // STATISTICHE MENSILI
+        const statsMensili = await ordini.aggregate([
+            {$match: filtro},
+            {
+                $addFields: {
+                    mese: {$month: {date: '$data', timezone: 'Europe/Rome'}},
+                    durataMinuti: {
+                        $divide: [{$subtract: ['$dataConsegna', '$data']}, 60000]
+                    },
+                    incassoOrdine: {
+                        $reduce: {
+                            input: '$prodotti',
+                            initialValue: 0,
+                            in: {$add: ['$$value', {$multiply: ['$$this.prezzo', '$$this.quantita']}]}
+                        }
+                    }
+                }
+            },
+            {
+                $group: {
+                    _id: '$mese',
+                    incassoTotale: {$sum: '$incassoOrdine'},
+                    numeroOrdini: {$sum: 1},
+                    durataMedia: {$avg: '$durataMinuti'}
+                }
+            }
+        ]).toArray();
+
+        // PIATTI PIÙ VENDUTI PER MESE
+        const piattiPerMese = await ordini.aggregate([
+            {$match: filtro},
+            {
+                $addFields: {mese: {$month: {date: '$data', timezone: 'Europe/Rome'}}}
+            },
+            {$unwind: '$prodotti'},
+            {
+                $group: {
+                    _id: {mese: '$mese', nomePiatto: '$prodotti.nome'},
+                    pezziVenduti: {$sum: '$prodotti.quantita'}
+                }
+            },
+            {$sort: {pezziVenduti: -1}}, {
+                $group: {
+                    _id: '$_id.mese',
+                    piattiTop: {$push: {nome: '$_id.nomePiatto', quantita: '$pezziVenduti'}}
+                }
+            },
+            {
+                $project: {_id: 1, piattiTop: {$slice: ['$piattiTop', 5]}}
+            }
+        ]).toArray();
+
+        // PIATTI PIÙ VENDUTI IN TUTTO L'ANNO
+        const piattiAnno = await ordini.aggregate([
+            {$match: filtro},
+            {$unwind: '$prodotti'},
+            {
+                $group: {
+                    _id: '$prodotti.nome',
+                    quantita: {$sum: '$prodotti.quantita'}
+                }
+            },
+            {$sort: {quantita: -1}}, {$limit: 5} // Prendi i primi 5 dell'intero anno
+        ]).toArray();
+
+        const statsMap = new Map(statsMensili.map(s => [s._id, s]));
+        const piattiMap = new Map(piattiPerMese.map(p => [p._id, p.piattiTop]));
+
+        let totaleIncassoAnno = 0;
+        let totaleOrdiniAnno = 0;
+        let sommaDurataPesata = 0;
+
+        // GENERAZIONE ARRAY 12 MESI
+        const arrayMesi = Array.from({length: 12}, (_, i) => {
+            const meseNum = i + 1;
+            const stat = statsMap.get(meseNum);
+            const piatti = piattiMap.get(meseNum) || [];
+
+            if (!stat) {
+                return {
+                    mese: meseNum,
+                    incassoTotale: 0,
+                    numeroOrdini: 0,
+                    scontrinoMedio: 0,
+                    tempoPreparazioneMedio: 0,
+                    piattiPiuAcquistati: []
+                };
+            }
+
+            totaleIncassoAnno += stat.incassoTotale;
+            totaleOrdiniAnno += stat.numeroOrdini;
+            sommaDurataPesata += (stat.durataMedia * stat.numeroOrdini);
+
+            return {
+                mese: meseNum,
+                incassoTotale: Number(stat.incassoTotale.toFixed(2)),
+                numeroOrdini: stat.numeroOrdini,
+                scontrinoMedio: Number((stat.incassoTotale / stat.numeroOrdini).toFixed(2)),
+                tempoPreparazioneMedio: Math.round(stat.durataMedia),
+                piattiPiuAcquistati: piatti
+            };
+        });
+
+        // CALCOLO RESOCONTO TOTALE ANNUALE
+        const totaliAnno = {
+            incassoTotale: Number(totaleIncassoAnno.toFixed(2)),
+            numeroOrdini: totaleOrdiniAnno,
+            scontrinoMedio: totaleOrdiniAnno > 0 ? Number((totaleIncassoAnno / totaleOrdiniAnno).toFixed(2)) : 0,
+            tempoPreparazioneMedio: totaleOrdiniAnno > 0 ? Math.round(sommaDurataPesata / totaleOrdiniAnno) : 0,
+            piattiPiuAcquistati: piattiAnno.map(p => ({
+                nome: p._id,
+                quantita: p.quantita
+            }))
+        };
+
+        res.json({
+            anno: annoRichiesto,
+            totaliAnno: totaliAnno,
+            mesi: arrayMesi
+        });
+
+    } catch (error) {
+        console.error("Errore recupero statistiche:", error);
+        res.status(500).json({error: "Errore interno del server"});
+    }
+});
+
 client.connect()
 
     .then(() => {
