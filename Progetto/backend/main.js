@@ -399,9 +399,9 @@ app.post('/user/:id/ristorante', async (req, res) => {
         return res.status(403).json({error: "Utente non autorizzato"});
     }
 
-    const {nomeRistorante, partitaIVA, telefonoRistorante, via, civico, citta, cap, provincia} = req.body;
+    const {nomeRistorante, partitaIVA, telefonoRistorante, via, civico, citta, cap, provincia, tipoCucina} = req.body;
 
-    if (!nomeRistorante || !partitaIVA || !telefonoRistorante || !via || !civico || !citta || !cap || !provincia) {
+    if (!nomeRistorante || !partitaIVA || !telefonoRistorante || !via || !civico || !citta || !cap || !provincia || !tipoCucina) {
         return res.status(400).json({error: "Dati mancanti"});
     }
 
@@ -432,7 +432,8 @@ app.post('/user/:id/ristorante', async (req, res) => {
             provincia: provincia.toUpperCase(),
             lat: coordinates.lat,
             lon: coordinates.lon,
-            logoUrl: null
+            logoUrl: null,
+            tipoCucina: tipoCucina
         };
         await client.db('FastFood').collection('ristoranti').insertOne(ristorante);
 
@@ -516,9 +517,9 @@ app.put('/user/:id/ristorante', async (req, res) => {
         return res.status(404).json({error: "Ristorante non trovato"});
     }
 
-    const {nomeRistorante, partitaIVA, telefonoRistorante, via, civico, citta, cap, provincia} = req.body;
+    const {nomeRistorante, partitaIVA, telefonoRistorante, via, civico, citta, cap, provincia, tipoCucina} = req.body;
 
-    if (!nomeRistorante || !partitaIVA || !telefonoRistorante || !via || !civico || !citta || !cap || !provincia) {
+    if (!nomeRistorante || !partitaIVA || !telefonoRistorante || !via || !civico || !citta || !cap || !provincia || !tipoCucina) {
         return res.status(400).json({error: "Dati mancanti"});
     }
 
@@ -547,7 +548,8 @@ app.put('/user/:id/ristorante', async (req, res) => {
         cap: cap,
         provincia: provincia.toUpperCase(),
         lat: coordinates.lat,
-        lon: coordinates.lon
+        lon: coordinates.lon,
+        tipoCucina: tipoCucina
     };
 
     try {

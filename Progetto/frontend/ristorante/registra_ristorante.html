@@ -84,6 +84,12 @@
                             </div>
                         </div>
 
+                        <div class="mb-3">
+                            <label for="tipoCucina" class="form-label">Tipologia di Cucina</label>
+                            <input type="text" class="form-control" id="tipoCucina"
+                                   placeholder="Italiana, Pizza, Sushi..." maxlength="100">
+                        </div>
+
                         <button type="submit" class="btn btn-brand rounded-pill w-100 py-2">Registra</button>
                         <p id="registrazione-messaggio" class="text-center mt-3 mb-0" style="font-size: 14px;"></p>
                     </form>
@@ -136,6 +142,7 @@
         const cNome = capitalize(document.getElementById('nomeRistorante').value.trim());
         const cPiva = document.getElementById('piva').value.trim().toUpperCase();
         const cTelefono = document.getElementById('telefono').value.trim();
+        const cTipoCucina = capitalize(document.getElementById('tipoCucina').value.trim());
 
         const ristorante = {
             nomeRistorante: cNome,
@@ -145,7 +152,8 @@
             civico: document.getElementById('civico').value.trim(),
             citta: capitalize(document.getElementById('citta').value.trim()),
             cap: document.getElementById('cap').value.trim(),
-            provincia: document.getElementById('provincia').value.trim().toUpperCase()
+            provincia: document.getElementById('provincia').value.trim().toUpperCase(),
+            tipoCucina: cTipoCucina,
 
         };
 

@@ -94,6 +94,14 @@
                                        maxlength="2" pattern="[A-Za-z]{2}" required>
                             </div>
                         </div>
+                        <div class="mb-3">
+                            <label for="tipoCucina" class="form-label">Tipo di Cucina<span
+                                    class="text-danger"></span></label>
+                            <input type="text" class="form-control" id="tipoCucina"
+                                   placeholder="Italiana, Pizza, Sushi..."
+                                   maxlength="100" required>
+                        </div>
+
 
                         <button type="submit" class="btn btn-brand rounded-pill w-100 py-2">Aggiorna</button>
                         <p id="aggiornamento-messaggio" class="text-center mt-3 mb-0" style="font-size: 14px;"></p>
@@ -187,6 +195,7 @@
         document.getElementById("citta").value = ristorante.citta;
         document.getElementById("cap").value = ristorante.cap;
         document.getElementById("provincia").value = ristorante.provincia;
+        document.getElementById("tipoCucina").value = ristorante.tipoCucina;
     }
 
     inizializza();
@@ -223,12 +232,17 @@
                 provincia: document.getElementById('provincia').value,
                 lat: result.lat,
                 lon: result.lon,
-                logoUrl: ristorante.logoUrl
+                logoUrl: ristorante.logoUrl,
+                tipoCucina: document.getElementById('tipoCucina').value
             }
-
+            console.log('Ristorante aggiornato:', ristoranteAggiornato);
             localStorage.setItem('ristorante', JSON.stringify(ristoranteAggiornato));
 
             mostraToast('Dati aggiornati con successo!');
+            document.getElementById('aggiornamento-messaggio').classList.remove('text-danger');
+            document.getElementById('aggiornamento-messaggio').textContent = 'Dati aggiornati con successo!';
+            document.getElementById('aggiornamento-messaggio').classList.add('text-success');
+
 
         }
     }
@@ -316,6 +330,7 @@
         const cCitta = capitalize(document.getElementById('citta').value.trim());
         const cCap = document.getElementById('cap').value.trim();
         const cProvincia = document.getElementById('provincia').value.trim().toUpperCase();
+        const cTipoCucina = capitalize(document.getElementById('tipoCucina').value.trim());
         const restaurant = {
             nomeRistorante: cNome,
             partitaIVA: cPiva,
@@ -324,7 +339,8 @@
             civico: cCivico,
             citta: cCitta,
             cap: cCap,
-            provincia: cProvincia
+            provincia: cProvincia,
+            tipoCucina: cTipoCucina
         };
 
         const options = {
