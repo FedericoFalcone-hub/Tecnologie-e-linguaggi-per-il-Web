@@ -341,12 +341,12 @@
                         clone.getElementsByClassName('card-title')[0].innerText += piatto.nome;
                         clone.getElementsByClassName('ingredienti-piatto')[0].innerText += piatto.ingredienti.join(', ');
                         clone.getElementsByClassName('categoria-piatto')[0].innerText += piatto.categoria;
-                        clone.getElementsByTagName('img')[0].alt = piatto.nome;
-                        if (piatto.foto == null || piatto.foto.trim() === "") {
-                            clone.getElementsByTagName('img')[0].src = `https://placehold.co/800x600/FF7A1A/white?text=${encodeURIComponent(piatto.nome)}`;
-                        } else {
-                            clone.getElementsByTagName('img')[0].src = piatto.foto;
+                        const img = clone.getElementsByTagName('img')[0];
+                        img.onerror = function () {
+                            this.error = null;
+                            this.src = `https://placehold.co/800x600/FF7A1A/white?text=${encodeURIComponent(piatto.nome)}`;
                         }
+
                         clone.getElementsByClassName('prezzo-piatto')[0].innerText += piatto.prezzo.toFixed(2) + " €";
 
 
