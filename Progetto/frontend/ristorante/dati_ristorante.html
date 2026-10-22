@@ -37,7 +37,7 @@
 
                     <form id="form-dati">
                         <div id="logo" class="ristorante-logo-form mx-auto mb-3"
-                             style="cursor: pointer; background: #ff7a1a;"
+                             style="cursor: pointer;"
                              data-bs-toggle="modal" data-bs-target="#modalLogo" onclick="apriModalLogo()">
                             <span id="logo-contenuto"></span>
                             <span class="logo-overlay">✏️ Modifica</span>
@@ -169,13 +169,13 @@
 
         if (ristorante.logoUrl) {
             try {
-                logoContainer.style.backgroundColor = "#fff";
                 logoContainer.innerHTML = `<img src="${ristorante.logoUrl}" alt="Logo ristorante">`;
 
             } catch (error) {
                 logoContainer.textContent = ristorante.nomeRistorante.substring(0, 2).toUpperCase();
             }
         } else {
+            document.getElementById("logo").style.backgroundColor = "#ff7a1a";
             logoContainer.textContent = ristorante.nomeRistorante.substring(0, 2).toUpperCase();
         }
 

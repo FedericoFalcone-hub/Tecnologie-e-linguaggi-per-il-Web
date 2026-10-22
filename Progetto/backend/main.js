@@ -438,6 +438,9 @@ app.post('/user/:id/ristorante', async (req, res) => {
 
         res.json(ristorante);
     } catch (error) {
+        if (error.code === 11000) {
+            res.status(409).json({error: "Partita IVA già registrata"});
+        }
         res.status(500).json({error: `Errore non gestito ${error.message}`});
     }
 });
