@@ -222,6 +222,7 @@
         } else {
             const ristoranteAggiornato = {
                 ...JSON.parse(localStorage.getItem('ristornate')),
+                _id: ristorante._id,
                 nomeRistorante: document.getElementById('nomeRistorante').value,
                 partitaIVA: document.getElementById('piva').value,
                 telefonoRistorante: document.getElementById('telefono').value,
@@ -235,7 +236,6 @@
                 logoUrl: ristorante.logoUrl,
                 tipoCucina: document.getElementById('tipoCucina').value
             }
-            console.log('Ristorante aggiornato:', ristoranteAggiornato);
             localStorage.setItem('ristorante', JSON.stringify(ristoranteAggiornato));
 
             mostraToast('Dati aggiornati con successo!');
@@ -295,6 +295,7 @@
                 const modale = bootstrap.Modal.getInstance(document.getElementById('modalLogo'));
                 modale.hide();
                 ristorante.logoUrl = nuovoUrl;
+
                 localStorage.setItem("ristorante", JSON.stringify(ristorante));
                 window.location.reload();
             })

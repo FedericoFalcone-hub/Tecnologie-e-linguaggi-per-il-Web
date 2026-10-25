@@ -612,6 +612,7 @@ app.get('/ristorante/:id', async (req, res) => {
 
 app.get('/ristorante/:id/menu', async (req, res) => {
     // #swagger.description = "Recupera il menu raggruppato per ristorante"
+    console.log(req.params.id);
     const id = ObjectID.createFromHexString(req.params.id);
 
     try {
@@ -934,9 +935,19 @@ app.get('/ricette', async (req, res) => {
 })
 
 app.get('/search/:query', async (req, res) => {
-    // #swagger.description = "Cerca prodotti raggruppati per ristorante, o ristoranti stessi"
+    // #swagger.description = "Cerca prodotti raggruppati per ristorante, o ristoranti per nome o tipo di cucina"
     const query = req.params.query;
+    const test = await client.db('FastFood')
+        .collection('ristoranti')
+        .find({
+            $or: [
+                {nomeRistorante: {$regex: 'sakura', $options: 'i'}},
+                {tipoCucina: {$regex: 'sushi', $options: 'i'}}
+            ]
+        })
+        .toArray();
 
+    console.log(test);
     try {
         const results = await client.db('FastFood').collection('menu').aggregate([
             {
@@ -954,7 +965,8 @@ app.get('/search/:query', async (req, res) => {
                         {nome: {$regex: query, $options: 'i'}},
                         {categoria: {$regex: query, $options: 'i'}},
                         {ingredienti: {$regex: query, $options: 'i'}},
-                        {'ristorante.nomeRistorante': {$regex: query, $options: 'i'}}
+                        {'ristorante.nomeRistorante': {$regex: query, $options: 'i'}},
+                        {'ristorante.tipoCucina': {$regex: query, $options: 'i'}}
                     ]
                 }
             },
@@ -1011,6 +1023,7 @@ app.get('/search/:query', async (req, res) => {
             }
         ]).toArray();
 
+        console.log(results);
         res.json(results);
     } catch (error) {
         console.error("Errore durante la ricerca:", error);
