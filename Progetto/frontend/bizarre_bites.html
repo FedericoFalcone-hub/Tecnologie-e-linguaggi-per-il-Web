@@ -24,18 +24,30 @@
             pochi click</p>
 
         <form id="form-ricerca" class="search-bar mx-auto">
-            <span class="search-icon">🔍</span>
+            <span class="search-icon"><img src="../backend/images/search.png" alt="Cerca"
+                                           style=" width:28px; height: 28px; object-fit: contain;"></span>
             <label for="ricerca-input"></label><input type="text" id="ricerca-input" class="form-control border-0"
                                                       placeholder="Cerca ristoranti o piatti...">
             <button type="submit" class="btn btn-brand rounded-pill px-4">Cerca</button>
         </form>
 
         <div class="quick-categories mt-4">
-            <a href="search.html?q=pizza" class="category-pill">🍕 Pizza</a>
-            <a href="search.html?q=burger" class="category-pill">🍔 Burger</a>
-            <a href="search.html?q=pasta" class="category-pill">🍝 Pasta</a>
-            <a href="search.html?q=vegano" class="category-pill">🥗 Vegano</a>
-            <a href="search.html?q=dessert" class="category-pill">🍰 Dessert</a>
+            <a href="search.html?q=pizza" class="category-pill d-inline-flex align-items-center gap-2">
+                <img src="../backend/images/pizza.png" alt="" style="width: 24px; height: 24px; object-fit: contain;">
+                Pizza
+            </a>
+            <a href="search.html?q=pasta" class="category-pill d-inline-flex align-items-center gap-2">
+                <img src="../backend/images/pasta.png" alt="" style="width: 24px; height: 24px; object-fit: contain;">
+                Pasta
+            </a>
+            <a href="search.html?q=vegano" class="category-pill d-inline-flex align-items-center gap-2">
+                <img src="../backend/images/vegan.png" alt="" style="width: 24px; height: 24px; object-fit: contain;">
+                Vegano
+            </a>
+            <a href="search.html?q=dessert" class="category-pill d-inline-flex align-items-center gap-2">
+                <img src="../backend/images/dessert.png" alt="" style="width: 24px; height: 24px; object-fit: contain;">
+                Dessert
+            </a>
         </div>
     </div>
 </section>
@@ -71,18 +83,21 @@
         <h4 class="text-center mb-5" style="font-weight: 700;">Come funziona</h4>
         <div class="row g-4 text-center">
             <div class="col-md-4">
-                <div class="step-icon mx-auto mb-3">🔍</div>
+                <div class="step-icon mx-auto mb-3"><img src="../backend/images/search.png" alt=""
+                                                         style=" width:28px; height: 28px; object-fit: contain;"></div>
                 <p class="fw-semibold mb-1">1. Cerca</p>
                 <p class="text-muted" style="font-size: 14px;">Trova il ristorante e i piatti che preferisci</p>
             </div>
             <div class="col-md-4">
-                <div class="step-icon mx-auto mb-3">🛒</div>
+                <div class="step-icon mx-auto mb-3"><img src="../backend/images/shopping-cart.png" alt=""
+                                                         style=" width:28px; height: 28px; object-fit: contain;"></div>
                 <p class="fw-semibold mb-1">2. Ordina</p>
                 <p class="text-muted" style="font-size: 14px;">Aggiungi al carrello e scegli come ricevere l'ordine
                 </p>
             </div>
             <div class="col-md-4">
-                <div class="step-icon mx-auto mb-3">🍽️</div>
+                <div class="step-icon mx-auto mb-3"><img src="../backend/images/dish.png" alt=""
+                                                         style=" width:28px; height: 28px; object-fit: contain;"></div>
                 <p class="fw-semibold mb-1">3. Gusta</p>
                 <p class="text-muted" style="font-size: 14px;">Ritira in loco o ricevi a domicilio</p>
             </div>
