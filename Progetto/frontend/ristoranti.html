@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap"
+          rel="stylesheet">
+
+</head>
+<body>
+<div id="navbar-container"></div>
+
+<div class="container py-5">
+    <h3 class="mb-4" style="font-weight: 700;">Ristoranti</h3>
+
+    <form id="form-ricerca" class="d-flex gap-2 mb-2" style="max-width: 562px;">
+        <label for="ricerca" class="visually-hidden"></label>
+        <input type="search" id="ricerca" class="form-control rounded-pill px-4"
+               placeholder="Cerca per nome, città, ..."
+               autocomplete="off">
+        <button type="submit" class="btn btn-brand rounded-pill px-4">Cerca</button>
+    </form>
+    <p id="conteggio" class="text-muted mb-4" style="font-size: 14px; min-height: 21px;"></p>
+
+    <!-- Template ristorante -->
+    <div id="modello-ristorante" class="col-lg-4 col-md-6 d-none">
+        <a href="#" class="ristorante-link text-decoration-none text-dark d-block h-100">
+            <div class="ristorante-card card border-0 shadow-sm h-100">
+                <div class="card-body p-4 d-flex align-items-center gap-3">
+                    <div class="ristorante-icona d-flex align-items-center justify-content-center flex-shrink-0"
+                         style="width: 64px; height: 64px; border-radius: 16px; overflow: hidden; background: var(--brand); color: #fff; font-size: 22px; font-weight: 700;">
+                        <img class="card-logo d-none" alt=""
+                             style="width: 100%; height: 100%; object-fit: cover;">
+                        <span class="ristorante-iniziali"></span>
+                    </div>
+                    <div class="overflow-hidden">
+                        <h5 class="ristorante-nome fw-bold mb-1 text-truncate"></h5>
+                        <small class="ristorante-indirizzo text-muted d-block">📍 <span></span></small>
+                        <small class="ristorante-telefono text-muted d-block">📞 <span></span></small>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+    <div id="lista-ristoranti" class="row g-4"></div>
+    <p id="nessun-ristorante" class="text-muted text-center py-5 d-none"></p>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../backend/lib.js"></script>
+
+<script>
+    const input = document.getElementById('ricerca');
+
+    function formattaIndirizzo(r) {
+        if (!r.via) return '';
+        return `${r.via}, ${r.civico}, ${r.cap}, ${r.citta} (${r.provincia})`;
+    }
+
+    function renderRistoranti(ristoranti, q) {
+        const lista = document.getElementById('lista-ristoranti');
+        const modello = document.getElementById('modello-ristorante');
+        lista.innerHTML = '';
+
+        const vuoto = document.getElementById('nessun-ristorante');
+        vuoto.textContent = q ? `Nessun ristorante trovato per "${q}".` : 'Nessun ristorante disponibile al momento.';
+        vuoto.classList.toggle('d-none', ristoranti.length > 0);
+
+        document.getElementById('conteggio').textContent = ristoranti.length > 0
+            ? `${ristoranti.length} ${ristoranti.length === 1 ? 'ristorante' : 'ristoranti'}`
+            : '';
+
+        ristoranti.forEach(r => {
+            const clone = modello.cloneNode(true);
+            clone.removeAttribute('id');
+            clone.classList.remove('d-none');
+
+            clone.querySelector('.ristorante-link').href = `ristorante.html?id=${r._id}`;
+            clone.querySelector('.ristorante-nome').textContent = r.nomeRistorante;
+            clone.querySelector('.ristorante-indirizzo span').textContent = formattaIndirizzo(r);
+            clone.querySelector('.ristorante-telefono span').textContent = r.telefonoRistorante || '';
+            clone.querySelector('.ristorante-indirizzo').classList.toggle('d-none', !r.via);
+            clone.querySelector('.ristorante-telefono').classList.toggle('d-none', !r.telefonoRistorante);
+
+            const icona = clone.querySelector('.ristorante-icona');
+            const iniziali = clone.querySelector('.ristorante-iniziali');
+            const logo = clone.querySelector('.card-logo');
+            iniziali.textContent = r.nomeRistorante.substring(0, 2).toUpperCase();
+
+            if (r.logoUrl) {
+                logo.onload = () => {
+                    icona.style.background = '#fff';
+                    logo.classList.remove('d-none');
+                    iniziali.classList.add('d-none');
+                };
+                logo.src = r.logoUrl;
+            }
+
+            lista.appendChild(clone);
+        });
+    }
+
+    async function caricaRistoranti() {
+        const q = input.value.trim();
+
+        history.replaceState(null, '', q ? `?q=${encodeURIComponent(q)}` : window.location.pathname);
+
+        try {
+            const response = await fetch(`http://localhost:3005/ristoranti?q=${encodeURIComponent(q)}&api_key=1234567`);
+            const risultato = await response.json();
+
+            if (risultato.error) {
+                console.error(risultato.error);
+                return;
+            }
+            renderRistoranti(risultato, q);
+        } catch (error) {
+            console.error('Errore:', error);
+        }
+    }
+
+    document.getElementById('form-ricerca').addEventListener('submit', (e) => {
+        e.preventDefault();
+        caricaRistoranti();
+    });
+
+    input.value = new URLSearchParams(window.location.search).get('q') || '';
+    caricaRistoranti();
+</script>
+</body>
+</html>

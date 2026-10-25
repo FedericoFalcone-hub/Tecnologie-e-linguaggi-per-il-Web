@@ -1703,6 +1703,36 @@ app.get('/user/:id/ristorante/statistiche/mensili', async (req, res) => {
     }
 });
 
+app.get('/ristoranti', async (req, res) => {
+    // #swagger.description = "Elenca i ristoranti; con ?q= cerca per nome, città o via"
+    try {
+        const q = String(req.query.q || '').trim().slice(0, 60);
+        const filtro = {};
+
+        if (q) {
+            const regex = new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i');
+            filtro.$or = [{nomeRistorante: regex}, {citta: regex}, {via: regex}];
+        }
+
+        const ristoranti = await client.db('FastFood').collection('ristoranti')
+            .find(filtro, {
+                projection: {
+                    nomeRistorante: 1, logoUrl: 1, telefonoRistorante: 1,
+                    via: 1, civico: 1, cap: 1, citta: 1, provincia: 1
+                }
+            })
+            .collation({locale: 'it'})
+            .sort({nomeRistorante: 1})
+            .limit(100)
+            .toArray();
+
+        res.json(ristoranti);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({error: "Errore interno del server"});
+    }
+});
+
 client.connect()
 
     .then(() => {
