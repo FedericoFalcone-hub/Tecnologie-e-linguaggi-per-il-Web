@@ -7,7 +7,16 @@
     <link href="style.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap"
           rel="stylesheet">
+    <style>
+        .ristorante-card {
+            transition: transform .15s ease, box-shadow .15s ease;
+        }
 
+        .ristorante-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .12) !important;
+        }
+    </style>
 </head>
 <body>
 <div id="navbar-container"></div>
@@ -31,7 +40,7 @@
                 <div class="card-body p-4 d-flex align-items-center gap-3">
                     <div class="ristorante-icona d-flex align-items-center justify-content-center flex-shrink-0"
                          style="width: 64px; height: 64px; border-radius: 16px; overflow: hidden; background: var(--brand); color: #fff; font-size: 22px; font-weight: 700;">
-                        <img class="card-logo d-none" alt=""
+                        <img class="ristorante-logo d-none" alt=""
                              style="width: 100%; height: 100%; object-fit: cover;">
                         <span class="ristorante-iniziali"></span>
                     </div>
@@ -86,13 +95,14 @@
 
             const icona = clone.querySelector('.ristorante-icona');
             const iniziali = clone.querySelector('.ristorante-iniziali');
-            const logo = clone.querySelector('.card-logo');
+            const logo = clone.querySelector('.ristorante-logo');
             iniziali.textContent = r.nomeRistorante.substring(0, 2).toUpperCase();
 
             if (r.logoUrl) {
                 logo.onload = () => {
                     icona.style.background = '#fff';
                     logo.classList.remove('d-none');
+                    logo.style.background = 'transparent';
                     iniziali.classList.add('d-none');
                 };
                 logo.src = r.logoUrl;
