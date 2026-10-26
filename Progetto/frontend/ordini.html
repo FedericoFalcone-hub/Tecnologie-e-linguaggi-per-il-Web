@@ -122,7 +122,7 @@
 
     function creaCardOrdine(ordine) {
         const clone = document.getElementById('modello-ordine').cloneNode(true);
-        clone.removeAttribute('id');
+        clone.id = ordine._id;
         clone.classList.remove('d-none');
         clone.href = `conferma_ordine.html?id=${ordine._id}`;
 

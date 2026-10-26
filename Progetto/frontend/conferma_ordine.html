@@ -153,7 +153,7 @@
             }
 
             const clone = modello.cloneNode(true);
-            clone.removeAttribute('id');
+            clone.id = item.id;
             clone.classList.remove('d-none');
             clone.querySelector('.prodotto-nome').textContent = item.nome;
             const nota = clone.querySelector('.prodotto-nota');

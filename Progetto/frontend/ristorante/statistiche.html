@@ -183,7 +183,7 @@
 
         [...mesi].reverse().filter(m => m.numeroOrdini > 0).forEach(m => {
             const clone = modello.cloneNode(true);
-            clone.removeAttribute('id');
+            clone.id = m.mese;
             clone.classList.remove('d-none');
             clone.querySelector('.mese-nome').textContent = MESI[m.mese - 1];
             clone.querySelector('.mese-ordini').textContent = String(m.numeroOrdini);

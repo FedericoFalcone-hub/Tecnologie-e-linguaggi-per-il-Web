@@ -975,7 +975,23 @@ app.get('/search/:query', async (req, res) => {
                     _id: '$ristorante._id',
                     ristoranteNome: {$first: '$ristorante.nomeRistorante'},
                     ristoranteTelefono: {$first: '$ristorante.telefonoRistorante'},
-                    ristoranteIndirizzo: {$first: '$ristorante.indirizzoRistorante'},
+                    ristoranteIndirizzo: {
+                        $first: {
+                            $cond: [
+                                {$eq: [{$type: '$ristorante.via'}, 'string']},
+                                {
+                                    $concat: [
+                                        '$ristorante.via', ' ',
+                                        '$ristorante.civico', ', ',
+                                        '$ristorante.cap', ' ',
+                                        '$ristorante.citta', ' (',
+                                        '$ristorante.provincia', ')'
+                                    ]
+                                },
+                                '$ristorante.indirizzoRistorante'
+                            ]
+                        }
+                    },
                     ristoranteLogo: {$first: '$ristorante.logoUrl'},
                     // Inserisci i piatti trovati in un array
                     piatti: {

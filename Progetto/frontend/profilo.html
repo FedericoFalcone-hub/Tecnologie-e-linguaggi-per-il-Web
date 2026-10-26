@@ -329,7 +329,7 @@
 
         indirizzi.forEach(ind => {
             const clone = modello.cloneNode(true);
-            clone.removeAttribute('id');
+            clone.id = ind._id;
             clone.classList.remove('d-none');
 
             const stradale = `${ind.via}, ${ind.civico}`;

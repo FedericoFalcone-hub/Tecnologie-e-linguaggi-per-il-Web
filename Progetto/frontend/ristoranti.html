@@ -83,7 +83,7 @@
 
         ristoranti.forEach(r => {
             const clone = modello.cloneNode(true);
-            clone.removeAttribute('id');
+            clone.id = r._id;
             clone.classList.remove('d-none');
 
             clone.querySelector('.ristorante-link').href = `ristorante.html?id=${r._id}`;

@@ -135,9 +135,8 @@
 
     function creaCardOrdine(ordine) {
         const clone = document.getElementById('modello-ordine').cloneNode(true);
-        clone.removeAttribute('id');
         clone.classList.remove('d-none');
-
+        clone.id = ordine.numeroOrdine;
         clone.querySelector('.ordine-numero').textContent = `#${String(ordine.numeroOrdine).padStart(6, '0')}`;
         clone.querySelector('.ordine-data').textContent = new Date(ordine.data).toLocaleString('it-IT', {
             dateStyle: 'short',
@@ -162,7 +161,7 @@
         const modelloProdotto = document.getElementById('modello-prodotto-ordine');
         ordine.prodotti.forEach(p => {
             const riga = modelloProdotto.cloneNode(true);
-            riga.removeAttribute('id');
+            riga.id = p.id;
             riga.classList.remove('d-none');
             riga.querySelector('.prodotto-nome').textContent = p.nome;
             const nota = riga.querySelector('.prodotto-nota');

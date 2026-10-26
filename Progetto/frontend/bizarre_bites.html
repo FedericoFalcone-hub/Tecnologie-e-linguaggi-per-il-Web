@@ -141,13 +141,12 @@
 
         offerte.forEach(o => {
             const clone = modello.cloneNode(true);
-            clone.removeAttribute('id');
             clone.classList.remove('d-none');
             clone.querySelector('.offerta-categoria').textContent = o.categoria;
             clone.querySelector('.offerta-sconto').textContent = `-${o.sconto}%`;
             clone.querySelector('.offerta-descrizione').textContent = `Sconto del ${o.sconto}% su tutti i piatti di ${o.categoria}.`;
             clone.querySelector('.offerta-codice').textContent = o.codice;
-
+            clone.id = o.codice;
             const btnCopia = clone.querySelector('.btn-copia');
             btnCopia.addEventListener('click', async () => {
                 try {

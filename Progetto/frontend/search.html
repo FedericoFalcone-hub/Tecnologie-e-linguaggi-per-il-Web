@@ -105,9 +105,8 @@
 
         data.forEach(item => {
             const clone = modelloRisultati.cloneNode(true);
-            clone.removeAttribute('id');
             clone.classList.remove('d-none');
-
+            clone.id = item.idRistorante;
             clone.querySelector('.card-img-top').src = item.ristoranteLogo;
             clone.querySelector('.card-title').textContent = item.ristoranteNome;
             clone.querySelector('.indirizzo-ristorante').textContent = item.ristoranteIndirizzo;

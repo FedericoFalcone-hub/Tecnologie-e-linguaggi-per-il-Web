@@ -193,7 +193,6 @@
 
         ristorante.piatti.forEach(item => {
             const clone = modelloRisultati.cloneNode(true);
-            clone.removeAttribute('id');
             clone.classList.remove('d-none');
 
             if (categoriaAttuale !== item.categoria) {
@@ -206,7 +205,7 @@
             clone.querySelector('.card-img-top').src = item.foto;
             clone.querySelector('.card-title').textContent = item.nome;
             clone.querySelector('.prezzo-piatto').textContent = `€ ${item.prezzo.toFixed(2)}`;
-
+            clone.id = item._id;
             if (utente && utente.ristoratore) {
                 clone.querySelector('.btn-aggiungi-carrello').style.display = 'none';
             }

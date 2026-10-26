@@ -564,7 +564,7 @@
         listaCarte.innerHTML = '';
         carte.forEach(carta => {
             const clone = modelloCarta.cloneNode(true);
-            clone.removeAttribute('id');
+            clone.id = carta._id;
             clone.classList.remove('d-none');
             clone.classList.toggle('border-2', carta._id === cartaSelezionata._id);
             clone.classList.toggle('border-dark', carta._id === cartaSelezionata._id);
@@ -627,8 +627,8 @@
             totale += subtotale;
 
             const clone = modello.cloneNode(true);
-            clone.removeAttribute('id');
             clone.classList.remove('d-none');
+            clone.id = item.id;
             clone.querySelector('.riepilogo-nome').textContent = item.nome;
             const nota = clone.querySelector('.riepilogo-nota');
             nota.textContent = item.nota || '';
