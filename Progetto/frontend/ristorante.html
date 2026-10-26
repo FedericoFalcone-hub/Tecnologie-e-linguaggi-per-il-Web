@@ -37,6 +37,13 @@
 
     <h3 class="mb-4" style="font-weight: 700;">Menu</h3>
     <hr>
+
+    <div class="text-center w-100" id="loader">
+        <div class="spinner-border text-dark" role="status">
+            <span class="visually-hidden">Caricamento...</span>
+        </div>
+    </div>
+
     <div id="container-result" class="row g-4 ">
         <div id="modello-risultati" class="col-lg-4 col-md-6 d-none menu-item-card">
             <div class="card border-0 shadow-sm h-100">
@@ -176,6 +183,7 @@
             const response = await fetch(`http://localhost:3005/ristorante/${idRistorante}/menu`);
             const ristorante = await response.json();
             document.title = ristorante.ristoranteNome;
+            document.getElementById('loader').style.display = 'none';
             displayHeader(ristorante);
             displayRistorante(ristorante);
         } catch (error) {

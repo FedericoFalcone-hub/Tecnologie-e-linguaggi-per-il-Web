@@ -33,6 +33,12 @@
     </form>
     <p id="conteggio" class="text-muted mb-4" style="font-size: 14px; min-height: 21px;"></p>
 
+    <div class="text-center w-100" id="loader">
+        <div class="spinner-border text-dark" role="status">
+            <span class="visually-hidden">Caricamento...</span>
+        </div>
+    </div>
+
     <!-- Template ristorante -->
     <div id="modello-ristorante" class="col-lg-4 col-md-6 d-none">
         <a href="#" class="ristorante-link text-decoration-none text-dark d-block h-100">
@@ -125,6 +131,7 @@
                 console.error(risultato.error);
                 return;
             }
+            document.getElementById('loader').style.display = 'none';
             renderRistoranti(risultato, q);
         } catch (error) {
             console.error('Errore:', error);
