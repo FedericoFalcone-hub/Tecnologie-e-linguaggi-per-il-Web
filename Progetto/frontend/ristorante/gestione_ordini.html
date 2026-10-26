@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestione ordini</title>
+    <title>Gestione ordini - Bizarre Bites</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="../style.css" rel="stylesheet">
 
@@ -119,7 +119,8 @@
 <script>
     checkLoggedRistoratore();
     setInterval(aggiornaCronometro, 1000);
-
+    const ristorante = JSON.parse(localStorage.getItem('ristorante'));
+    document.title = "Gestione Ordini - " + ristorante.nomeRistorante + " - Bizarre Bites";
     const dataAccettazione = (o) => o.dataPreparazione;
     const utente = JSON.parse(localStorage.getItem('utente'));
     const STATI = {

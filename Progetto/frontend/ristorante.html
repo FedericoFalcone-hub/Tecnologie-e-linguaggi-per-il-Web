@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Search</title>
+    <title>Ristorante - Bizarre Bites</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="style.css" rel="stylesheet">
 
@@ -182,7 +182,7 @@
         try {
             const response = await fetch(`http://localhost:3005/ristorante/${idRistorante}/menu`);
             const ristorante = await response.json();
-            document.title = ristorante.ristoranteNome;
+            document.title = ristorante.ristoranteNome + ' - Bizarre Bites';
             document.getElementById('loader').style.display = 'none';
             displayHeader(ristorante);
             displayRistorante(ristorante);

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Menu Ristorante</title>
+    <title>Menu Ristorante - Bizarre Bites</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="../style.css" rel="stylesheet">
 
@@ -310,6 +310,7 @@
     async function caricaMenu() {
 
         const ristorante = JSON.parse(localStorage.getItem('ristorante'));
+        document.title = ristorante ? `Menu - ${ristorante.nomeRistorante}` : "Menu - Bizarre Bites";
         const modello = document.getElementById('modello-menu');
         const body = document.getElementById('body');
         body.innerHTML = "";
