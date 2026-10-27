@@ -49,7 +49,8 @@
             <div class="card border-0 shadow-sm h-100">
                 <div class="position-relative">
                     <img src="" class="card-img-top" alt="" style="height: 200px; object-fit: cover;">
-                    <button class="btn btn-brand rounded-circle shadow btn-aggiungi-carrello position-absolute d-flex align-items-center justify-content-center"
+                    <button id='aggiunta'
+                            class="btn btn-brand rounded-circle shadow btn-aggiungi-carrello position-absolute d-flex align-items-center justify-content-center"
                             style="top: 10px; right: 10px; width: 38px; height: 38px; font-size: 22px; line-height: 1; padding: 0;"
                             aria-label="Aggiungi al carrello">+
                     </button>
@@ -167,6 +168,10 @@
     let modalPiatto = new bootstrap.Modal(document.getElementById('modalPiatto'));
     const utente = JSON.parse(localStorage.getItem('utente'));
 
+    if (!utente || utente.ristoratore) {
+        document.getElementById('btn-carrello').style.display = 'none';
+    }
+
     window.addEventListener('pageshow', (e) => {
         if (e.persisted) {
             document.getElementById('badge-carrello').textContent = '0';
@@ -214,12 +219,14 @@
             clone.querySelector('.card-title').textContent = item.nome;
             clone.querySelector('.prezzo-piatto').textContent = `€ ${item.prezzo.toFixed(2)}`;
             clone.id = item._id;
-            if (utente && utente.ristoratore) {
-                clone.querySelector('.btn-aggiungi-carrello').style.display = 'none';
+            if (!utente || utente.ristoratore) {
+                clone.querySelector('.btn-aggiungi-carrello').remove();
+            } else {
+                clone.querySelector('.btn-aggiungi-carrello').addEventListener('click', () => {
+                    apriModalPiatto(item);
+                });
             }
-            clone.querySelector('.btn-aggiungi-carrello').addEventListener('click', () => {
-                apriModalPiatto(item);
-            });
+
 
             containerResult.appendChild(clone);
 

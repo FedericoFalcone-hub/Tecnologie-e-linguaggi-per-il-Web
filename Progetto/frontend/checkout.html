@@ -654,6 +654,10 @@
         const metodoPagamento = getMetodoPagamento();
         const metodoRitiro = document.querySelector('input[name="metodo"]:checked').value;
 
+        if (!metodoPagamento) {
+            alert('Seleziona un metodo di pagamento');
+            return;
+        }
         const ordine = {
             ristoranteId: idRistorante,
             sconto: codiceApplicato,
@@ -665,6 +669,7 @@
             cognomeCliente: cognome,
         };
 
+        console.log(ordine);
         const response = await fetch(`http://localhost:3005/user/${utente._id}/ordine?api_key=1234567`, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
