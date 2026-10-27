@@ -115,7 +115,7 @@
                             </select>
                         </div>
 
-                        <div class="mb-3 form-check">
+                        <div id="check" class="mb-3 form-check">
                             <input type="checkbox" class="form-check-input" id="preferenzePersonalizzazione">
                             <label class="form-check-label" for="preferenzePersonalizzazione" style="font-size: 14px;">
                                 Accetto di ricevere offerte speciali personalizzate in base alle mie preferenze
@@ -144,6 +144,8 @@
 
 <script>
     checkLogged();
+    const tipo = document.getElementById('tipo');
+    const check = document.getElementById('check');
 
     function registra(result) {
         let alert = document.getElementById('registrazione-messaggio');
@@ -183,7 +185,7 @@
         }
         const cTipo = document.getElementById('tipo');
         const cPreferenze = document.getElementById('preferenzePersonalizzazione').checked;
-
+        
         const user = {
             nome: cNome,
             cognome: cCognome,
@@ -206,10 +208,23 @@
         document.getElementById('registrazione-messaggio').classList.add('text-muted');
         document.getElementById('registrazione-messaggio').textContent = 'Registrazione in corso...';
 
-        fetch('http://localhost:3005/user?api_key=${API_KEY}', options)
+        fetch(`http://localhost:3005/user?api_key=${API_KEY}`, options)
             .then(response => response.json())
             .then(result => registra(result));
     });
+
+
+    function aggiornaCheck() {
+        const ristoratore = tipo.value === 'true';
+        check.style.display = ristoratore ? 'none' : 'block';
+        if (ristoratore) {
+            check.querySelectorAll('input[type="checkbox"]').forEach(c => c.checked = false);
+        }
+    }
+
+    tipo.addEventListener('change', aggiornaCheck);
+    aggiornaCheck();
+    window.addEventListener('pageshow', aggiornaCheck);
 
 </script>
 </body>
