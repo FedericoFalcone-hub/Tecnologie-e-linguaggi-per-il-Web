@@ -74,7 +74,7 @@
 
     async function ritiraOrdine(ordine) {
         try {
-            const response = await fetch(`http://localhost:3005/user/${utente._id}/ordini/${ordine.numeroOrdine}/ritira?api_key=1234567`, {
+            const response = await fetch(`http://localhost:3005/user/${utente._id}/ordini/${ordine.numeroOrdine}/ritira?api_key=${API_KEY}`, {
                 method: 'PUT'
             });
             const risultato = await response.json();
@@ -176,7 +176,7 @@
 
     async function caricaOrdini() {
         try {
-            const response = await fetch(`http://localhost:3005/user/${utente._id}/ordini?api_key=1234567`);
+            const response = await fetch(`http://localhost:3005/user/${utente._id}/ordini?api_key=${API_KEY}`);
             const risultato = await response.json();
             if (risultato.error) {
                 console.error(risultato.error);

@@ -319,7 +319,7 @@
         const pieno = document.getElementById('pieno');
 
         try {
-            fetch(`http://localhost:3005/ristorante/${ristorante._id}/menu?api_key=1234567`)
+            fetch(`http://localhost:3005/ristorante/${ristorante._id}/menu?api_key=${API_KEY}`)
                 .then(res => res.json())
                 .then(dati => {
                     if (dati === null) {
@@ -421,7 +421,7 @@
         const modello = document.getElementById('modello-catalogo');
         const body = document.getElementById('body-catalogo');
         if (!catalogoCache) {
-            const res = await fetch(`http://localhost:3005/piatti?api_key=1234567`);
+            const res = await fetch(`http://localhost:3005/piatti?api_key=${API_KEY}`);
             catalogoCache = await res.json();
         }
         renderCatalogo(catalogoCache, modello, body);

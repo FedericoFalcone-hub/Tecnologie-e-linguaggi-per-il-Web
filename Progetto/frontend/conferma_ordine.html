@@ -197,7 +197,7 @@
 
     async function caricaOrdine() {
         try {
-            const response = await fetch(`http://localhost:3005/ordine/${idOrdine}?api_key=1234567`);
+            const response = await fetch(`http://localhost:3005/ordine/${idOrdine}?api_key=${API_KEY}`);
             const ordine = await response.json();
             if (ordine.error) {
                 mostraErrore(ordine.error);

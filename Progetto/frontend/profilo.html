@@ -229,7 +229,7 @@
                 }
             };
 
-            fetch(`http://localhost:3005/user/${utente._id}?api_key=1234567`, options)
+            fetch(`http://localhost:3005/user/${utente._id}?api_key=${API_KEY}`, options)
                 .then(response => response.json())
                 .then(result => {
                     if (result.error) {
@@ -281,7 +281,7 @@
             body: JSON.stringify(user)
         };
 
-        fetch(`http://localhost:3005/user/${utente._id}?api_key=1234567`, options)
+        fetch(`http://localhost:3005/user/${utente._id}?api_key=${API_KEY}`, options)
             .then(response => response.json())
             .then(result => aggiornaDati(result))
     });
@@ -316,7 +316,7 @@
         };
 
 
-        fetch(`http://localhost:3005/user/${utente._id}/password?api_key=1234567`, options)
+        fetch(`http://localhost:3005/user/${utente._id}/password?api_key=${API_KEY}`, options)
             .then(response => response.json())
             .then(result => aggiornaPassword(result))
     });
@@ -354,7 +354,7 @@
         if (!confirm('Vuoi eliminare questo indirizzo?')) return;
 
         try {
-            await fetch(`http://localhost:3005/user/${utente._id}/indirizzi/${idIndirizzo}?api_key=1234567`, {method: 'DELETE'});
+            await fetch(`http://localhost:3005/user/${utente._id}/indirizzi/${idIndirizzo}?api_key=${API_KEY}`, {method: 'DELETE'});
 
             const eliminato = utente.indirizzi.find(a => a._id === idIndirizzo);
             utente.indirizzi = utente.indirizzi.filter(a => a._id !== idIndirizzo);
@@ -386,7 +386,7 @@
 
 
         try {
-            const response = await fetch(`http://localhost:3005/user/${utente._id}/indirizzi?api_key=1234567`, {
+            const response = await fetch(`http://localhost:3005/user/${utente._id}/indirizzi?api_key=${API_KEY}`, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify(body)

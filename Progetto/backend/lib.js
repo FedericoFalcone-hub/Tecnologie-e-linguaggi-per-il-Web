@@ -1,3 +1,5 @@
+const API_KEY = "1234567";
+
 function isLogged() {
     return localStorage.getItem("utente");
 }

@@ -245,7 +245,7 @@
 
     async function caricaOrdini() {
         try {
-            const response = await fetch(`http://localhost:3005/user/${utente._id}/ristorante/ordini?api_key=1234567`);
+            const response = await fetch(`http://localhost:3005/user/${utente._id}/ristorante/ordini?api_key=${API_KEY}`);
             const risultato = await response.json();
             if (risultato.error) {
                 mostraToast(risultato.error);
@@ -261,7 +261,7 @@
     async function cambiaStato(ordine, annulla = false) {
         if (!annulla) {
             try {
-                const response = await fetch(`http://localhost:3005/user/${utente._id}/ristorante/ordini/${ordine.numeroOrdine}/stato/aggiorna?api_key=1234567`, {
+                const response = await fetch(`http://localhost:3005/user/${utente._id}/ristorante/ordini/${ordine.numeroOrdine}/stato/aggiorna?api_key=${API_KEY}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json'
@@ -283,7 +283,7 @@
             }
         } else {
             try {
-                const response = await fetch(`http://localhost:3005/user/${utente._id}/ristorante/ordini/${ordine.numeroOrdine}/stato/annulla?api_key=1234567`, {
+                const response = await fetch(`http://localhost:3005/user/${utente._id}/ristorante/ordini/${ordine.numeroOrdine}/stato/annulla?api_key=${API_KEY}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json'

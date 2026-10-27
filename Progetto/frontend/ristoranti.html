@@ -136,7 +136,7 @@
         history.replaceState(null, '', q ? `?q=${encodeURIComponent(q)}` : window.location.pathname);
 
         try {
-            const response = await fetch(`http://localhost:3005/ristoranti?q=${encodeURIComponent(q)}&api_key=1234567`);
+            const response = await fetch(`http://localhost:3005/ristoranti?q=${encodeURIComponent(q)}&api_key=${API_KEY}`);
             const risultato = await response.json();
 
             if (risultato.error) {

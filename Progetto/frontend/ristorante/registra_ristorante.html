@@ -169,7 +169,7 @@
         messaggio.textContent = 'Registrazione in corso...';
         messaggio.classList.add('text-muted');
 
-        fetch(`http://localhost:3005/user/${utente._id}/ristorante?api_key=1234567`, options)
+        fetch(`http://localhost:3005/user/${utente._id}/ristorante?api_key=${API_KEY}`, options)
             .then(response => response.json())
             .then(result => registra(result));
     });

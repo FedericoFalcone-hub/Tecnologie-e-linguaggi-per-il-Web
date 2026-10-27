@@ -260,7 +260,7 @@
     async function caricaStatistiche() {
         aggiornaSelettore();
         try {
-            const response = await fetch(`http://localhost:3005/user/${utente._id}/ristorante/statistiche/mensili?anno=${anno}&api_key=1234567`);
+            const response = await fetch(`http://localhost:3005/user/${utente._id}/ristorante/statistiche/mensili?anno=${anno}&api_key=${API_KEY}`);
             const dati = await response.json();
 
             if (dati.error) {

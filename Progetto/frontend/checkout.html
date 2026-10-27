@@ -398,7 +398,7 @@
     }
 
     async function getRistorante() {
-        const response = await fetch(`http://localhost:3005/ristorante/${idRistorante}?api_key=1234567`);
+        const response = await fetch(`http://localhost:3005/ristorante/${idRistorante}?api_key=${API_KEY}`);
         ristorante = await response.json();
         document.getElementById('nome-ristorante').textContent = ristorante.nomeRistorante;
         document.title = "Checkout - " + ristorante.nomeRistorante;
@@ -455,7 +455,7 @@
         messaggio.textContent = 'Verifica in corso...';
 
         try {
-            const response = await fetch(`http://localhost:3005/user/consumaCodice?api_key=1234567`, {
+            const response = await fetch(`http://localhost:3005/user/consumaCodice?api_key=${API_KEY}`, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({
@@ -509,7 +509,7 @@
         };
 
 
-        const response = await fetch(`http://localhost:3005/user/${utente._id}/indirizzi?api_key=1234567`, {
+        const response = await fetch(`http://localhost:3005/user/${utente._id}/indirizzi?api_key=${API_KEY}`, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(nuovo)
@@ -553,7 +553,7 @@
 
     async function renderListaCarte() {
 
-        const response = await fetch(`http://localhost:3005/user/${utente._id}/carte-pagamento?api_key=1234567`);
+        const response = await fetch(`http://localhost:3005/user/${utente._id}/carte-pagamento?api_key=${API_KEY}`);
         const carte = await response.json();
 
         if (cartaSelezionata == null) {
@@ -589,7 +589,7 @@
             cvv: document.getElementById('input-cvv').value.trim()
         };
 
-        const response = await fetch(`http://localhost:3005/user/${utente._id}/carte?api_key=1234567`, {
+        const response = await fetch(`http://localhost:3005/user/${utente._id}/carte?api_key=${API_KEY}`, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(nuovaCarta)
@@ -670,7 +670,7 @@
         };
 
         console.log(ordine);
-        const response = await fetch(`http://localhost:3005/user/${utente._id}/ordine?api_key=1234567`, {
+        const response = await fetch(`http://localhost:3005/user/${utente._id}/ordine?api_key=${API_KEY}`, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(ordine)

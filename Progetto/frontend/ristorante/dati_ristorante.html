@@ -289,7 +289,7 @@
         }
 
         // Chiamata per salvare il nuovo logoUrl
-        fetch(`http://localhost:3005/user/${utente._id}/ristorante/logo?api_key=1234567`, {
+        fetch(`http://localhost:3005/user/${utente._id}/ristorante/logo?api_key=${API_KEY}`, {
             method: 'PUT',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({logoUrl: nuovoUrl})

@@ -206,7 +206,7 @@
         document.getElementById('registrazione-messaggio').classList.add('text-muted');
         document.getElementById('registrazione-messaggio').textContent = 'Registrazione in corso...';
 
-        fetch('http://localhost:3005/user?api_key=1234567', options)
+        fetch('http://localhost:3005/user?api_key=${API_KEY}', options)
             .then(response => response.json())
             .then(result => registra(result));
     });
