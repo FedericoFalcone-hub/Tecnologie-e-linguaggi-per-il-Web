@@ -220,7 +220,9 @@
             clone.querySelector('.prezzo-piatto').textContent = `€ ${item.prezzo.toFixed(2)}`;
             clone.id = item._id;
             if (!utente || utente.ristoratore) {
-                clone.querySelector('.btn-aggiungi-carrello').remove();
+                clone.querySelector('.btn-aggiungi-carrello').addEventListener('click', () => {
+                    alert('Devi eseguire l\'accesso come cliente per aggiungere piatti al carrello.');
+                });
             } else {
                 clone.querySelector('.btn-aggiungi-carrello').addEventListener('click', () => {
                     apriModalPiatto(item);
