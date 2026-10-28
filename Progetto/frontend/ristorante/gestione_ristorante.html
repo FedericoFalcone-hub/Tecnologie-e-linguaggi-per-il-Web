@@ -82,9 +82,19 @@
         </div>
 
     </div>
-    <div class="row justify-content-center mt-4">
+    <div class="row justify-content-center mt-4 g-4">
         <div class="col-md-6">
-            <div class="card border-0 shadow-sm p-4 text-center card-danger-negozio" style="cursor: pointer;"
+            <div class="card border-0 shadow-sm p-4 text-center card-danger-negozio h-100" style="cursor: pointer;"
+                 data-bs-toggle="modal" data-bs-target="#modalTrasferisci">
+                <img src="../../backend/images/exchange.png" alt="" class="d-block mx-auto mb-2"
+                     style="width: 32px; height: 32px; object-fit: contain;">
+                <p class="fw-semibold mb-1 text-danger">Dai in gestione</p>
+                <p class="text-muted mb-0" style="font-size: 14px;">Cedi definitivamente il ristorante a un altro
+                    account</p>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm p-4 text-center card-danger-negozio h-100" style="cursor: pointer;"
                  data-bs-toggle="modal" data-bs-target="#modalEliminaRistorante">
                 <img src="../../backend/images/bin1.png" alt="" class="d-block mx-auto mb-2"
                      style="width: 32px; height: 32px; object-fit: contain;">
@@ -118,12 +128,36 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="modalTrasferisci" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-danger">Trasferisci proprietà</h5>
+                <button class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p class="small">Perderai il controllo del ristorante. L'azione non è annullabile.</p>
+
+                <label for="emailTrasferimento"></label><input type="email" id="emailTrasferimento"
+                                                               class="form-control mb-2"
+                                                               placeholder="Email del nuovo proprietario">
+                <div id="erroreTrasferimento" class="text-danger small mt-2"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-light" data-bs-dismiss="modal">Annulla</button>
+                <button class="btn btn-danger" id="btnConfermaTrasferimento">Trasferisci</button>
+            </div>
+        </div>
+    </div>
+</div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 
 <script src="../../backend/lib.js"></script>
 
 <script>
     checkLoggedRistoratore();
+    const utente = JSON.parse(localStorage.getItem('utente'));
 
     async function inizializza() {
         let ristorante = JSON.parse(localStorage.getItem("ristorante"));
@@ -182,6 +216,36 @@
                 }
             });
     }
+
+    document.getElementById('btnConfermaTrasferimento').addEventListener('click', async () => {
+        const email = document.getElementById('emailTrasferimento').value.trim();
+
+        if (confirm(`Sei sicuro di voler trasferire la proprietà del ristorante a ${email}? Questa azione non può essere annullata.`)) {
+            try {
+                fetch(`http://localhost:3005/ristorante/${utente._id}/trasferisci?api_key=${API_KEY}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({email})
+                }).then(response => response.json())
+                    .then(result => {
+                        if (result.error) {
+                            console.log("qui");
+                            document.getElementById('erroreTrasferimento').textContent = result.error;
+                        } else {
+                            alert('Trasferimento completato con successo.');
+                            localStorage.removeItem('ristorante');
+                            window.location.href = 'gestione_ristorante.html';
+                        }
+                    });
+
+            } catch (error) {
+                console.error('Errore durante il trasferimento:', error);
+                document.getElementById('erroreTrasferimento').textContent = 'Si è verificato un errore. Riprova più tardi.';
+            }
+        }
+    })
 
     inizializza();
 

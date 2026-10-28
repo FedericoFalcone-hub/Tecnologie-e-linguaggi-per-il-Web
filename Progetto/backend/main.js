@@ -1749,6 +1749,48 @@ app.get('/ristoranti', async (req, res) => {
     }
 });
 
+app.post('/ristorante/:id/trasferisci', async (req, res) => {
+    // #swagger.description = "Trasferisce la proprietà di un ristorante a un altro utente"
+    try {
+        const {id} = req.params;
+        const {email} = req.body;
+
+        if (!email) {
+            return res.status(400).json({error: "Email non fornita"});
+        }
+
+        const ristorante = await getRistoranteRistoratore(id);
+
+        if (!ristorante) {
+            return res.status(404).json({error: "Ristorante non trovato"});
+        }
+
+        const utente = await client.db('FastFood').collection('users').findOne({email});
+
+        if (!utente) {
+            return res.status(404).json({error: "Utente non trovato"});
+        }
+
+        if (!utente.ristoratore) {
+            return res.status(400).json({error: "L'utente non è un ristoratore"});
+        }
+
+
+        if (await getRistoranteRistoratore(utente._id.toString())) {
+            return res.status(400).json({error: "L'utente ha già un ristorante associato"});
+        }
+        await client.db('FastFood').collection('ristoranti').updateOne(
+            {_id: ristorante._id},
+            {$set: {idRistoratore: utente._id.toString()}}
+        );
+
+        res.json({message: "Proprietà del ristorante trasferita con successo"});
+    } catch (error) {
+        console.error("Errore durante il trasferimento della proprietà del ristorante:", error);
+        res.status(500).json({error: "Errore interno del server"});
+    }
+});
+
 client.connect()
 
     .then(() => {
