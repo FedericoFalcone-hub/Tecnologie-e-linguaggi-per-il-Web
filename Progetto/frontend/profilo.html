@@ -219,26 +219,44 @@
         }
     }
 
-    function eliminaAccount() {
-        if (confirm("Sei sicuro di voler eliminare il tuo account? Questa azione è irreversibile.")) {
-            const utente = JSON.parse(localStorage.getItem('utente'));
-            const options = {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            };
+    async function elimina() {
+        const options = {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        };
 
-            fetch(`http://localhost:3005/user/${utente._id}?api_key=${API_KEY}`, options)
+        fetch(`http://localhost:3005/user/${utente._id}?api_key=${API_KEY}`, options)
+            .then(response => response.json())
+            .then(result => {
+                if (result.error) {
+                    alert("Errore durante l'eliminazione dell'account: " + result.error);
+                } else {
+                    localStorage.removeItem('utente');
+                    window.location.href = "bizarre_bites.html";
+                }
+            });
+    }
+
+    async function eliminaAccount() {
+        if (utente.ristoratore) {
+            fetch(`http://localhost:3005/user/${utente._id}/ristorante?api_key=${API_KEY}`)
                 .then(response => response.json())
                 .then(result => {
                     if (result.error) {
-                        alert("Errore durante l'eliminazione dell'account: " + result.error);
+                        confirm("Sei sicuro di voler eliminare il tuo account? Questa azione è irreversibile.");
+                        elimina();
                     } else {
-                        localStorage.removeItem('utente');
-                        window.location.href = "bizarre_bites.html";
+                        console.log(result);
+                        alert("Impossibile eliminare l'account perché associato ad un ristorante. Elimina prima il ristorante o dallo in gestione a qualcun altro.");
                     }
                 });
+        } else {
+            if (confirm("Sei sicuro di voler eliminare il tuo account? Questa azione è irreversibile.")) {
+                await elimina();
+            }
+
         }
     }
 
