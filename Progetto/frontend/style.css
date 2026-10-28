@@ -308,6 +308,15 @@ body {
     background-color: #fff5f5;
 }
 
+
+.card-opzioni {
+    transition: background-color 0.2s;
+}
+
+.card-opzioni:hover {
+    background-color: #f8f9fa;
+}
+
 .badge-categoria {
     display: inline-block;
     background: rgba(255, 122, 26, 0.1);
