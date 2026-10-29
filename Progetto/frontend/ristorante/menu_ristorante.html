@@ -156,12 +156,18 @@
                                     <label for="fotoPiatto" class="form-label">Foto</label>
                                     <input type="text" class="form-control" id="fotoPiatto"
                                            placeholder="URL della foto">
+                                    <p id="foto-modal-messaggio" class="text-center mt-2 mb-0"
+                                       style="font-size: 14px;"></p>
+
                                 </div>
                                 <div class="mb-3">
                                     <label for="ricettaPiatto" class="form-label">Ricetta</label>
                                     <textarea class="form-control" id="ricettaPiatto" rows="3" required
                                               placeholder="Scrivi la ricetta del piatto..."></textarea>
                                 </div>
+                                <img id="anteprimaFotoPiatto" src="" alt="Anteprima foto piatto"
+                                     class="img-fluid mb-3 d-none">
+
                                 <button type="submit"
                                         class="btn btn-brand rounded-pill w-100 py-2">Aggiungi al menu
                                 </button>
@@ -284,6 +290,29 @@
     let catalogoCache = null;
     let piattoDaAggiungere = null;
     const user = JSON.parse(localStorage.getItem('utente'));
+    const messaggio = document.getElementById('foto-modal-messaggio');
+
+    document.getElementById('fotoPiatto').addEventListener('input', function () {
+        const url = this.value.trim();
+        const img = document.getElementById('anteprimaFotoPiatto');
+
+        if (!url) {
+            messaggio.textContent = '';
+            return;
+        }
+
+        img.onerror = function () {
+            messaggio.textContent = 'Impossibile caricare questa immagine';
+            messaggio.className = 'mt-2 mb-0 text-danger';
+        };
+
+        img.onload = function () {
+            messaggio.textContent = '';
+        };
+
+        img.src = url;
+    });
+
 
     function rimuoviDaMenu(menuId) {
         const options = {
@@ -510,6 +539,9 @@
     document.getElementById("formAggiungiPiattoPersonalizzato").addEventListener("submit", function (e) {
         e.preventDefault();
 
+        if (messaggio.textContent !== '') {
+            return;
+        }
         const nome = document.getElementById("nomePiatto").value;
         const categoria = document.getElementById("categoriaPiatto").value;
         const prezzo = parseFloat(document.getElementById("prezzoPiatto").value);
