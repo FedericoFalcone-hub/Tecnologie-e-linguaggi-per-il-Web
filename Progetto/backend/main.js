@@ -937,17 +937,7 @@ app.get('/ricette', async (req, res) => {
 app.get('/search/:query', async (req, res) => {
     // #swagger.description = "Cerca prodotti raggruppati per ristorante, o ristoranti per nome o tipo di cucina"
     const query = req.params.query;
-    const test = await client.db('FastFood')
-        .collection('ristoranti')
-        .find({
-            $or: [
-                {nomeRistorante: {$regex: 'sakura', $options: 'i'}},
-                {tipoCucina: {$regex: 'sushi', $options: 'i'}}
-            ]
-        })
-        .toArray();
 
-    console.log(test);
     try {
         const results = await client.db('FastFood').collection('menu').aggregate([
             {
