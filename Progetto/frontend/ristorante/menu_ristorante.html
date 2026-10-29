@@ -154,7 +154,7 @@
                                 </div>
                                 <div class="mb-3">
                                     <label for="fotoPiatto" class="form-label">Foto</label>
-                                    <input type="text" class="form-control" id="fotoPiatto" required
+                                    <input type="text" class="form-control" id="fotoPiatto"
                                            placeholder="URL della foto">
                                 </div>
                                 <div class="mb-3">
@@ -514,7 +514,11 @@
         const categoria = document.getElementById("categoriaPiatto").value;
         const prezzo = parseFloat(document.getElementById("prezzoPiatto").value);
         const ingredienti = document.getElementById("ingredientiPiatto").value.split(",").map(i => i.trim());
-        const foto = document.getElementById("fotoPiatto").value;
+        let foto = document.getElementById("fotoPiatto").value;
+
+        if (!foto) {
+            foto = `https://placehold.co/800x600/FF7A1A/white?text=${encodeURIComponent(nome)}`;
+        }
         const ricetta = document.getElementById("ricettaPiatto").value;
 
         const options = {
