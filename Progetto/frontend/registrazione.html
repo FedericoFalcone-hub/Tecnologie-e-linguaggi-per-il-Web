@@ -185,7 +185,7 @@
         }
         const cTipo = document.getElementById('tipo');
         const cPreferenze = document.getElementById('preferenzePersonalizzazione').checked;
-        
+
         const user = {
             nome: cNome,
             cognome: cCognome,
@@ -208,7 +208,7 @@
         document.getElementById('registrazione-messaggio').classList.add('text-muted');
         document.getElementById('registrazione-messaggio').textContent = 'Registrazione in corso...';
 
-        fetch(`http://localhost:3005/user?api_key=${API_KEY}`, options)
+        fetch(`http://localhost:3005/user/register?api_key=${API_KEY}`, options)
             .then(response => response.json())
             .then(result => registra(result));
     });

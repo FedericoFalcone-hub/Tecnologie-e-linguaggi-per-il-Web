@@ -191,7 +191,7 @@ function validateEmail(email) {
 const generaCodice = () => `BB-${crypto.randomBytes(4).toString('hex').toUpperCase()}`;
 
 
-app.post('/user', async (req, res) => {
+app.post('/user/register', async (req, res) => {
     // #swagger.description = "Crea un nuovo utente"
 
     const nome = req.body.nome;
