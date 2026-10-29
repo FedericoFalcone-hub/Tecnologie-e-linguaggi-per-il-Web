@@ -142,8 +142,7 @@
 
         const filtrate = ricetteComplete.filter(r =>
             r.nome.toLowerCase().includes(query) ||
-            r.categoria.toLowerCase().includes(query) ||
-            r.ingredienti.some(ing => ing.toLowerCase().includes(query))
+            r.categoria.toLowerCase().includes(query)
         );
 
         renderRicette(filtrate);
