@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="it">
 <head>
     <meta charset="UTF-8">
     <title>Ristoranti - Bizarre Bites</title>
@@ -25,9 +25,9 @@
     <h3 class="mb-4" style="font-weight: 700;">Ristoranti</h3>
 
     <form id="form-ricerca" class="d-flex gap-2 mb-2" style="max-width: 562px;">
-        <label for="ricerca" class="visually-hidden"></label>
+        <label for="ricerca" class="visually-hidden">Cerca ristorante</label>
         <input type="search" id="ricerca" class="form-control rounded-pill px-4"
-               placeholder="Cerca per nome, città, ..."
+               placeholder="Cerca per nome, città, via..."
                autocomplete="off">
         <button type="submit" class="btn btn-brand rounded-pill px-4">Cerca</button>
     </form>
@@ -80,6 +80,7 @@
 
 <script>
     const input = document.getElementById('ricerca');
+    let ristorantiCompleti = [];
 
     function formattaIndirizzo(r) {
         if (!r.via) return '';
@@ -114,7 +115,7 @@
             const icona = clone.querySelector('.ristorante-icona');
             const iniziali = clone.querySelector('.ristorante-iniziali');
             const logo = clone.querySelector('.ristorante-logo');
-            iniziali.textContent = r.nomeRistorante.substring(0, 2).toUpperCase();
+            iniziali.textContent = (r.nomeRistorante || '').substring(0, 2).toUpperCase();
 
             if (r.logoUrl) {
                 logo.onload = () => {
@@ -130,32 +131,54 @@
         });
     }
 
-    async function caricaRistoranti() {
+    function filtra() {
         const q = input.value.trim();
+        const queryLower = q.toLowerCase();
 
         history.replaceState(null, '', q ? `?q=${encodeURIComponent(q)}` : window.location.pathname);
 
+        if (!q) {
+            renderRistoranti(ristorantiCompleti, '');
+            return;
+        }
+
+        const filtrate = ristorantiCompleti.filter(r => {
+            const nome = (r.nomeRistorante || '').toLowerCase();
+            const citta = (r.citta || '').toLowerCase();
+            const via = (r.via || '').toLowerCase();
+
+            return nome.includes(queryLower) || citta.includes(queryLower) || via.includes(queryLower);
+        });
+
+        renderRistoranti(filtrate, q);
+    }
+
+    async function caricaRistoranti() {
         try {
-            const response = await fetch(`http://localhost:3005/ristoranti?q=${encodeURIComponent(q)}&api_key=${API_KEY}`);
+            const response = await fetch(`http://localhost:3005/ristoranti?api_key=${API_KEY}`);
             const risultato = await response.json();
 
             if (risultato.error) {
                 console.error(risultato.error);
                 return;
             }
+
             document.getElementById('loader').style.display = 'none';
-            renderRistoranti(risultato, q);
+            ristorantiCompleti = risultato;
+
+            input.value = new URLSearchParams(window.location.search).get('q') || '';
+            filtra();
         } catch (error) {
             console.error('Errore:', error);
+            document.getElementById('loader').style.display = 'none';
         }
     }
 
     document.getElementById('form-ricerca').addEventListener('submit', (e) => {
         e.preventDefault();
-        caricaRistoranti();
+        filtra();
     });
 
-    input.value = new URLSearchParams(window.location.search).get('q') || '';
     caricaRistoranti();
 </script>
 </body>
