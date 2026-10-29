@@ -1029,7 +1029,6 @@ app.get('/search/:query', async (req, res) => {
             }
         ]).toArray();
 
-        console.log(results);
         res.json(results);
     } catch (error) {
         console.error("Errore durante la ricerca:", error);
