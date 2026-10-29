@@ -56,6 +56,12 @@
         </div>
     </div>
 
+    <div id="nessun-risultato" class="text-center text-muted py-5 d-none">
+        <p class="fw-semibold mb-1">Il menu non è ancora disponibile</p>
+        <p class="mb-0" style="font-size: 14px;">Questo ristorante non ha ancora aggiunto dei piatti. Torna a trovarci
+            più tardi.</p>
+    </div>
+
     <div id="container-result" class="row g-4 ">
         <div id="modello-risultati" class="col-lg-4 col-md-6 d-none menu-item-card">
             <div class="card border-0 shadow-sm h-100">
@@ -216,6 +222,10 @@
         const containerResult = document.getElementById('container-result');
         const modelloRisultati = document.getElementById('modello-risultati');
 
+        if (ristorante.piatti.length === 0) {
+            document.getElementById('nessun-risultato').classList.remove('d-none');
+            return;
+        }
         ristorante.piatti.forEach(item => {
             const clone = modelloRisultati.cloneNode(true);
             clone.classList.remove('d-none');

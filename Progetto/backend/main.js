@@ -741,7 +741,22 @@ app.get('/ristorante/:id/menu', async (req, res) => {
         if (menuDettagliato.length > 0) {
             res.json(menuDettagliato[0]);
         } else {
-            res.json(null);
+            const ristorante = await client.db('FastFood').collection('ristoranti').findOne({_id: id});
+
+            if (!ristorante) {
+                return res.status(404).json({error: "Ristorante non trovato"});
+            }
+
+            const indirizzoFormattato = `${ristorante.via || ''} ${ristorante.civico || ''}, ${ristorante.cap || ''}, ${ristorante.citta || ''} (${ristorante.provincia || ''})`;
+
+            return res.json({
+                idRistorante: ristorante._id,
+                ristoranteNome: ristorante.nomeRistorante,
+                ristoranteLogo: ristorante.logoUrl,
+                ristoranteIndirizzo: indirizzoFormattato,
+                ristoranteTelefono: ristorante.telefonoRistorante,
+                piatti: []
+            });
         }
 
     } catch (error) {
