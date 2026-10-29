@@ -224,6 +224,7 @@
             document.getElementById('aggiornamento-messaggio').textContent = result.error;
             document.getElementById('aggiornamento-messaggio').classList.add('text-danger');
         } else {
+            const tipoCucina = formattaTipoCucina(document.getElementById('tipoCucina').value);
             const ristoranteAggiornato = {
                 ...JSON.parse(localStorage.getItem('ristornate')),
                 _id: ristorante._id,
@@ -238,10 +239,10 @@
                 lat: result.lat,
                 lon: result.lon,
                 logoUrl: ristorante.logoUrl,
-                tipoCucina: document.getElementById('tipoCucina').value
+                tipoCucina: tipoCucina
             }
             localStorage.setItem('ristorante', JSON.stringify(ristoranteAggiornato));
-
+            document.getElementById('tipoCucina').value = tipoCucina;
             mostraToast('Dati aggiornati con successo!');
             document.getElementById('aggiornamento-messaggio').classList.remove('text-danger');
             document.getElementById('aggiornamento-messaggio').textContent = 'Dati aggiornati con successo!';

@@ -86,6 +86,19 @@ function capitalize(str) {
     return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
+function formattaTipoCucina(str) {
+    if (!str) return '';
+    return str
+        .split(',')
+        .map(item => {
+            const t = item.trim();
+            if (!t) return '';
+            return t.charAt(0).toUpperCase() + t.slice(1);
+        })
+        .filter(Boolean)
+        .join(', ');
+}
+
 async function getRistorante() {
     const id = JSON.parse(localStorage.getItem("utente"))._id;
 

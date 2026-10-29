@@ -179,8 +179,19 @@ function checkApiKeys(req, res, next) {
     } else {
         res.status(401).send("Non autorizzato")
     }
+}
 
-
+function formattaTipoCucina(str) {
+    if (!str) return '';
+    return str
+        .split(',')
+        .map(item => {
+            const t = item.trim();
+            if (!t) return '';
+            return t.charAt(0).toUpperCase() + t.slice(1);
+        })
+        .filter(Boolean)
+        .join(', ');
 }
 
 function validateEmail(email) {
@@ -399,7 +410,9 @@ app.post('/user/:id/ristorante', async (req, res) => {
         return res.status(403).json({error: "Utente non autorizzato"});
     }
 
-    const {nomeRistorante, partitaIVA, telefonoRistorante, via, civico, citta, cap, provincia, tipoCucina} = req.body;
+    const {nomeRistorante, partitaIVA, telefonoRistorante, via, civico, citta, cap, provincia} = req.body;
+
+    let tipoCucina = req.body.tipoCucina;
 
     if (!nomeRistorante || !partitaIVA || !telefonoRistorante || !via || !civico || !citta || !cap || !provincia || !tipoCucina) {
         return res.status(400).json({error: "Dati mancanti"});
@@ -419,6 +432,8 @@ app.post('/user/:id/ristorante', async (req, res) => {
         return res.status(400).json({error: "Indirizzo ristorante non valido"});
     }
 
+
+    tipoCucina = formattaTipoCucina(tipoCucina);
     try {
         const ristorante = {
             nomeRistorante,
@@ -549,7 +564,7 @@ app.put('/user/:id/ristorante', async (req, res) => {
         provincia: provincia.toUpperCase(),
         lat: coordinates.lat,
         lon: coordinates.lon,
-        tipoCucina: tipoCucina
+        tipoCucina: formattaTipoCucina(tipoCucina)
     };
 
     try {
