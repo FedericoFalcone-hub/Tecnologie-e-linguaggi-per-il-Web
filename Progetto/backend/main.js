@@ -397,9 +397,9 @@ function formattaIndirizzo({via, civico, cap, citta, provincia}) {
     return `${via} ${civico}, ${cap} ${citta} (${provincia})`;
 }
 
-app.post('/user/:id/ristorante', async (req, res) => {
+app.post('/user/:userId/ristorante', async (req, res) => {
     // #swagger.description = "Registra un ristorante per un utente"
-    const id = req.params.id;
+    const id = req.params.userId;
     const user = await getUser(id);
 
     if (!user) {
@@ -461,10 +461,10 @@ app.post('/user/:id/ristorante', async (req, res) => {
     }
 });
 
-app.get('/user/:id/ristorante', async (req, res) => {
+app.get('/user/:userId/ristorante', async (req, res) => {
     // #swagger.description = "Recupera il ristorante di un utente"
 
-    const id = req.params.id;
+    const id = req.params.userId;
     const user = await getUser(id);
     if (!user) {
         return res.status(404).json({error: "Utente non trovato"});
@@ -484,9 +484,9 @@ app.get('/user/:id/ristorante', async (req, res) => {
     res.json(ristorante);
 });
 
-app.put('/user/:id/ristorante/logo', async (req, res) => {
+app.put('/user/:userId/ristorante/logo', async (req, res) => {
     // #swagger.description = "Aggiorna il logo del ristorante di un utente"
-    const id = req.params.id;
+    const id = req.params.userId;
     let logoUrl = req.body.logoUrl;
 
     if (!logoUrl) {
@@ -515,10 +515,10 @@ app.put('/user/:id/ristorante/logo', async (req, res) => {
     res.json(result);
 });
 
-app.put('/user/:id/ristorante', async (req, res) => {
+app.put('/user/:userId/ristorante', async (req, res) => {
     // #swagger.description = "Aggiorna i dati del ristorante di un utente"
 
-    const id = req.params.id;
+    const id = req.params.userId;
     const user = await getUser(id);
     if (!user) {
         return res.status(404).json({error: "Utente non trovato"});
@@ -583,9 +583,9 @@ app.put('/user/:id/ristorante', async (req, res) => {
     }
 });
 
-app.delete('/user/:id/ristorante', async (req, res) => {
+app.delete('/user/:userId/ristorante', async (req, res) => {
     // #swagger.description = "elimina ristorante di un utente"
-    const id = req.params.id;
+    const id = req.params.userId;
     const user = await getUser(id);
     if (!user) {
         return res.status(404).json({error: "Utente non trovato"});
@@ -627,7 +627,6 @@ app.get('/ristorante/:id', async (req, res) => {
 
 app.get('/ristorante/:id/menu', async (req, res) => {
     // #swagger.description = "Recupera il menu raggruppato per ristorante"
-    console.log(req.params.id);
     const id = ObjectID.createFromHexString(req.params.id);
 
     try {
@@ -765,7 +764,7 @@ app.get('/ristorante/:id/menu', async (req, res) => {
     }
 });
 
-app.post('/ristorante/:id/menu/catalogo', async (req, res) => {
+app.post('/ristorante/:idUser/menu/catalogo', async (req, res) => {
     // #swagger.description = Aggiunge un prodotto presente nel catalogo al menu del ristorante dell'utente
     const idUtente = req.params.id;
     const idProdotto = req.body.idProdotto;
@@ -805,9 +804,9 @@ app.post('/ristorante/:id/menu/catalogo', async (req, res) => {
     res.json(result);
 });
 
-app.delete('/ristorante/:id/menu', async (req, res) => {
+app.delete('/ristorante/:userId/menu', async (req, res) => {
     // #swagger.description = Rimuove un prodotto dal menu del ristorante dell'utente
-    const idUtente = req.params.id;
+    const idUtente = req.params.userId;
     const idMenu = req.body.id;
 
     let user = await getUser(idUtente);
@@ -837,9 +836,9 @@ app.get('/categorie', async (req, res) => {
     res.json(result);
 });
 
-app.put('/ristorante/:id_user/menu/:id_prodotto', async (req, res) => {
+app.put('/ristorante/:userId/menu/:id_prodotto', async (req, res) => {
     // #swagger.description = Aggiorna i dati di un prodotto nel menu del ristorante dell'utente
-    const idUtente = req.params.id_user;
+    const idUtente = req.params.userId;
     const idProdotto = req.params.id_prodotto;
     const newPrezzo = req.body.prezzo;
     const newIngredienti = req.body.ingredienti;
@@ -884,9 +883,9 @@ app.put('/ristorante/:id_user/menu/:id_prodotto', async (req, res) => {
 
 });
 
-app.post('/ristorante/:id_user/menu/personalizzato', async (req, res) => {
+app.post('/ristorante/:userId/menu/personalizzato', async (req, res) => {
 // #swagger.description = Aggiunge un prodotto personalizzato al menu del ristorante dell'utente
-    const idUtente = req.params.id_user;
+    const idUtente = req.params.userId;
     const nome = req.body.nome;
     const prezzo = req.body.prezzo;
     const ingredienti = req.body.ingredienti;
@@ -1263,9 +1262,9 @@ app.get('/ordine/:id', async (req, res) => {
     }
 });
 
-app.get('/user/:id/ristorante/ordini', async (req, res) => {
+app.get('/user/:userId/ristorante/ordini', async (req, res) => {
     // #swagger.description = "Recupera gli ordini del ristorante del ristoratore
-    const {id} = req.params;
+    const id = req.params.userId;
     if (!await getUser(id)) {
         return res.status(404).json({error: "Utente non trovato"});
     }
@@ -1288,11 +1287,11 @@ app.get('/user/:id/ristorante/ordini', async (req, res) => {
     }
 });
 
-app.put('/user/:id/ristorante/ordini/:numeroOrdine/stato/aggiorna', async (req, res) => {
+app.put('/user/:userId/ristorante/ordini/:numeroOrdine/stato/aggiorna', async (req, res) => {
     // #swagger.description = "Aggiorna lo stato di un ordine del ristorante del ristoratore"
     try {
         const numeroOrdine = req.params.numeroOrdine;
-        const id = req.params.id;
+        const id = req.params.userId;
 
         const utente = await getUser(id);
         if (!utente) return res.status(404).json({error: "Utente non trovato"});
@@ -1353,11 +1352,11 @@ app.put('/user/:id/ristorante/ordini/:numeroOrdine/stato/aggiorna', async (req, 
     }
 });
 
-app.put('/user/:id/ristorante/ordini/:numeroOrdine/stato/annulla', async (req, res) => {
+app.put('/user/:userId/ristorante/ordini/:numeroOrdine/stato/annulla', async (req, res) => {
     // #swagger.description = "Annulla un ordine del ristorante del ristoratore"
     try {
         const numeroOrdine = req.params.numeroOrdine;
-        const id = req.params.id;
+        const id = req.params.userId;
 
         const utente = await getUser(id);
         if (!utente) return res.status(404).json({error: "Utente non trovato"});
@@ -1586,10 +1585,10 @@ app.post('/user/consumaCodice', async (req, res) => {
 
 });
 
-app.get('/user/:id/ristorante/statistiche/mensili', async (req, res) => {
+app.get('/user/:userId/ristorante/statistiche/mensili', async (req, res) => {
     // #swagger.description = "Recupera le statistiche mensili e il resoconto totale di un anno specifico (?anno=2026)"
     try {
-        const id = req.params.id;
+        const id = req.params.userId;
 
         const annoRichiesto = parseInt(req.query.anno) || new Date().getFullYear();
 
@@ -1764,10 +1763,10 @@ app.get('/ristoranti', async (req, res) => {
     }
 });
 
-app.post('/ristorante/:id/trasferisci', async (req, res) => {
+app.post('/ristorante/:userId/trasferisci', async (req, res) => {
     // #swagger.description = "Trasferisce la proprietà di un ristorante a un altro utente"
     try {
-        const {id} = req.params;
+        const id = req.params.userId;
         const {email} = req.body;
 
         if (!email) {
