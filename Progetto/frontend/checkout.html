@@ -352,6 +352,10 @@
     let indirizzoLocale;
     const carrello = JSON.parse(sessionStorage.getItem(idRistorante)) || [];
 
+    if (carrello.length === 0 || !carrello) {
+        window.location.href = 'bizarre_bites.html';
+    }
+
     const modalNominativo = new bootstrap.Modal(document.getElementById('modalNominativo'));
     const modalIndirizzo = new bootstrap.Modal(document.getElementById('modalIndirizzo'));
     const formIndirizzo = document.getElementById('form-indirizzo');
