@@ -628,7 +628,6 @@ app.get('/ristorante/:id', async (req, res) => {
 app.get('/ristorante/:id/menu', async (req, res) => {
     // #swagger.description = "Recupera il menu raggruppato per ristorante"
     const id = ObjectID.createFromHexString(req.params.id);
-
     try {
         const menuDettagliato = await client.db('FastFood').collection('menu').aggregate([
             {$match: {idRistorante: id}},

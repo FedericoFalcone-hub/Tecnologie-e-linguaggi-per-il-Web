@@ -290,6 +290,7 @@
 
     checkLoggedRistoratore();
     caricaCategorieSuggerite();
+    const cap = (str) => str.charAt(0).toUpperCase() + str.slice(1);
 
     let catalogoCache = null;
     let piattoDaAggiungere = null;
@@ -428,10 +429,10 @@
                                 if (messaggioModifica.textContent !== '') {
                                     return;
                                 }
-                                const nome = document.getElementById('nomePiattoModifica').value;
-                                const categoria = document.getElementById('categoriaPiattoModifica').value;
+                                const nome = cap(document.getElementById('nomePiattoModifica').value);
+                                const categoria = cap(document.getElementById('categoriaPiattoModifica').value);
                                 const prezzo = parseFloat(document.getElementById('prezzoPiattoModifica').value);
-                                const ingredienti = document.getElementById('ingredientiPiattoModifica').value.split(',').map(i => i.trim());
+                                const ingredienti = document.getElementById('ingredientiPiattoModifica').value.split(",").map(i => cap(i.trim()));
                                 const foto = document.getElementById('fotoPiattoModifica').value;
                                 const options = {
                                     method: 'PUT',
@@ -442,7 +443,7 @@
                                         prezzo: prezzo,
                                         ingredienti: ingredienti,
                                         foto: foto,
-                                        ricetta: document.getElementById('ricettaPiattoModifica').value
+                                        ricetta: cap(document.getElementById('ricettaPiattoModifica').value)
                                     })
                                 };
                                 fetch(`http://localhost:3005/ristorante/${user._id}/menu/${piatto._id}`, options)
@@ -572,10 +573,13 @@
         if (messaggio.textContent !== '') {
             return;
         }
-        const nome = document.getElementById("nomePiatto").value;
-        const categoria = document.getElementById("categoriaPiatto").value;
+
+        const nome = cap(document.getElementById("nomePiatto").value);
+        const categoria = capitalize(document.getElementById("categoriaPiatto").value);
         const prezzo = parseFloat(document.getElementById("prezzoPiatto").value);
-        const ingredienti = document.getElementById("ingredientiPiatto").value.split(",").map(i => i.trim());
+        const ingredienti = document.getElementById("ingredientiPiatto").value
+            .split(",")
+            .map(i => cap(i.trim()));
         let foto = document.getElementById("fotoPiatto").value;
 
         if (!foto) {
@@ -592,7 +596,7 @@
                 prezzo: prezzo,
                 ingredienti: ingredienti,
                 foto: foto,
-                ricetta: ricetta
+                ricetta: cap(ricetta)
             })
         };
 

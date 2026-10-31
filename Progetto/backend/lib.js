@@ -83,7 +83,12 @@ caricaNavbar().catch(err => {
 });
 
 function capitalize(str) {
-    return str.charAt(0).toUpperCase() + str.slice(1);
+    if (!str) return '';
+    return str
+        .toLowerCase()
+        .split(' ')
+        .map(parola => parola.charAt(0).toUpperCase() + parola.slice(1))
+        .join(' ');
 }
 
 function formattaTipoCucina(str) {
