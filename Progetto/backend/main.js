@@ -1585,7 +1585,7 @@ app.post('/user/consumaCodice', async (req, res) => {
 
 });
 
-app.get('/user/:userId/ristorante/statistiche/mensili', async (req, res) => {
+app.get('/user/:userId/ristorante/statistiche', async (req, res) => {
     // #swagger.description = "Recupera le statistiche mensili e il resoconto totale di un anno specifico (?anno=2026)"
     try {
         const id = req.params.userId;
