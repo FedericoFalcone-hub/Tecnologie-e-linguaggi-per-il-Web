@@ -20,7 +20,7 @@ ristorante e iniziare a riceve ordini tramite la piattaforma.
 
 La pagina principale del sito, `bizarre_bites.html`, si presenta come segue:
 
-![Homepage](images/homepage.png)
+![Homepage](./images/homepage.png)
 
 In questa pagina è possibile eseguire delle ricerche, dove però non è possibile eseguire un ordine (essendo necessario
 essere registrati). Nella navbar ci sono collegamenti per accedere a varie pagine informative, come quella per
@@ -29,7 +29,7 @@ assistenza (`contatti.html`). Inoltre è possibile accedere alla pagina di login
 
 ### Login
 
-![Login](images/login.png)
+![Login](./images/login.png)
 
 In questa pagina, `accesso.html` l'utente può eseguire l'accesso al proprio account inserendo la propria mail e
 password. L'accesso avviene tramite l'API:
@@ -41,7 +41,7 @@ POST /user/login
 In caso di inserimento errato, l'API restituirà un errore che verrà poi segnalato all'utente tramite l'apposito
 messaggio:
 <p align="center">
-<img src="images/error_login.png" alt="error" width="300">
+<img src="./images/error_login.png" alt="error" width="300">
 </p>
 
 Una volta eseguito il login, i dati dell'utente vengono salvati in `localStorage`.
@@ -51,14 +51,14 @@ Una volta eseguito il login, i dati dell'utente vengono salvati in `localStorage
 Se l'utente non possiede un account, può registrarsi tramite l'apposito link posizionato sotto al tasto di accesso che
 lo reinderizzerà nella pagina `registrazione.html`. La pagina si mostra come segue:
 
-![Registrazione](images/registrazione.png)
+![Registrazione](./images/registrazione.png)
 
 Si nota che, in fase di registrazione, l'utente può scegliere se registrarsi come cliente o come ristoratore. Nel primo
 caso gli viene anche chiesto se vuole ricevere offerte speciali personalizzate. Quando si seleziona un ristoratore,
 l'opzione scompare:
 
 <p align="center">
-<img src="images/ristoratore.png" alt="error" width="500">
+<img src="./images/ristoratore.png" alt="error" width="500">
 </p>
 
 La registrazione avviene tramite l'API:
@@ -73,12 +73,12 @@ errore l'utente riceverà un messaggio di errore.
 
 Caso indirizzo non valido:
 <p align="center">
-<img src="images/invalid_address.png" alt="error" width="500">
+<img src="./images/invalid_address.png" alt="error" width="500">
 </p>
 
 Caso inserimento errato di un campo:
 <p align="center">
-<img src="images/input_error.png" alt="error" width="500">
+<img src="./images/input_error.png" alt="error" width="500">
 </p>
 
 Una volta avvenuta la registrazione, se l'utente è di tipo ristoratore viene reindirizzato alla pagina di gestione del
@@ -90,7 +90,7 @@ A registrazione avvenuta, i dati dell'utente vengono salvati in `localStorage`.
 
 In `ristoranti.html` è possibile visualizzare la lista completa dei ristoranti:
 
-![Ristoranti](images/ristoranti.png)
+![Ristoranti](./images/ristoranti.png)
 
 I ristoranti vengono ottenuti tramite l'API:
 
@@ -105,7 +105,7 @@ implementata lato client, filtrando l'array in memoria.
 
 È possibile visualizzare le ricette tramite la pagina `ricette.html`:
 
-![Ricette](images/ricette.png)
+![Ricette](./images/ricette.png)
 
 Le ricette vengono ottenute tramite l'API:
 
@@ -133,11 +133,11 @@ Se al ristoratore è associato un ristorante, esso viene salvato in `localStorag
 Se a un ristoratore non è ancora associato un ristorante, nella pagina di gestione visualizzerà un messaggio che gli
 permette di fare ciò.
 
-![Gestione ristorante vuoto](images/gestione_ristorante_vuoto.png)
+![Gestione ristorante vuoto](./images/gestione_ristorante_vuoto.png)
 
 Esso verrà reindirizzato alla pagina `ristorante/registrazione_ristorante.html`.
 
-![Registrazione ristorante](images/registra_ristorante.png?v=2)
+![Registrazione ristorante](./images/registra_ristorante.png?v=2)
 
 La registrazione del ristorante avviene tramite l'API:
 
@@ -157,14 +157,14 @@ Avvenuta la registrazione, il ristorante viene salvato in `localStorage`.
 Quando a un ristoratore è associato un ristorante, in `ristorante/gestione_ristorante.html` l'utente visualizzerà tutte
 le possibili operazioni che può eseguire sul ristorante:
 
-![Gestione ristorante](images/gestione_ristorante.png)
+![Gestione ristorante](./images/gestione_ristorante.png)
 
 #### Modifica dei dati del ristorante
 
 Cliccando su "Dati ristorante" l'utente viene reindirizzato alla pagina `ristorante/dati_ristorante.html`, in cui può
 modificare i dati del ristorante.
 
-![Dati ristorante](images/dati_ristorante.png)
+![Dati ristorante](./images/dati_ristorante.png)
 
 La modifica dei dati avviene tramite l'API:
 
@@ -179,7 +179,7 @@ dell'immagine (utilizzando un servizio di hosting come imgBB). Una volta inserit
 caso di errore, l'utente verrà avvisato tramite l'apposito messaggio.
 
 <p align="center">
-<img src="images/logo_ristorante.png" alt="error" width="300">
+<img src="./images/logo_ristorante.png" alt="error" width="300">
 </p>
 
 Il caricamento dell'immagine avviene tramite l'API:
@@ -206,12 +206,12 @@ GET /ristorante/:id/menu
 
 Nel caso il menù sia vuoto, l'utente visualizzerà la seguente schermata:
 
-![Gestione menù vuoto](images/menu_vuoto.png)
+![Gestione menù vuoto](./images/menu_vuoto.png)
 
 Cliccando il bottone si aprirà un modal. Da questo modal si può scegliere di inserire un piatto esistente dal catalogo
 fornito dalla piattaforma (i piatti contenuti in meals.json) oppure di inserire un piatto personalizzato.
 
-![Modal catalogo](images/modal_catalogo.png)
+![Modal catalogo](./images/modal_catalogo.png)
 
 Il catalogo è caricato dal DB tramite l'API:
 
