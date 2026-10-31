@@ -250,6 +250,10 @@
                     <div class="mb-3">
                         <label for="fotoPiattoModifica" class="form-label">Foto</label>
                         <input type="text" class="form-control" id="fotoPiattoModifica" required>
+                        <img id="anteprimaFotoPiattoModifica" src="" alt="Anteprima foto piatto"
+                             class="img-fluid mb-3 d-none">
+                        <p id="foto-modal-messaggio-modifica" class="text-center mt-2 mb-0"
+                           style="font-size: 14px;"></p>
                     </div>
                     <div class="mb-3">
                         <label for="ricettaPiattoModifica" class="form-label">Ricetta</label>
@@ -291,7 +295,7 @@
     let piattoDaAggiungere = null;
     const user = JSON.parse(localStorage.getItem('utente'));
     const messaggio = document.getElementById('foto-modal-messaggio');
-
+    const messaggioModifica = document.getElementById('foto-modal-messaggio-modifica')
     document.getElementById('fotoPiatto').addEventListener('input', function () {
         const url = this.value.trim();
         const img = document.getElementById('anteprimaFotoPiatto');
@@ -313,6 +317,26 @@
         img.src = url;
     });
 
+    document.getElementById('fotoPiattoModifica').addEventListener('input', function () {
+        const url = this.value.trim();
+        const img = document.getElementById('anteprimaFotoPiattoModifica');
+
+        if (!url) {
+            messaggioModifica.textContent = '';
+            return;
+        }
+
+        img.onerror = function () {
+            messaggioModifica.textContent = 'Impossibile caricare questa immagine';
+            messaggioModifica.className = 'mt-2 mb-0 text-danger';
+        };
+
+        img.onload = function () {
+            messaggioModifica.textContent = '';
+        };
+
+        img.src = url;
+    });
 
     function rimuoviDaMenu(menuId) {
         const options = {
@@ -331,6 +355,7 @@
                     mostraToast("Errore durante la rimozione del piatto: " + result.error);
                 } else {
                     mostraToast("Piatto rimosso con successo!");
+                    messaggioModifica.textContent = "";
                     caricaMenu();
                 }
             });
@@ -398,6 +423,11 @@
 
                             form.onsubmit = function (e) {
                                 e.preventDefault();
+
+                                console.log(messaggioModifica.textContent);
+                                if (messaggioModifica.textContent !== '') {
+                                    return;
+                                }
                                 const nome = document.getElementById('nomePiattoModifica').value;
                                 const categoria = document.getElementById('categoriaPiattoModifica').value;
                                 const prezzo = parseFloat(document.getElementById('prezzoPiattoModifica').value);

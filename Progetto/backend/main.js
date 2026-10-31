@@ -764,9 +764,9 @@ app.get('/ristorante/:id/menu', async (req, res) => {
     }
 });
 
-app.post('/ristorante/:idUser/menu/catalogo', async (req, res) => {
+app.post('/ristorante/:userId/menu/catalogo', async (req, res) => {
     // #swagger.description = Aggiunge un prodotto presente nel catalogo al menu del ristorante dell'utente
-    const idUtente = req.params.id;
+    const idUtente = req.params.userId;
     const idProdotto = req.body.idProdotto;
     const prezzo = req.body.prezzo;
 
