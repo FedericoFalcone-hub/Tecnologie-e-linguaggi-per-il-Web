@@ -56,7 +56,7 @@
                         <img src="../backend/images/location.png" alt="location"
                              style="width: 28px; height: 28px; object-fit: contain;">
                         <span id="indirizzo" class="fw-semibold"></span>
-                        <img src="../backend/images/next.png" alt="Apri" class="ms-auto"
+                        <img id="freccia-indirizzo" src="../backend/images/next.png" alt="Apri" class="ms-auto"
                              style="width: 20px; height: 20px; object-fit: contain;">
                     </div>
                 </div>
@@ -533,13 +533,20 @@
 
     document.getElementById('metodo-ritiro').addEventListener('change', async () => {
         document.getElementById('indirizzo').textContent = indirizzoLocale;
+        aggiornaBloccoIndirizzo(true);
         renderRiepilogo();
     });
 
     document.getElementById('metodo-domicilio').addEventListener('change', () => {
         document.getElementById('indirizzo').textContent = formattaIndirizzo(indirizzo);
+        aggiornaBloccoIndirizzo(false);
         renderRiepilogo();
     });
+
+    function aggiornaBloccoIndirizzo(ritiro) {
+        document.getElementById('blocco-indirizzo').classList.toggle('pe-none', ritiro);
+        document.getElementById('freccia-indirizzo').classList.toggle('d-none', ritiro);
+    }
 
     // Gestione pagamento
     document.querySelectorAll('input[name="pagamento"]').forEach(radio => {
