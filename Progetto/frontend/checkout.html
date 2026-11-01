@@ -61,63 +61,7 @@
                     </div>
                 </div>
             </div>
-        </div>
 
-
-        <!-- Riepilogo -->
-        <div class="col-lg-5">
-            <div class="card border-0 shadow-sm">
-                <div class="card-body p-4">
-                    <h5 class="mb-1">Il tuo ordine</h5>
-                    <p id="nome-ristorante" class="text-muted mb-3"></p>
-
-                    <div id="modello-riepilogo"
-                         class="d-grid d-none align-items-start mb-2 pb-2 border-bottom"
-                         style="grid-template-columns: 1fr 40px 75px; column-gap: 8px;">
-                        <div>
-                            <span class="riepilogo-nome fw-semibold"></span>
-                            <small class="riepilogo-nota text-muted d-block"></small>
-                        </div>
-                        <span class="riepilogo-quantita text-muted text-center"></span>
-                        <span class="riepilogo-prezzo fw-bold text-brand text-end"></span>
-                    </div>
-
-                    <div id="lista-riepilogo"></div>
-                    <div id="riga-consegna" class="d-flex justify-content-between align-items-center mt-2">
-                        <span class="text-muted">Consegna</span>
-                        <span class="fw-semibold text-brand fw-bold">€ <span id="costo-consegna">0.00</span></span>
-                    </div>
-
-                    <div class="mt-3">
-                        <div class="input-group">
-
-                            <label for="input-codice"></label>
-                            <input type="text" id="input-codice" class="form-control text-uppercase"
-                                   placeholder="Codice Sconto" maxlength="20" autocomplete="off">
-                            <button type="button" id="btn-applica-codice" class="btn btn-brand">Applica</button>
-                        </div>
-                        <small id="codice-messaggio" class="d-block mt-1"></small>
-                    </div>
-
-                    <div id="riga-sconto" class="d-flex justify-content-between align-items-center mt-2 d-none">
-                        <span class="text-muted"> Sconto <span id="etichetta-sconto"></span></span>
-                        <span class="fw-semibold text-success">-€<span id="importo-sconto">0.00</span></span>
-                    </div>
-
-                    <div class="d-flex justify-content-between align-items-center mt-3">
-                        <span class="fw-bold fs-5">Totale</span>
-                        <span class="fw-bold fs-5 text-brand">€ <span id="totale-riepilogo">0.00</span></span>
-                    </div>
-
-                    <a id="ordina" class="btn btn-brand rounded-pill w-100 mt-3">
-                        Ordina e paga
-                    </a>
-                </div>
-            </div>
-        </div>
-
-
-        <div class="col-lg-7 mt-1 ">
             <div class="card border-0 shadow-sm mt-4">
                 <div class="card-body p-4">
                     <h5 class="mb-3 fw-bold">Metodo di pagamento</h5>
@@ -169,6 +113,59 @@
                         </label>
 
                     </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Riepilogo -->
+        <div class="col-lg-5">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <h5 class="mb-1">Il tuo ordine</h5>
+                    <p id="nome-ristorante" class="text-muted mb-3"></p>
+
+                    <div id="modello-riepilogo"
+                         class="d-grid d-none align-items-start mb-2 pb-2 border-bottom"
+                         style="grid-template-columns: 1fr 40px 75px; column-gap: 8px;">
+                        <div>
+                            <span class="riepilogo-nome fw-semibold"></span>
+                            <small class="riepilogo-nota text-muted d-block"></small>
+                        </div>
+                        <span class="riepilogo-quantita text-muted text-center"></span>
+                        <span class="riepilogo-prezzo fw-bold text-brand text-end"></span>
+                    </div>
+
+                    <div id="lista-riepilogo"></div>
+                    <div id="riga-consegna" class="d-flex justify-content-between align-items-center mt-2">
+                        <span class="text-muted">Consegna</span>
+                        <span class="fw-semibold text-brand fw-bold">€ <span id="costo-consegna">0.00</span></span>
+                    </div>
+
+                    <div class="mt-3">
+                        <div class="input-group">
+
+                            <label for="input-codice"></label>
+                            <input type="text" id="input-codice" class="form-control text-uppercase"
+                                   placeholder="Codice Sconto" maxlength="20" autocomplete="off">
+                            <button type="button" id="btn-applica-codice" class="btn btn-brand">Applica</button>
+                        </div>
+                        <small id="codice-messaggio" class="d-block mt-1"></small>
+                    </div>
+
+                    <div id="riga-sconto" class="d-flex justify-content-between align-items-center mt-2 d-none">
+                        <span class="text-muted"> Sconto <span id="etichetta-sconto"></span></span>
+                        <span class="fw-semibold text-success">-€<span id="importo-sconto">0.00</span></span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                        <span class="fw-bold fs-5">Totale</span>
+                        <span class="fw-bold fs-5 text-brand">€ <span id="totale-riepilogo">0.00</span></span>
+                    </div>
+
+                    <a id="ordina" class="btn btn-brand rounded-pill w-100 mt-3">
+                        Ordina e paga
+                    </a>
                 </div>
             </div>
         </div>
