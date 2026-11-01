@@ -1125,7 +1125,7 @@ app.delete('/user/:id/indirizzi/:idIndirizzo', async (req, res) => {
     }
 });
 
-app.post('/user/:id/carta-pagamento', async (req, res) => {
+app.post('/user/:id/carte-pagamento', async (req, res) => {
     // #swagger.description = "Aggiunge una carta di pagamento all'utente"
     const {id} = req.params;
 

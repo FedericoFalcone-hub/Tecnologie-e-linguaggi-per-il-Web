@@ -348,6 +348,7 @@
     const utente = JSON.parse(localStorage.getItem('utente'));
     let indirizzoLocale;
     const carrello = JSON.parse(sessionStorage.getItem(idRistorante)) || [];
+    utente.carte = utente.carte || [];
 
     if (carrello.length === 0 || !carrello) {
         window.location.href = 'bizarre_bites.html';
@@ -355,6 +356,8 @@
 
     const modalNominativo = new bootstrap.Modal(document.getElementById('modalNominativo'));
     const modalIndirizzo = new bootstrap.Modal(document.getElementById('modalIndirizzo'));
+    const modalCarta = new bootstrap.Modal(document.getElementById('modalCarta'));
+
     const formIndirizzo = document.getElementById('form-indirizzo');
     const formCarta = document.getElementById('form-carta');
     const vistaLista = document.getElementById('vista-lista');
@@ -597,7 +600,7 @@
             cvv: document.getElementById('input-cvv').value.trim()
         };
 
-        const response = await fetch(`http://localhost:3005/user/${utente._id}/carte?api_key=${API_KEY}`, {
+        const response = await fetch(`http://localhost:3005/user/${utente._id}/carte-pagamento?api_key=${API_KEY}`, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(nuovaCarta)
@@ -612,8 +615,9 @@
 
         utente.carte.push(risultato);
         localStorage.setItem('utente', JSON.stringify(utente));
-        sezioneCarta.hide();
+        modalCarta.hide();
         formCarta.reset();
+        await renderListaCarte();
     });
 
     function getMetodoPagamento() {
@@ -677,7 +681,6 @@
             cognomeCliente: cognome,
         };
 
-        console.log(ordine);
         const response = await fetch(`http://localhost:3005/user/${utente._id}/ordine?api_key=${API_KEY}`, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
