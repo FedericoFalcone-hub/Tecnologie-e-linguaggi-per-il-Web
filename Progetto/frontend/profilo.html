@@ -424,7 +424,7 @@
 
         const messaggio = document.getElementById('lista-carte-messaggio');
         try {
-            const response = await fetch(`http://localhost:3005/user/${utente._id}/carte/${idCarta}?api_key=${API_KEY}`, {method: 'DELETE'});
+            const response = await fetch(`http://localhost:3005/user/${utente._id}/carte-pagamento/${idCarta}?api_key=${API_KEY}`, {method: 'DELETE'});
             const risultato = await response.json();
             if (risultato.error) throw new Error(risultato.error);
 
@@ -452,7 +452,7 @@
         };
 
         try {
-            const response = await fetch(`http://localhost:3005/user/${utente._id}/carte?api_key=${API_KEY}`, {
+            const response = await fetch(`http://localhost:3005/user/${utente._id}/carte-pagamento?api_key=${API_KEY}`, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify(body)
