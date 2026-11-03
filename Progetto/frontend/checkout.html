@@ -584,11 +584,49 @@
             clone.querySelector('.carta-scadenza').textContent = carta.scadenza;
             clone.addEventListener('click', () => {
                 cartaSelezionata = carta;
-
                 renderListaCarte();
             });
-            listaCarte.appendChild(clone);
+
+            const btnElimina = document.createElement('button');
+            btnElimina.type = 'button';
+            btnElimina.className = 'btn border-0 p-1';
+            btnElimina.setAttribute('aria-label', 'Elimina carta');
+
+            const icona = document.createElement('img');
+            icona.src = '../backend/images/bin.png';
+            icona.alt = 'Elimina';
+            icona.style.cssText = 'width: 16px; height: 16px; object-fit: contain;';
+            btnElimina.appendChild(icona);
+
+            btnElimina.addEventListener('click', () => eliminaCarta(carta));
+
+            clone.classList.add('flex-grow-1');
+
+            const riga = document.createElement('div');
+            riga.className = 'd-flex align-items-center gap-2';
+            riga.append(clone, btnElimina);
+            listaCarte.appendChild(riga);
         });
+    }
+
+    async function eliminaCarta(carta) {
+        if (!confirm('Eliminare questa carta?')) return;
+
+        const response = await fetch(`http://localhost:3005/user/${utente._id}/carte-pagamento/${carta._id}?api_key=${API_KEY}`, {
+            method: 'DELETE'
+        });
+        const risultato = await response.json();
+        if (risultato.error) {
+            alert(risultato.error);
+            return;
+        }
+        utente.carte = (utente.carte || []).filter(c => c._id !== carta._id);
+        localStorage.setItem('utente', JSON.stringify(utente));
+
+        if (cartaSelezionata && cartaSelezionata._id === carta._id) {
+            cartaSelezionata = null;
+        }
+        await renderListaCarte();
     }
 
     formCarta.addEventListener('submit', async (e) => {

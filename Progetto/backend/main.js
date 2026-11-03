@@ -1176,6 +1176,20 @@ app.get('/user/:id/carte-pagamento', async (req, res) => {
     res.json(user.carte || []);
 });
 
+app.delete('/user/:id/carte-pagamento/:idCarta', async (req, res) => {
+    const id = req.params.id;
+    const idCarta = req.params.idCarta;
+
+    if (!await getUser(id)) {
+        return res.status(404).json({error: "Utente non trovato"});
+    }
+
+
+    const coll = client.db('FastFood').collection('users');
+    await coll.updateOne({_id: new ObjectId(id)}, {$pull: {carte: {_id: new ObjectId(idCarta)}}});
+    res.json({ok: true});
+});
+
 app.post('/user/:id/ordine', async (req, res) => {
     // #swagger.description = "Crea un nuovo ordine per l'utente"
     const {id} = req.params;
