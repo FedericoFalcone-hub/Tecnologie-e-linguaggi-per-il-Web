@@ -36,6 +36,8 @@
                 <a href="#sezione-indirizzi" class="list-group-item list-group-item-action" data-tab="indirizzi">Indirizzi</a>
                 <a href="#sezione-sicurezza" class="list-group-item list-group-item-action"
                    data-tab="sicurezza">Modifica password</a>
+                <a href="#sezione-carte" class="list-group-item list-group-item-action" data-tab="carte">Carte di
+                    credito</a>
                 <a href="#" class="list-group-item list-group-item-action text-danger"
                    onclick="eliminaAccount()">Elimina account</a>
 
@@ -163,6 +165,58 @@
                     </form>
 
 
+                </div>
+            </div>
+
+            <!-- Carte di pagamento -->
+            <div id="sezione-carte" class="profile-section" style="display: none;">
+                <div class="card border-0 shadow-sm p-4 mb-4">
+                    <h5 class="mb-4">Le mie carte</h5>
+
+                    <div id="modello-carta" class="d-none d-flex align-items-center gap-3 mb-3 pb-3 border-bottom">
+                        <div class="flex-grow-1">
+                            <span class="carta-intestatario fw-semibold"></span>
+                            <small class="carta-numero text-muted d-block"></small>
+                        </div>
+                        <small class="carta-scadenza text-muted"></small>
+                        <button class="btn btn-sm btn-outline-danger btn-elimina-carta" aria-label="Elimina carta">
+                            <img src="../backend/images/bin.png" alt=""
+                                 style="width: 16px; height: 16px; object-fit: contain;">
+                        </button>
+                    </div>
+
+                    <div id="lista-carte"></div>
+                    <p id="carte-vuote" class="text-muted mb-0 d-none">Non hai ancora nessuna carta salvata.</p>
+                    <p id="lista-carte-messaggio" class="mt-2 mb-0" style="font-size: 14px;"></p>
+                </div>
+
+                <div class="card border-0 shadow-sm p-4">
+                    <h5 class="mb-4">Aggiungi una carta</h5>
+                    <form id="form-nuova-carta" autocomplete="off">
+                        <div class="mb-3">
+                            <label for="carta-intestatario" class="form-label">Intestatario</label>
+                            <input type="text" class="form-control" id="carta-intestatario" maxlength="60" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="carta-numero" class="form-label">Numero carta</label>
+                            <input type="text" class="form-control" id="carta-numero" placeholder="1234 5678 9012 3456"
+                                   inputmode="numeric" maxlength="19" required>
+                        </div>
+                        <div class="row g-3 mb-3">
+                            <div class="col-6">
+                                <label for="carta-scadenza" class="form-label">Scadenza</label>
+                                <input type="text" class="form-control" id="carta-scadenza" placeholder="MM/AA"
+                                       inputmode="numeric" maxlength="5" pattern="(0[1-9]|1[0-2])/\d{2}" required>
+                            </div>
+                            <div class="col-6">
+                                <label for="carta-cvv" class="form-label">CVV</label>
+                                <input type="password" class="form-control" id="carta-cvv" placeholder="123"
+                                       inputmode="numeric" maxlength="4" pattern="\d{3,4}" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-brand rounded-pill px-4 py-2">Aggiungi carta</button>
+                        <p id="carta-messaggio" class="mt-3 mb-0" style="font-size: 14px;"></p>
+                    </form>
                 </div>
             </div>
         </div>
@@ -338,6 +392,88 @@
             .then(response => response.json())
             .then(result => aggiornaPassword(result))
     });
+
+    let carte = [];
+
+    async function caricaCarte() {
+        const response = await fetch(`http://localhost:3005/user/${utente._id}/carte-pagamento?api_key=${API_KEY}`);
+        carte = await response.json();
+        renderCarte();
+    }
+
+    function renderCarte() {
+        const lista = document.getElementById('lista-carte');
+        const modello = document.getElementById('modello-carta');
+        lista.innerHTML = '';
+        document.getElementById('carte-vuote').classList.toggle('d-none', carte.length > 0);
+
+        carte.forEach(carta => {
+            const clone = modello.cloneNode(true);
+            clone.id = carta._id;
+            clone.classList.remove('d-none');
+            clone.querySelector('.carta-intestatario').textContent = carta.intestatario;
+            clone.querySelector('.carta-numero').textContent = '••••' + carta.numero;
+            clone.querySelector('.carta-scadenza').textContent = carta.scadenza;
+            clone.querySelector('.btn-elimina-carta').addEventListener('click', () => eliminaCarta(carta._id));
+            lista.appendChild(clone);
+        });
+    }
+
+    async function eliminaCarta(idCarta) {
+        if (!confirm('Vuoi eliminare questa carta?')) return;
+
+        const messaggio = document.getElementById('lista-carte-messaggio');
+        try {
+            const response = await fetch(`http://localhost:3005/user/${utente._id}/carte/${idCarta}?api_key=${API_KEY}`, {method: 'DELETE'});
+            const risultato = await response.json();
+            if (risultato.error) throw new Error(risultato.error);
+
+            carte = carte.filter(c => c._id !== idCarta);
+            utente.carte = (utente.carte || []).filter(c => c._id !== idCarta);
+            salvaUtente();
+            renderCarte();
+            messaggio.textContent = '';
+        } catch (error) {
+            messaggio.textContent = error.message;
+            messaggio.className = 'mt-2 mb-0 text-danger';
+        }
+    }
+
+    document.getElementById('form-nuova-carta').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const btn = e.submitter;
+        btn.disabled = true;
+
+        const body = {
+            intestatario: document.getElementById('carta-intestatario').value.trim(),
+            numero: document.getElementById('carta-numero').value.replace(/\s/g, ''),
+            scadenza: document.getElementById('carta-scadenza').value.trim(),
+            cvv: document.getElementById('carta-cvv').value.trim()
+        };
+
+        try {
+            const response = await fetch(`http://localhost:3005/user/${utente._id}/carte?api_key=${API_KEY}`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(body)
+            });
+            const risultato = await response.json();
+            if (risultato.error) throw new Error(risultato.error);
+
+            utente.carte = [...(utente.carte || []), risultato];
+            salvaUtente();
+            await caricaCarte();
+
+            e.target.reset();
+            mostraMessaggio('carta-messaggio', 'Carta aggiunta!');
+        } catch (error) {
+            mostraMessaggio('carta-messaggio', error.message, true);
+        } finally {
+            btn.disabled = false;
+        }
+    });
+
+    caricaCarte();
 
     function renderIndirizzi() {
         const lista = document.getElementById('lista-indirizzi');
