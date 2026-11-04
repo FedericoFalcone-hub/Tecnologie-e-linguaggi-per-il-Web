@@ -132,7 +132,7 @@ async function categorieOrdinate(utente) {
     if (!utente || utente.ristoratore || utente.preferenze !== true) return [];
 
     const risultato = await client.db('FastFood').collection('ordini').aggregate([
-        {$match: {idUtente: {$in: [utente._id.toString(), utente._id]}, stato: {$ne: 'annullato'}}},
+        {$match: {idUtente: {$in: [utente._id.toString(), utente._id]}, stato: 'annullato'}},
         {$unwind: '$prodotti'},
         {
             $lookup: {
@@ -1416,13 +1416,28 @@ app.get('/user/:id/ordini', async (req, res) => {
         const utente = await getUser(id);
         if (!utente) return res.status(404).json({error: "Utente non trovato"});
 
-        const ordini = client.db('FastFood').collection('ordini');
+        const db = client.db('FastFood');
         const filtro = {
             idUtente: {$in: [utente._id.toString(), utente._id]}
         };
 
-        const ordiniUtente = await ordini.find(filtro).toArray();
-        res.json(ordiniUtente);
+        const ordiniUtente = await db.collection('ordini').find(filtro).toArray();
+
+        const idRistoranti = [...new Set(ordiniUtente.map(o => String(o.ristoranteId)))]
+            .filter(ObjectId.isValid)
+            .map(id => new ObjectId(id));
+
+        const ristoranti = await db.collection('ristoranti')
+            .find({_id: {$in: idRistoranti}})
+            .project({nomeRistorante: 1})
+            .toArray();
+
+        const nomi = new Map(ristoranti.map(r => [r._id.toString(), r.nomeRistorante]));
+
+        res.json(ordiniUtente.map(o => ({
+            ...o,
+            nomeRistorante: nomi.get(String(o.ristoranteId)) ?? o.nomeRistorante ?? 'Ristorante eliminato'
+        })));
     } catch (error) {
         console.error(error);
         res.status(500).json({error: "Errore interno del server"});
