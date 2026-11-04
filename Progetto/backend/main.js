@@ -132,7 +132,7 @@ async function categorieOrdinate(utente) {
     if (!utente || utente.ristoratore || utente.preferenze !== true) return [];
 
     const risultato = await client.db('FastFood').collection('ordini').aggregate([
-        {$match: {idUtente: {$in: [utente._id.toString(), utente._id]}, stato: 'annullato'}},
+        {$match: {idUtente: {$in: [utente._id.toString(), utente._id]}, stato: 'consegnato'}},
         {$unwind: '$prodotti'},
         {
             $lookup: {
@@ -142,14 +142,13 @@ async function categorieOrdinate(utente) {
                 as: 'piatto'
             }
         },
-        {$unwind: '$piatto'},
         {
             $lookup: {
                 from: 'catalogo',
                 let: {
                     idProdotto: {
                         $convert: {
-                            input: '$piatto.idProdotto',
+                            input: {$arrayElemAt: ['$piatto.idProdotto', 0]},
                             to: 'objectId',
                             onError: null,
                             onNull: null
@@ -160,7 +159,17 @@ async function categorieOrdinate(utente) {
                 as: 'dettagli'
             }
         },
-        {$addFields: {categoria: {$ifNull: [{$arrayElemAt: ['$dettagli.strCategory', 0]}, '$piatto.categoria']}}},
+        {
+            $addFields: {
+                categoria: {
+                    $ifNull: [
+                        {$arrayElemAt: ['$dettagli.strCategory', 0]},
+                        {$arrayElemAt: ['$piatto.categoria', 0]},
+                        '$prodotti.categoria'
+                    ]
+                }
+            }
+        },
         {$match: {categoria: {$ne: null}}},
         {$group: {_id: '$categoria', ordinati: {$sum: '$prodotti.quantita'}}},
         {$sort: {ordinati: -1, _id: 1}},
