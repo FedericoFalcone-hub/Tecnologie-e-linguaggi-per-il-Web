@@ -1485,6 +1485,48 @@ app.put('/user/:id/ordini/:numeroOrdine/ritira', async (req, res) => {
     }
 });
 
+app.put('/user/:id/ordini/:numeroOrdine/annulla', async (req, res) => {
+
+    const id = req.params.id;
+    const numeroOrdine = req.params.numeroOrdine;
+
+    const utente = await getUser(id);
+    if (!utente) return res.status(404).json({error: "Utente non trovato"});
+
+    if (utente.ristoratore) return res.status(403).json({error: "Solo i clienti possono annullare ordini"});
+
+    const ordini = client.db('FastFood').collection('ordini');
+    const filtro = {
+        numeroOrdine: parseInt(numeroOrdine),
+        idUtente: {$in: [utente._id.toString(), utente._id]}
+    };
+
+    const ordine = await ordini.findOne(filtro);
+
+    if (!ordine) return res.status(404).json({error: "Ordine non trovato"});
+
+    if (ordine.stato === 'consegnato') {
+        return res.status(400).json({error: "Ordine già consegnato"});
+    }
+
+    if (ordine.stato === 'annullato') {
+        return res.status(400).json({error: "Ordine già annullato"});
+    }
+
+    if (ordine.stato === 'consegna') {
+        return res.status(400).json({error: "Ordine in consegna, non può essere annullato"});
+    }
+
+    if (ordine.stato === 'preparazione') {
+        return res.status(400).json({error: "Ordine in preparazione, non può essere annullato"});
+    }
+
+    const set = {stato: 'annullato'};
+
+    await ordini.updateOne({...filtro, stato: ordine.stato}, {$set: set});
+    res.json({...ordine, ...set});
+});
+
 app.get('/user/:id/offerte', async (req, res) => {
     // #swagger.description = "Codici sconto sbloccati dall'utente (solo con preferenze accettate)"
     try {

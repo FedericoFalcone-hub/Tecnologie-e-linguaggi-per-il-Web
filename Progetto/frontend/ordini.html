@@ -46,6 +46,9 @@
                 <span class="fw-bold text-brand">€ <span class="ordine-totale"></span></span>
             </div>
             <button type="button" class="btn-ritira btn btn-brand rounded-pill w-100 mt-3 d-none"></button>
+            <button type="button" class="btn-annulla btn btn-outline-danger rounded-pill w-100 mt-3 d-none">
+                Annulla ordine
+            </button>
         </div>
     </a>
 
@@ -156,7 +159,37 @@
             ritiraOrdine(ordine);
         });
 
+        const btnAnnulla = clone.querySelector('.btn-annulla');
+        btnAnnulla.classList.toggle('d-none', ordine.stato !== 'ordinato');
+
+        btnAnnulla.addEventListener('click', async (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            if (!confirm(`Annullare l'ordine #${String(ordine.numeroOrdine).padStart(6, '0')}?`)) return;
+            btnAnnulla.disabled = true;
+            await annullaOrdine(ordine);
+
+        });
         return clone;
+    }
+
+    async function annullaOrdine(ordine) {
+        try {
+            const response = await fetch(`http://localhost:3005/user/${utente._id}/ordini/${ordine.numeroOrdine}/annulla?api_key=${API_KEY}`, {
+                method: 'PUT'
+            });
+            const risultato = await response.json();
+            if (risultato.error) {
+                alert(risultato.error);
+                await caricaOrdini();
+                return;
+            }
+            ordine.stato = risultato.stato;
+            renderOrdini();
+        } catch (error) {
+            console.error(error);
+            await caricaOrdini();
+        }
     }
 
     function renderOrdini() {
