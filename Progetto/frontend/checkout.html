@@ -379,8 +379,8 @@
     }
 
     function cambiaNominativo() {
-        nome = document.getElementById('input-nome').value;
-        cognome = document.getElementById('input-cognome').value;
+        nome = document.getElementById('input-nome').value.trim();
+        cognome = document.getElementById('input-cognome').value.trim();
         caricaDati();
         modalNominativo.hide();
     }

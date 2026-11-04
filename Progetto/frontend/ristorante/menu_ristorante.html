@@ -429,11 +429,11 @@
                                 if (messaggioModifica.textContent !== '') {
                                     return;
                                 }
-                                const nome = cap(document.getElementById('nomePiattoModifica').value);
-                                const categoria = cap(document.getElementById('categoriaPiattoModifica').value);
+                                const nome = cap(document.getElementById('nomePiattoModifica').value.trim());
+                                const categoria = cap(document.getElementById('categoriaPiattoModifica').value.trim().toLowerCase());
                                 const prezzo = parseFloat(document.getElementById('prezzoPiattoModifica').value);
                                 const ingredienti = document.getElementById('ingredientiPiattoModifica').value.split(",").map(i => cap(i.trim()));
-                                const foto = document.getElementById('fotoPiattoModifica').value;
+                                const foto = document.getElementById('fotoPiattoModifica').value.trim();
                                 const options = {
                                     method: 'PUT',
                                     headers: {'Content-Type': 'application/json'},
@@ -443,7 +443,7 @@
                                         prezzo: prezzo,
                                         ingredienti: ingredienti,
                                         foto: foto,
-                                        ricetta: cap(document.getElementById('ricettaPiattoModifica').value)
+                                        ricetta: cap(document.getElementById('ricettaPiattoModifica').value.trim())
                                     })
                                 };
                                 fetch(`http://localhost:3005/ristorante/${user._id}/menu/${piatto._id}`, options)
@@ -574,18 +574,18 @@
             return;
         }
 
-        const nome = cap(document.getElementById("nomePiatto").value);
-        const categoria = capitalize(document.getElementById("categoriaPiatto").value);
+        const nome = cap(document.getElementById("nomePiatto").value.trim());
+        const categoria = capitalize(document.getElementById("categoriaPiatto").value.toLowerCase().trim());
         const prezzo = parseFloat(document.getElementById("prezzoPiatto").value);
         const ingredienti = document.getElementById("ingredientiPiatto").value
             .split(",")
             .map(i => cap(i.trim()));
-        let foto = document.getElementById("fotoPiatto").value;
+        let foto = document.getElementById("fotoPiatto").value.trim();
 
         if (!foto) {
             foto = `https://placehold.co/800x600/FF7A1A/white?text=${encodeURIComponent(nome)}`;
         }
-        const ricetta = document.getElementById("ricettaPiatto").value;
+        const ricetta = document.getElementById("ricettaPiatto").value.trim();
 
         const options = {
             method: 'POST',

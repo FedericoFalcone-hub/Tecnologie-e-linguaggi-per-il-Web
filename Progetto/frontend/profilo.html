@@ -249,9 +249,9 @@
         } else {
             const utenteAggiornato = {
                 ...JSON.parse(localStorage.getItem('utente')),
-                nome: document.getElementById('nome').value,
-                cognome: document.getElementById('cognome').value,
-                email: document.getElementById('email').value
+                nome: document.getElementById('nome').value.trim(),
+                cognome: document.getElementById('cognome').value.trim(),
+                email: document.getElementById('email').value.trim().toLowerCase()
             };
             localStorage.setItem('utente', JSON.stringify(utenteAggiornato));
             document.getElementById('dati-messaggio').textContent = 'Dati aggiornati con successo!';
@@ -335,9 +335,9 @@
     //Modifica dati personali
     document.getElementById('form-dati').addEventListener('submit', function (e) {
         e.preventDefault();
-        const cNome = capitalize(document.getElementById('nome').value);
-        const cCognome = capitalize(document.getElementById('cognome').value);
-        const cEmail = document.getElementById('email').value.toLowerCase();
+        const cNome = capitalize(document.getElementById('nome').value.trim());
+        const cCognome = capitalize(document.getElementById('cognome').value.trim());
+        const cEmail = document.getElementById('email').value.trim().toLowerCase();
 
         const user = {
             nome: cNome,

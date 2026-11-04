@@ -135,7 +135,7 @@
 
     document.getElementById('form-accesso').addEventListener('submit', function (e) {
         e.preventDefault();
-        const cEmail = document.getElementById('email').value;
+        const cEmail = document.getElementById('email').value.trim().toLowerCase();
         const cPassword = document.getElementById('password').value;
 
         const user = {
