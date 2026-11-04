@@ -142,3 +142,10 @@ async function caricaCategorieSuggerite() {
 function formattaIndirizzo(indirizzo) {
     return `${indirizzo.via}, ${indirizzo.civico}, ${indirizzo.cap}, ${indirizzo.citta} (${indirizzo.provincia})`;
 }
+
+function formattaNumeroCarta(input) {
+    input.addEventListener('input', () => {
+        const cifre = input.value.replace(/\D/g, '').slice(0, 16);
+        input.value = cifre.replace(/(\d{4})(?=\d)/g, '$1 ');
+    });
+}

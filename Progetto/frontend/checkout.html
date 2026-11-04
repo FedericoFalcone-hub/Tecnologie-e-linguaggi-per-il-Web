@@ -633,7 +633,7 @@
         e.preventDefault();
         const nuovaCarta = {
             intestatario: document.getElementById('input-intestatario').value.trim(),
-            numero: document.getElementById('input-numero').value.trim(),
+            numero: document.getElementById('input-numero').value.replace(/\s/g, ''),
             scadenza: document.getElementById('input-scadenza').value.trim(),
             cvv: document.getElementById('input-cvv').value.trim()
         };
@@ -734,6 +734,8 @@
         sessionStorage.removeItem(idRistorante);
         window.location.replace(`conferma_ordine.html?id=${risultato._id}`);
     });
+
+    formattaNumeroCarta(document.getElementById('input-numero'));
     renderListaCarte();
     caricaDati();
     renderRiepilogo();
